@@ -1,0 +1,12 @@
+# 설치 하기
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# zshrc에 homebrew path 추가
+echo 'export PATH=/opt/homebrew/bin:$PATH' >> ~/.zshrc
+
+# zshrc 반영
+source ~/.zshrc
+
+brew --version
+
+brew install gitmoji
