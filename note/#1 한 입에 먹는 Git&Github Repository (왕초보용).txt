@@ -1,0 +1,512 @@
+# 한 입에 먹는 Git&Github Repository (왕초보용)
+
+## 왜 Git&GitHub를 사용해야할까? 🤔
+
+### 1. **버전 관리**
+
+- **변경 이력 추적**: Git을 사용하면 코드의 변경 이력을 기록하고 추적할 수 있습니다. 과거에 작성된 코드를 되돌아보거나, 특정 버그가 언제 발생했는지를 파악하는 데 유용합니다.
+- **안전한 복구**: 만약 실수로 코드를 잘못 수정했더라도, 이전 버전으로 쉽게 되돌릴 수 있어 안전하게 작업을 이어갈 수 있습니다.
+
+### 2. **협업 용이**
+
+- **동시 작업**: 여러 명의 개발자가 동시에 작업할 수 있습니다. 각자 자신의 브랜치(branch)에서 작업한 후, 병합(merge)하여 최종 결과물을 만들어낼 수 있습니다.
+- **코드 리뷰**: 팀원 간의 코드 리뷰가 가능하여, 서로의 코드를 확인하고 피드백을 주고받을 수 있습니다.
+
+### 3. **백업 및 중앙 집중화** (GitHub의 기능)
+
+- **중앙 저장소**: GitHub는 클라우드 기반의 중앙 저장소 역할을 합니다. 코드가 안전하게 저장되며, 언제 어디서든 접근할 수 있습니다.
+- **데이터 손실 방지**: 로컬 컴퓨터가 고장나더라도 GitHub에 저장된 코드를 통해 데이터 손실을 방지할 수 있습니다.
+
+### 4. **오픈 소스 및 공개 협업**
+
+- **오픈 소스 프로젝트 참여**: GitHub는 많은 오픈 소스 프로젝트의 중심입니다. 누구나 프로젝트에 기여하고, 다양한 코드베이스에 참여할 수 있습니다.
+- **프로젝트 홍보 및 공유**: 개인 프로젝트를 공개하여 다른 개발자들과 공유할 수 있으며, 다른 사람의 피드백을 받을 수도 있습니다.
+
+### 5. **CI/CD 및 자동화 지원**
+
+- **자동화 도구 연동**: GitHub는 다양한 자동화 도구와 쉽게 연동할 수 있습니다. 코드를 푸시(push)하면 자동으로 테스트하고, 배포하는 등의 작업을 자동화할 수 있습니다.
+
+### 6. **문서화 및 프로젝트 관리**
+
+- **README 파일**: 프로젝트의 개요와 사용 방법을 쉽게 문서화할 수 있습니다.
+- **이슈 추적 및 프로젝트 관리**: 프로젝트의 이슈를 관리하고, 작업할 항목을 정리하여 체계적으로 프로젝트를 진행할 수 있습니다.
+
+<aside>
+➡️ Git과 GitHub는 개발의 효율성을 높이고, 협업을 원활하게 하며, 안전하고 체계적으로 프로젝트를 관리할 수 있는 도구입니다. 따라서 많은 개발자들이 이를 사용하고 있으며, 특히 팀 개발이나 오픈 소스 프로젝트에서 필수적인 도구로 자리 잡고 있습니다.
+
+</aside>
+
+---
+
+## Git
+
+![git.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/b89e4dbc-4ccd-4847-8d26-0f39da5e0d11/git.png)
+
+<aside>
+<img src="notion://custom_emoji/00feaf78-d356-41ee-90f9-616e7f73fd77/152caf56-50aa-803a-ad16-007a2e7b3945" alt="notion://custom_emoji/00feaf78-d356-41ee-90f9-616e7f73fd77/152caf56-50aa-803a-ad16-007a2e7b3945" width="40px" /> 프로젝트의 모든 변경 사항을 기록하고 관리할 수 있게 하며, 
+여러 사람이 동시에 작업할 수 있는 **강력한 협업 도구**
+
+</aside>
+
+- **버전 관리**
+    - Git은 프로젝트의 모든 파일과 폴더를 추적하고, 변경 사항을 "커밋(commit)"이라는 단위로 기록합니다. 이를 통해 언제든지 과거의 특정 시점으로 되돌아갈 수 있습니다.
+- **분산형 시스템**
+    - Git은 중앙 서버뿐만 아니라, 각 사용자가 자신의 컴퓨터에 전체 프로젝트의 **복사본**을 가지고 작업할 수 있게 합니다. **중앙 서버와 연결이 끊어져도 작업을 계속**할 수 있고, 나중에 변경 사항을 중앙 서버에 업로드할 수 있습니다.
+- **브랜치(branch) 기능**
+    - Git에서는 독립적인 작업을 위해 "브랜치"를 쉽게 만들 수 있습니다. 
+    예를 들어, 새로운 기능을 개발할 때 주 프로젝트와는 별도로 작업한 후, 기능이 완성되면 다시 병합할 수 있습니다. 이 과정에서 서로 다른 브랜치의 변경 사항을 합치는 것도 가능합니다.
+- **협업**
+    - 여러 사람이 동시에 작업할 때, 각자의 작업 내용을 효과적으로 관리하고 병합할 수 있습니다. 
+    Git은 충돌을 최소화하고, 충돌이 발생하더라도 쉽게 해결할 수 있는 기능을 제공합니다.
+
+## Github
+
+![깃.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/c08e58e3-5663-4b05-ac6b-172cb8f3cfd0/%E1%84%80%E1%85%B5%E1%86%BA.png)
+
+![Git Lifecycle](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/fed6c231-16ea-4c65-8135-bbe6b8f1bedc/git_lifecycle.jpg)
+
+Git Lifecycle
+
+<aside>
+<img src="notion://custom_emoji/00feaf78-d356-41ee-90f9-616e7f73fd77/152caf56-50aa-803a-ad16-007a2e7b3945" alt="notion://custom_emoji/00feaf78-d356-41ee-90f9-616e7f73fd77/152caf56-50aa-803a-ad16-007a2e7b3945" width="40px" /> 개발자들이 효율적으로 협업하고, 프로젝트를 체계적으로 관리할 수 있도록 돕는 웹 기반 **플랫폼**
+
+</aside>
+
+- **원격 저장소**
+    - GitHub는 Git으로 관리되는 프로젝트를 인터넷 상에서 호스팅 할 수 있는 서비스입니다. 쉽게 말해, GitHub는 코드와 프로젝트의 저장소를 온라인에 올려서 다른 사람들과 공유하고 협업할 수 있게 해줍니다.
+- **협업 도구**
+    - GitHub는 여러 개발자가 함께 작업할 수 있도록 도와줍니다. 예를 들어, 한 사람이 프로젝트에 새로운 기능을 추가하고 그 변경 사항을 GitHub에 올리면, 다른 사람들은 이를 검토하고, 필요한 경우 변경 사항을 합칠 수 있습니다.
+- **오픈소스와 커뮤니티**
+    - GitHub는 전 세계 개발자들이 오픈소스 프로젝트를 쉽게 공유하고 기여할 수 있도록 하는 중요한 플랫폼입니다. 누구나 다른 사람의 프로젝트에 기여할 수 있고, 자신의 프로젝트를 공개해 피드백을 받을 수 있습니다.
+
+---
+
+## 터미널 / 명령 프롬프트 여는 법
+
+<aside>
+🌟
+
+터미널이란 사용자와 컴퓨터가 소통할 수 있는 **인터페이스**입니다. 우리가 터미널에 명령어를 입력하면 컴퓨터는 해당 명령어에 따른 동작을 실행하게 됩니다. 이러한 명령어를 CLI(Command Line Interface)라고도 부릅니다. Mac 환경에서는 **터미널**, Window 환경에서는 **명령 프롬프트**라고 명칭되어있지만 편의상 통칭 터미널로 부릅니다.
+
+</aside>
+
+- Terminal 열기 (MAC)
+    
+    1. `Command + Space` 단축키를 통해 Spoitlight 검색 기능을 실행합니다.
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/ca814ba1-6da1-451c-9a08-0bc739dda585/image.png)
+    
+    1. Spotlight 검색에 **Terminal**을 검색하여 실행합니다. 한글로 터미널, 혹은 ‘Ter’나 ‘터’ 처럼 일부만 검색해도 됩니다. Enter키를 누르면 터미널이 실행됩니다.
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/f9e22424-8fe2-4108-8bbb-cf70d8c945a1/image.png)
+    
+    1. a1은 사용자명으로 화면과 다를 수 있습니다. 터미널 사용 준비 완료! ✨
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/0e66f4a9-1160-4ebc-b102-9c83d5688e32/image.png)
+    
+- 명령 프롬프트 열기 (Windows)
+    - [방법 1] 윈도우 검색창에 cmd를 검색하여 실행합니다.
+        
+        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/9b9a5cd2-1fb4-4b7e-9833-2782e097149f/image.png)
+        
+    - [방법2] `윈도우 키 + R` 단축키를 입력하여 실행창을 띄우고 CMD를 입력하고 확인을 누르면 됩니다.
+        
+        ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/8905b2aa-ead1-4fca-a2af-8db9ad1a7404/image.png)
+        
+    
+    최종적으로 이런 창이 실행되면 명령 프롬프트 사용 준비 완료✨ 
+    
+    ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/cfa03e68-1a84-4022-ad57-c8f32067d081/image.png)
+    
+
+## Github 회원가입
+
+- [ ]  Github 회원가입
+    
+    [GitHub: Let’s build from here](https://github.com/dashboard)
+    
+
+       [[깃허브 회원가입 가이드](https://docs.github.com/ko/get-started/start-your-journey/creating-an-account-on-github)]
+
+## Homebrew 및 Git 설치하기
+
+- [ ]  Homebrew 설치 (Mac만)
+- [ ]  Git 설치
+- [ ]  Git 전역설정
+
+### Git 설치하는 법 (Window)
+
+윈도우 환경에서는 Homebrew를 설치할 필요가 없기 때문에 하단 링크를 통해 GIt 설치를 진행해주세요!
+
+[윈도우 Git 설치 가이드](https://sfida.tistory.com/46)
+
+### Git 설치하는 법 (Mac)
+
+### **🍺 Homebrew**
+
+macOS 및 Linux에서 패키지 관리를 간편하게 해주는 도구입니다. 일반적으로 소프트웨어 설치, 관리, 업그레이드, 제거를 쉽게 할 수 있도록 도와줍니다.
+
+[Homebrew 공식페이지](https://brew.sh/)
+
+Homebrew 공식페이지
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/93851fb5-7aaa-461d-a728-fbf729619f8b/image.png)
+
+**`==> Installation successful!`** 이 나오면 설치완료입니다. 약간의 시간이 소요될 수 있으니 기다려주세요!
+
+```bash
+# Homebrew 버전 확인
+brew --version
+
+# 설치된 패키지 목록 확인
+brew list
+```
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/19dd7912-08f3-46cb-8165-e820a3a833c8/image.png)
+
+버전 확인까지 되면 설치가 잘 된 것입니다! ✨
+
+---
+
+### brew를 이용하여 Git 설치
+
+```bash
+# brew를 이용한 git 설치 명령어
+brew install git
+
+# Git 버전 확인
+git --veresion
+```
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/b89f15a5-06c6-4aa2-a22d-6446c37fc2d4/image.png)
+
+### Git Config 설정
+
+초기 한 번만 진행하면 되는 설정입니다.
+레포지토리나 디렉토리를 몇 개를 만들던 간에 딱 한 번! 바로 지금🔥
+
+```bash
+# config 설정하기
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+git config --global init.defaultBranch main
+```
+
+```bash
+# config 설정 확인하기
+git config --list
+```
+
+- 만약 ! 잘못 입력했을 경우에는 수정하면 됩니다!!! 놀라지마세요  :)
+    
+    수정보다는 삭제 후 재설정이 편하므로 .. 추천 드립니다.
+    
+    ```python
+    git config --global --unset user.name
+    git config --global --unset user.email
+    ```
+    
+- `dquote >` 가 계속 뜨는 경우
+    1. 일단 `ctrl + g` 로 무한 `dquote` 에서 빠져나갑니다.
+    2. 설정했던 것을 지웁니다.
+    
+    ```python
+    git config --global --unset user.name
+    git config --global --unset user.email
+    ```
+    
+    1. dquote 가 뜨는 이유는 따옴표의 오류입니다.
+        1. 만약 양 쪽이 닫히지 않았을 경우 ( user.name”) → 뒤에만 따옴표가 있죠?
+            
+            이럴 때 발생합니다.
+            
+    
+
+## Repository 생성 & 원격 레포지토리 연결
+
+### [방법1] Git에서 제공하는 시퀀스를 이용하기
+
+로컬에서 새로운 Git 프로젝트를 시작하고, 그 프로젝트를 원격 저장소에 연결한 후 처음으로 푸시하는 방법
+
+### 1. 디렉토리 생성
+
+> 로컬에서 작업할 디렉토리를 생성합니다. 폴더명은 `oz_assignment`입니다.
+> 
+
+`F4` 또는 `Command (⌘) + Space`  로 Spotlight를 열고 Terminal을 검색하여 엽니다.
+
+![터미널을 열자마자 나타나는 `a1@1ui-MacBookAir ~ %` 는 **현재 위치**를 나타냅니다.](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/4bf65dd7-e243-40bb-aa8e-c7f9f5b4f1ad/image.png)
+
+터미널을 열자마자 나타나는 `a1@1ui-MacBookAir ~ %` 는 **현재 위치**를 나타냅니다.
+
+하단 명령어를 이용해 `oz_assignment` 디렉토리를 생성합니다.
+
+```bash
+# 현재 위치를 확인
+>> pwd
+
+# desktop 으로 이동
+>> cd desktop
+
+# 위치 이동
+## cd만 입력 후 `Tab키`를 누르시면 이동 가능한 모든 폴더를 확인할 수 있습니다
+>> cd 폴더명
+
+# 여기서는 바탕화면에 oz_assignment 디렉토리를 만들것이기 때문에 바탕화면으로 이동하겠습니다.
+>> cd Desktop
+
+# 새로운 디렉토리(oz_assignment) 폴더 생성
+>> mkdir oz_assignment
+
+# oz_assignment로 이동
+>> cd oz_assignment
+```
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/fc055188-e231-48a6-89a7-04abc866e887/image.png)
+
+### 2. 레포지토리 생성
+
+> Github에서 새로운 레포지토리를 생성합니다. 
+레포지토리는 Github에서 코드와 그와 관련된 파일들을 저장하고 관리하는 공간을 의미합니다.
+Repository name은 `oz_assignment` , 공개여부는 `Public`으로 설정해주세요.
+> 
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/ffd1604a-1daa-4c52-a534-5eca55911d46/image.png)
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/f701bbf6-9b79-4708-8f8b-248d376ac175/image.png)
+
+### 3. 터미널에서 Git 초기화 및 원격 레포지토리 연결
+
+하단의 시퀀스를 복사하여 터미널에서 `oz_assignment` 폴더 위치인지 확인 후 붙여넣습니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/709fa6b8-a70b-451a-bc81-3fc549a38963/image.png)
+
+```bash
+## 시퀀스 설명
+
+echo "# oz_assignment" >> README.md # README.md 파일을 만들고, 그 안에 "# oz_assignment"라는 내용을 추가합니다.
+git init # 현재 디렉터리에 Git 저장소를 초기화합니다.
+git add README.md # README.md 파일을 스테이징 영역에 추가합니다.
+git commit -m "first commit" # 스테이징된 파일을 "first commit"이라는 메시지로 커밋합니다.
+git branch -M main # 현재 브랜치를 main으로 이름을 변경합니다.
+git remote add origin <URL> # 원격 저장소의 URL을 origin이라는 이름으로 추가합니다.
+git push -u origin main # main 브랜치를 원격 저장소(origin)로 푸시합니다.
+```
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/23d1ebf9-d969-4eb6-9b93-5786d07dcdfa/image.png)
+
+정상적으로 완료되었다면 Github에 `README.md` 가 업로드 되어있는 상태입니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/7f98f6a1-9d57-47df-b129-9ad1d155d279/image.png)
+
+### [방법2] Git Clone하기
+
+이미 존재하는 원격 저장소를 복제하여, 로컬에서 해당 저장소의 작업을 이어서 하는 방법
+
+### 1. 레포지토리 생성
+
+> Github에서 새로운 레포지토리를 생성합니다. 
+레포지토리는 Github에서 코드와 그와 관련된 파일들을 저장하고 관리하는 공간을 의미합니다.
+Repository name은 `oz_assignment` , 공개여부는 `Public`으로 설정해주세요.
+> 
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/ffd1604a-1daa-4c52-a534-5eca55911d46/image.png)
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/f701bbf6-9b79-4708-8f8b-248d376ac175/image.png)
+
+### 2. 터미널에서 명령어 실행
+
+`F4` 또는 `Command (⌘) + Space`  로 Spotlight를 열고 Terminal을 검색하여 엽니다.
+
+![터미널을 열자마자 나타나는 `a1@1ui-MacBookAir ~ %` 는 **현재 위치**를 나타냅니다.](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/4bf65dd7-e243-40bb-aa8e-c7f9f5b4f1ad/image.png)
+
+터미널을 열자마자 나타나는 `a1@1ui-MacBookAir ~ %` 는 **현재 위치**를 나타냅니다.
+
+원하는 디렉토리로 이동한 다음, `git clone` 명령어와 함께 복사한 URL을 입력합니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/07c09d85-c50b-4c9f-aeab-d58e3b77da71/image.png)
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/50b17b4f-9da7-4e0b-8833-336d22680819/image.png)
+
+```bash
+# 현재 위치를 확인
+>> pwd
+
+# 위치 이동
+## cd만 입력 후 `Tab키`를 누르시면 이동 가능한 모든 폴더를 확인할 수 있습니다
+>> cd 폴더명
+
+# 여기서는 바탕화면에 oz_assignment 디렉토리를 만들것이기 때문에 바탕화면으로 이동하겠습니다.
+>> cd Desktop
+
+# 명령어 실행
+git clone <본인 레포지토리 URL>
+```
+
+- **`git clone`**
+    - 원격 저장소에서 코드를 복사하여 로컬에 저장소를 생성하는 명령입니다.
+    - 이 명령어는 지정된 URL에 있는 원격 저장소의 전체 내용을 현재 디렉토리로 복사해 옵니다.
+    - 새로운 로컬 저장소를 만들어, 원격 저장소의 모든 히스토리와 파일을 로컬에 복사합니다.
+    
+
+정상적으로 완료되었다면 레포지토리 이름과 동일한 폴더가 생성됩니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/fd212898-a45e-4305-a2aa-c7d2d0e8518b/image.png)
+
+### `.git` 폴더의 중요성
+
+원격 레포지토리가 연결 되었다면 로컬 디렉토리에서 `Command + Shift + .` 단축키로 숨겨진 `.git` 폴더를 확인할 수 있습니다. (README.md 파일은 Git Clone 방법으로 진행한 경우에는 없는게 맞습니다.)
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/4c2bdc36-40b4-40f4-82a0-fd1db992b821/image.png)
+
+<aside>
+👉 `.git` 폴더는 Git이 프로젝트의 모든 버전 관리 정보를 저장하는 숨겨진 디렉토리입니다. 이 폴더는 Git 저장소의 핵심이며, 프로젝트의 모든 커밋, 브랜치, 태그, 그리고 Git의 모든 메타데이터와 설정 파일이 포함되어 있습니다.
+
+</aside>
+
+- **Git의 핵심!**
+    - `.git` 폴더는 Git의 모든 기능이 의존하는 데이터베이스와 같습니다. 이 폴더가 손상되거나 삭제되면 해당 프로젝트의 버전 관리 정보는 사라지게 됩니다.
+- **독립적!**
+    - `.git` 폴더만 있으면 다른 파일들이 없어도 전체 Git 히스토리를 복구할 수 있습니다. 이 때문에 `.git` 폴더만 백업해도 전체 프로젝트의 버전 관리를 보존할 수 있습니다.
+- **버전 관리!**
+    - Git은 `.git` 폴더에 저장된 정보를 기반으로, 이전 상태로 프로젝트를 되돌리거나 다른 브랜치로 전환할 수 있습니다.
+
+ `.git` 폴더는 Git이 버전 관리를 수행하는 데 필수적인 모든 데이터를 담고 있는 매우 중요한 폴더입니다. **☠️ 절대 함부로 지우지마세요 ☠️** 또한, `.git` 파일은 **최상위폴더 딱 하나**에만 존재합니다. 하위폴더에 중복으로 있을 경우 충돌의 원인이 되니 주의하세요!
+
+## VSC에서 CLI를 이용하여 add, commit, push 3종 세트
+
+1. VSC에서 `oz_assignment` 디렉토리를 엽니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/7ec18364-8f7a-43f0-9306-00932b4a2217/image.png)
+
+1. 과제 등 프로젝트를 진행하고 저장합니다.( 저장 단축키 `Command + S` )
+
+![모든 파일이 저장된 상태](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/37db1441-118d-4164-8d84-cf4fae39c60c/image.png)
+
+모든 파일이 저장된 상태
+
+![이럴 경우, 저장되지 않은 파일이 있는 것이니 다시 저장해주세요](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/93cfaf5c-5753-40ef-9d6f-d768f70f598e/image.png)
+
+이럴 경우, 저장되지 않은 파일이 있는 것이니 다시 저장해주세요
+
+1. 단축키 (`Command + J`) 또는 클릭하여 VSC 터미널을 엽니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/1f8ce89c-4aeb-4096-a8dc-3196bff6eda4/image.png)
+
+1. **`git status`** 명령어로 파일의 상태를 확인합니다. 
+붉은색으로 표시되는 파일은 스테이징 되지 않은 상태임을 나타냅니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/85ec4d13-3465-4883-a11b-b84d2d82c7ee/image.png)
+
+1. **`git add`** 명령어로 작업 파일을 스테이징 시켜줍니다. 
+저는 `day_1` 폴더를 스테이징 시키기 위해 `git add day_1` 로 사용했습니다. 
+파일이 초록색으로 바뀌면 스테이징 된 것입니다.
+**`git add .`** 명령어를 이용하면 모든 파일을 한 번에 스테이징 시킬 수 있습니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/4ea69ddc-5b30-488e-8c4c-6251c9631c2c/image.png)
+
+1. **`git commit -m '커밋메세지'`** 명령어를 통해 스테이징된 파일의 상태를 저장합니다. 이렇게 저장한 상태를 **커밋**이라고 합니다. 커밋메세지에는 작업 내용을 설명하는 내용을 작성하면 됩니다. 
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/15927a19-e201-4012-b949-2e6f928aea87/image.png)
+
+```bash
+## 터미널 해설
+
+# main 브랜치에서 커밋이 이루어졌음을 나타냅니다.
+# (최상위-커밋)은 이 커밋이 현재 브랜치의 최신 커밋(즉, 이 브랜치의 가장 최근 커밋)임을 의미합니다.
+# 719bd42는 이 커밋의 고유한 해시 값입니다. 각 커밋은 고유한 해시 값을 가지며, 이 값으로 커밋을 식별할 수 있습니다.
+# 'first commit'은 커밋 메시지로, 이 커밋에서 무엇을 했는지 설명합니다. 이 경우, "첫 번째 커밋"이라는 의미입니다.
+>> [main (최상위-커밋) 719bd42] first commit 
+
+# 이 커밋으로 인해 한 개의 파일이 변경되었고, 그 파일에 11개의 새로운 라인이 추가되었음을 나타냅니다.
+>> 1 file changed, 11 insertions(+)
+
+#day_1/sample.html 파일이 새로 생성되었음을 의미합니다.
+# 100644는 파일 권한을 나타냅니다. 여기서는 일반적인 읽기-쓰기 파일입니다.
+>> create mode 100644 day_1/sample.html
+```
+
+1. **`git push origin main`** 명령어로 로컬에서 커밋한 내용을 원격 레포지토리에 업로드합니다. `main` 브랜치의 모든 커밋을 원격 레포지토리(`origin`)에 업로드합니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/7bba781e-f127-4e92-8c61-174ea27072d2/image.png)
+
+1. Github에서 반영된 것을 확인할 수 있습니다.
+
+![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/00feaf78-d356-41ee-90f9-616e7f73fd77/66ee6a22-db5f-49f0-b47f-cd9da3c380db/image.png)
+
+## 주의사항
+
+- 작업하던 폴더에서 `git init` 은 한번만 진행합니다.
+
+## 과제 폴더 구조 추천
+
+과목별로 분류하고 그 안에서 다시 일차로 구분하는 것을 권장드립니다 :) 폴더 및 파일명을 작성할 때는 띄어쓰기 대신 언더바(_)를 사용해주세요! 
+
+```markdown
+oz_assignment/
+├── PYTHON/
+│   ├── day_1/
+│   ├── day_2/
+│   └── day_3/
+├── HTML/
+│   ├── day_1/
+│   └── day_2/
+├── JS/
+│   ├── day_1/
+│   ├── day_2/
+│   ├── day_3/
+│   ├── day_4/
+│   └── day_5/
+└── FLASK/
+    ├── day_1/
+    └── day_2/
+
+```
+
+## 간단한 git 업로드
+
+1. 폴더 내의 깃 초기화
+
+```python
+git init
+```
+
+1. 현재 폴더와 깃허브 레포지토리를 연결하기
+
+```python
+git remote add origin "레포지토리 주소"
+```
+
+1. 연결한 레포지토리 확인하기
+
+```python
+git remote -v
+```
+
+1. 브랜치가 가끔 master 일 때가 있으므로, main으로 변경하기
+
+```python
+git branch -M main
+```
+
+1. 과제 진행 후 추가 및 수정 된 파일 업로드
+
+```python
+git add .
+```
+
+1. 업로드 할 코드를 메세지와 함께 커밋하기
+
+```python
+git commit -m "커밋 메세지"
+```
+
+1. 브랜치 `main` 에 푸쉬하기
+
+```python
+git push origin main
+```

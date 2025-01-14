@@ -1,0 +1,66 @@
+9시 50분부터 10 10분 사이 입실
+6시 50분부터 7 10분 사이 퇴실
+중간 출석 오전 11시, 오후 4시
+
+남들과 다른 노력과 성장에 집중할 수 있는 환경
+외출시 외출 찍고 
+
+
+안녕하세요
+저는 이번에 같이 백엔드를 배우게 된 김태진이구요.
+사는 곳은 부산이고 저도 비전공자 출신이지만 이전에 다른 학원에서 한번 배워보니 잘 맞는 거 같아서 진지하게 한번 배워보려고 여기에 오게 됬습니다.
+6개월간 잘 부탁드립니다!
+
+5조: ['김태진', '김우중', '고근우', '정한율', '장태문']
+고근우 대구  정한율 인천 송도 
+
+깃허브 중요
+리베이스 중요
+
+vscode
+https://code.visualstudio.com/
+
+Git & Github
+
+Python
+
+
+
+리눅스 명령어
+
+파일 생성
+터미널에 입력
+touch test.py
+
+숨김파일 표시
+폴더 창에서
+커맨드 쉬프트 .
+
+.DS_store란?
+**.DS_Store**는 macOS에서 생성되는 시스템 파일로,
+Finder(맥의 파일 탐색기)가 폴더의 디스플레이 설정과 메타데이터를 저장하기 위해 사용됩니다.
+DS_store 자동 생성 해제
+defaults write com.apple.desktopservices DSDontWriteNetworkStores true
+
+
+
+스테이징
+git add .
+
+git 구조
+working   stage   repository
+
+git log 시 해시코드가 보임
+git은 커밋 명으로 구분하지 않고 해시코드로 구분
+067b2ed2873ec5871b71d8a17e67fc9a05324627
+
+git log --oneline
+
+git config --global init.defaultBranch main
+
+git reset  스테이징 된거 리셋 됨.
+
+
+
+.gitignore 파일
+내용안에 쓴 파일명.확장자를 쓰면 스테이징에서 제외
