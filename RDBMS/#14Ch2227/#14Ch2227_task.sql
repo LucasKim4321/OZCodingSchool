@@ -56,7 +56,13 @@ INSERT INTO employees (employeeNumber, lastName, jobTitle) VALUES
 (1003, 'Brown', 'IT Specialist');
 
 -- (4) **`orders`**와 **`orderdetails`**에 연결된 주문을 한 번에 추가하세요.
-
+INSERT INTO orders (orderNumber, orderDate) VALUES
+(3005, '2025-01-05'),
+(3006, '2025-01-06');
+INSERT INTO orderdetails (orderNumber, productCode) VALUES
+(3005, 'P055'),
+(3006, 'P066');
+SELECT * FROM orders;
 -- (5)**`payments`** 테이블에 여러 지불 정보를 한 번에 추가하세요.
 
 -- (6) **`customers`** 테이블에 고객을 추가하고 바로 주문을 추가하세요.
