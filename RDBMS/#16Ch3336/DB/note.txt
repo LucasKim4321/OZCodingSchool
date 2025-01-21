@@ -1,0 +1,37 @@
+window
+
+# 가상환경 생성
+python3 -m venv .venv
+
+# 가상환경 활성화
+./venv/Scripts/activate  # 활성화시 (.venv) username@machine:~$  이런식으로 표시
+
+# 가상환경에서 모듈 설치
+# 가상환경을 활성화한 상태에서 설치시 가상환경에 설치됨
+pip3 install webdriver-manager
+
+
+mac
+
+# 가상환경 생성
+python3 -m venv .venv
+
+# 가상환경 활성화
+source .venv/bin/activate  # 활성화시 (.venv) username@machine:~$  이런식으로 표시
+
+# 가상환경에서 모듈 설치
+# 가상환경을 활성화한 상태에서 설치시 가상환경에 설치됨
+pip3 install webdriver-manager
+
+# 강제고 패키지 재설치
+pip install <패키지명> --no-cache-dir --force-reinstall
+
+# 비활성화
+deactivate
+
+# 설치 경로 확인
+which python3
+/usr/bin/python3  # 맥 시스템에 기본적으로 설치된 파이썬
+
+홈브루로 파이썬 설치시 전역에 강제로 설치
+python3 -m pip install ipykernel -U --break-system-packages
