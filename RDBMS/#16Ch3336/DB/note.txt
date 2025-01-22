@@ -18,10 +18,12 @@ python3 -m venv .venv
 
 # 가상환경 활성화
 source .venv/bin/activate  # 활성화시 (.venv) username@machine:~$  이런식으로 표시
+source "/Users/taejin/Desktop/learning/OZCodingSchool/RDBMS/#16Ch3336/DB/.venv/bin/activate"
 
 # 가상환경에서 모듈 설치
 # 가상환경을 활성화한 상태에서 설치시 가상환경에 설치됨
 pip3 install webdriver-manager
+pip3 install selenium
 
 # 강제고 패키지 재설치
 pip install <패키지명> --no-cache-dir --force-reinstall
@@ -35,3 +37,27 @@ which python3
 
 홈브루로 파이썬 설치시 전역에 강제로 설치
 python3 -m pip install ipykernel -U --break-system-packages
+
+파일 경로에 특수문자 존재시 명령어가 제대로 동작 안할 수 있음.  예) python3 명령어는 괜찮은데 pip3 명령어는 문제 생김
+이름은 항상 영어+숫자로만 만들기
+
+경로 문제로 pip3 명령어 안될 시
+
+해결 방안 1
+파일 경로 수정
+
+해결 방안 2
+python3 명령어 사용
+python3 -m pip install 이렇게 하면 괜찮음.
+
+
+권한 수정
+chmod +x /Users/taejin/Desktop/learning/OZCodingSchool/RDBMS/#16Ch3336/DB/.venv/bin/pip3
+
+
+문제 해결했네요
+파일 경로에 #이 있어서 안되는거였어요.
+경로에 #이 포함 됬을 때 가상환경을 활성화 한 상태에서 pip3 install 이든 뭐든 제대로 안먹히고 python3 -m pip install 이렇게 하면 제대로 되네요
+경로에 문제 없으면 그냥 정상 작동하고
+경로가 잘못됬을때 vscode에선 무슨일인지 가상환경을 무시하고 원본환경을 기준으로 실행하고 파이참에서는 그냥 안된다고 표시해주네요
+이름에 # 괜히 넣었네요 아무문제 없을 줄 알았는데... 앞으로 파일이름은 무조건 영어+숫자로만 해야겠네요... 한글만 신경쓰면 될 줄 알았는데
