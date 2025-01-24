@@ -1,0 +1,265 @@
+010913
+1018
+
+맥에서 리눅스 설치
+
+먼저 Linux(Ubuntu) 다운로드
+
+arm64용 (Apple M1, M2 칩은 arm64)
+https://ubuntu.com/download/server/arm
+
+intel용 (x86_64 (amd64))
+https://ubuntu.com/download/server
+
+UTM 설치후 Ubuntu 가상환경 생성
+설치 할때 english, docker, 사용자 정보 입력 나머지는 그냥 done
+
+완료후 가상환경에 import된 Ubuntu 초기화 시키고 다시 실행하면
+로그인 화면이 나오고
+
+다음 명령어로 Ubuntu-desktop설치
+sudo apt install ubuntu-desktop
+
+설치 완료 후 재시작하면 Ubuntu 정상 실행 가능!!
+
+echo hello
+
+달력 설치
+sudo apt install ncal
+
+cal
+cal 2025
+cal -y 현재 해의 달력
+
+date
+
+실행했던 명령어 표시
+history
+
+history -c; history -w;
+
+history 후 번호가 보이는데
+!번호 하면 
+그 번호의 명령어가 실행됨
+
+!! 이전에 실행했던 명령어 실행
+
+exit  종료
+
+# 명령어의 구조
+commandName options inputs
+
+# 명령어의 위치
+which 명령어 이름
+which echo
+which cal
+반환값이 없으면 유효하지 않은 이름
+
+1. 폴더 찾기
+1) 전체 폴더에서 찾기 
+find / -name 폴더명 -type d 
+
+2)현재폴더(하위 포함) 에서 찾기
+find ./ -name 폴더명 -type d
+ 
+
+2. 파일 찾기(ls)
+
+1) ls로 찾기
+ls -Rhal | grep '.*[.]html'  <---- 확장자가 html인것 찾음
+
+R:하위폴더 포함
+h: 사람이 보기쉽게 해줌
+a: 숨겨진 파일,디렉토리 보여줌
+l: 자세히 보여줌(퍼미션,소유자,그룹..)
+
+2) find 로 찾기
+find 경로(찾을범위) 경로옵션 ,옵션조건( ex 찾을값) 
+
+경로옵션: -name, -user(소유자), -newer -perm -size  -type
+옵션조건:  -print(기본값) -exec(외부 명령실행) 
+find /etc -name "*.conf"   <--  /etc 디렉토리 하위에 확장명이 .conf인 파일검색 
+
+# hello world 출력
+echo "hello world"
+
+# date 기본 시간설정 UTC를 KST(한국표준시간)으로 변경
+서울 시간대가 있는지 확인
+ls /usr/share/zoneinfo/Asia
+시간대 변경
+sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+변경 후 date 명령어 사용시 한국시간대가 나옴
+date 
+
+표준시간대로 표시
+
+짧은 형태의 옵션 short form
+date -u
+
+긴형태의 옵션 long form
+date --universal
+
+도움말 표시
+date --help
+
+대소문자를 구분해서 명령어를 사용해야함.
+
+이러한 특성을
+case sensitive
+
+구문 안해도 되면
+case insensitive
+
+cal의 option 값으로 -A를 하면  -A : after
+cal -A  3 12 2023    #12월과 이후 3개의 달 표시
+
+cal의 option 값으로 -B를 하면  -B : before
+cal -B  2 12 2023    #12월과 이전 2개의 달 표시
+
+
+cal -A 1 -B  1 12 2023    #12월과 이전 2개의 달 표시
+
+명령어 경로 표시
+echo $PATH
+
+정리
+commandNames 들은 쉘의 검색 PATH안에 있어야 합니다.
+쉘은 터미널을 통해 명령이 제출될 때 명령의 의미를 해석하는 것입니다.
+Linux 명령은 commandName -options input 구조를 따릅니다.
+일부 명령에는 긴 형식과 짧은 형식 옵션이 있을 수 있습니다. --universal  -u
+짧은 형식의 옵션에는 대시 1개(-)가 있고  긴 형식 옵션에는 대시 2개(--)가 있습니다.
+
+메뉴얼 보기
+man 1 which
+q 누르면 나가기
+
+[thing] : thing은 선택사항
+<thing> : thing은 필수사항
+thing... : thing은 반복 가능
+thing1 | thing2 : thing1 과 thing2 중 하나만 사용
+
+man -k which
+man 페이지는 여러 섹션으로 구성되어 있습니다:
+
+1: 사용자 명령어.
+2: 시스템 호출.
+3: 라이브러리 함수.
+4: 특수 파일 및 장치.
+5: 파일 형식.
+6: 게임 및 기타.
+7: 매크로 패키지와 컨벤션.
+8: 시스템 관리 명령어.
+섹션 번호로 검색
+
+man -k는 모든 섹션을 검색합니다. 특정 섹션만 보고 싶으면 man [번호] [명령어]를 사용하세요:
+
+메뉴얼 페이지에 없으면 헬프 페이지에 있을 수도 있다
+help cd
+
+터미널 리디렉션
+
+cat
+컨트롤  c : 중지
+
+터미널에서의 명령어 입출력 (Input Output)
+Standard Output, Standard INput, Standard Error는 표준 데이터 스트림입니다.
+Standard Ouput와 Standard Error는 기본적으로 Terminal에 연결되어 있습니다.
+Standard Input Data Stream은 기본적으로 키보드에 연결되어 있습니다.
+
+------------------
+스탠다드 리다이렉트
+------------------
+Standard input(0)         -->   command   -->  Standard Output (1)
+Command Arguments  ->                        -->  Standard Error(2)
+--> Standard Data Stream
+-> Not a Data Stream
+
+
+새로운 파일을 만들어 내용을 작성함. 중복된 파일이 있으면 덮어씌움
+cat 1> 제목.확장자
+cat > 제목.확장자
+
+기존에 있는 파일을 수정
+새로운 파일을 만들어 내용을 작성 또는 기존 파일 내용을 수정(append함)
+cat >> 제목.확장자
+
+터미널의 위치
+tty
+
+탭하나 더 열고 터미널 위치 확인 후 
+
+cat 0< output.txt 1> /dev/pts/1
+
+이렇게 하면 output.txt를 읽어와서 /dev/pts/1(두번째 터미널)에 출력함
+
+cat > /dev/pts/1 이렇게 하면 입력은 현재 터미널에서하고 출력은 두번째 터미널에서 함.
+
+파일을 읽어와서 " "(공백)을 기준으로 나눠서 첫번째 필드를 불러옴.
+cut < 읽어올 파일 --delimiter(split()과 유사한 기능) " " --fields 1
+
+정해진 위치 혹은 파일로 출력
+cut < 읽어올 파일 --delimiter(split()과 유사한 기능) " " --fields 1 > 출력할 위치 혹은 파일
+
+| (파이핑)(piping)
+파이핑은 한 명령의 표준 출력을 다른 명령의 표준 입력에 연결하는 것입니다.
+대부분의 키보드에서 Shift + BACKSLASH(\)를 눌러 액세스 할 수 있는 파이프 문자(I)를 사용하여 파이프합니다.
+Command A -> Standard Ouput -> Pipe -> Standardinput -> Command B
+
+date를 실행해서 출력된 결과물을 cut 함.
+date | cut --delimiter " " --fields 1 > today.txt
+
+옵션의 순서는 아무래도 상관없음
+date | cut > today.txt --delimiter " " --fields 1
+date | cut --delimiter " "  > today.txt --fields 1
+
+------------------
+고급 파이핑 기술
+------------------
+
+------
+tee
+------
+
+이렇게 date에서 리디렉션이 한번 이루어지면은 파이핑 된 명령어는 무시됨.
+date > date.txt | cut --delimiter " "  --fields 1
+
+이를 해결하기 위해 tee를 사용
+date | tee date.txt | cut --delimiter " "  --fields 1
+
+tee를 사용해 저장과 데이터 전달 두가지 일을 동시에 처리
+
+date | tee cut --delimiter " "  --fields 1 | date.txt
+
+-------
+xargs
+-------
+
+echo는 이렇게 argument만 입력받음 standard input은 무시
+echo "hello world"
+
+date | echo  이렇게 하면 아무거도 출력이 안됨
+
+이때 xargs로 해결 가능.
+xargs는 standard input을 argument로 변환함.
+
+date | xargs echo 이렇게 하면 date가 출력이됨.
+date | xargs echo "hello world" 하면  "hello world"가 먼저 출력되고 그 다음 날짜가 출력됨
+
+date | cut --delimiter=" " --fields=1 | xargs echo
+
+파일 삭제
+rm 파일명
+
+문제 3개의 명령을 실행하고 commandB만 snapshot.txt로 출력하고 싶을 때
+commandA, commandB, commandC, commandB's snapshot.txt
+정답
+commandA | commandB | tee snapshot.txt | commandC
+
+-------------
+Aliases(별칭)
+-------------
+
+alias는 명령어와 pipeline을 위한 닉네임입니다.
+alias들은 home 폴더에 .bash_aliases파일 안에 생성합니다.
+alias는 alias aliasName = "command1 - options args | command2 -options args..."
+alias들은 적용 후 터미널을 다시 시작해야 적용이 됩니다.
