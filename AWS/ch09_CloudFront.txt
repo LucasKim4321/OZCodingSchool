@@ -1,0 +1,31 @@
+Cloud Front
+콘텐츠 전송 네트워크 (CDN)(Content Delivery Network)서비스의 일종
+콘텐츠를 전 세계로 빠르게 전송할 수 있게 해주는 서비스
+사용자가 S3등이 통신하는 과정에 개입해서 더욱 빠르고 유연하게 서비스하기 위해 사용.
+
+* 특징 *
+콘텐츠 전송 네트워크(CDN)
+콘텐츠(이미지,HTML)를 캐싱하여 성능 가속
+전 세계 수많은 엣지 로케이션
+글로벌 고속 백본 네트워크 확보
+AWS서비스 <-> CloudFront 데이터 전송 무료
+DDoS 방어 무료 제공 (AWS Shield Standard)
+
+사용자가 연결된 서비스(S3 등)에서 정보를 가져올 때 CloudFront가 대신 가져와 캐싱 후 사용자에게 전달.
+이후 모든 사용자는 CloudFront에 캐시된 데이터를 반복적으로 빠르게 불러오기 가능.
+원본 파일이 수정되도 캐시데이터가 사라질 때까지 캐시데이터가 유지됨.
+캐시된 데이터 유지 기간은 설정에 따라 다름.
+
+데이터 캐시 여부 확인법
+웹브라우저에서 F12 누른 후 Network탭의 doc 카테고리에 CloudFront문서를 클릭하면
+X-Cache라고 표기 되어 있는 Response Header의 값에 Miss 또는 Hit from cloudfront라고 표기됨.
+캐시된 데이터 유무에 따라 없으면 Miss 있으면 Hit으로 구분
+
+수정된 데이터 적용 방법
+무효화 (invalidation)를 해주거나 자동으로 무효화될 수 있게 설정
+보통 원본을 수정할 때 수정하는게 아니라 새로운 이름의 파일을 만들어 다시 캐싱되도록 유도.
+
+AWS의 네트워크 구조는
+리전(Region) -> 가용영역(Availability Zone) -> 엣지 로케이션(Edge Location)
+
+배포(Distribution)

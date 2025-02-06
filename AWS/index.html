@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S3 Index Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+        }
+        h1 {
+            color: #0073e6;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+        }
+        a:hover {
+            color: #0073e6;
+        }
+    </style>
+</head>
+<body>
+    <h1>안녕하세요 안녕하세요 :b</h1>
+    <h1>Welcome to My S3 Bucket</h1>
+    <p>아래 파일을 클릭하여 다운로드하세요:</p>
+    <ul id="file-list">
+        <!-- 파일 목록이 JavaScript로 동적으로 추가됨 -->
+    </ul>
+
+    <script>
+        // S3 버킷 URL (정적 웹사이트 엔드포인트로 변경)
+        const bucketUrl = "https://your-bucket-name.s3.amazonaws.com/";
+
+        // 파일 목록 (수동으로 입력하거나, JSON 목록을 불러올 수도 있음)
+        const files = [
+            "file1.jpg",
+            "file2.pdf",
+            "file3.mp4"
+        ];
+
+        // 파일 목록을 HTML에 추가
+        const fileListElement = document.getElementById("file-list");
+
+        files.forEach(file => {
+            const listItem = document.createElement("li");
+            const link = document.createElement("a");
+            link.href = bucketUrl + file;
+            link.textContent = file;
+            link.target = "_blank";
+            listItem.appendChild(link);
+            fileListElement.appendChild(listItem);
+        });
+    </script>
+</body>
+</html>

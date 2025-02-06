@@ -1,0 +1,23 @@
+** RDS (Relational Database Service) **
+
+관계형 데이터베이스 서비스
+서버에서 각각 DB를 사용하게 되면 로드밸런싱할 때 데이터가 분산되기 때문에 하나의 DB를 사용하기 위해 사용
+영상 https://youtu.be/_MROZtLtCcA
+
+DB와 관련된 모든 작업을 제공 (완전 관리형 관계형 데이터베이스)(Fully Managed Relational Database)
+Scale Up, Migration, Failover 등의 데이터 베이스 관리자가 해야할 일을 RDS가 대신해줌
+
+*시스템 대체 작동 Failover
+주 시스템의 작동이 정지되면 예비 장치가 자동으로 대체 작동함
+
+*다중-AZ (Multi-AZ)
+장애를 예방하기 위해 StandbyDB로 DB 이중화 작업을 하는 것
+MasterDB의 데이터는 StandbyDB로 동기식 복제가 이루어짐
+Master DB에 장애가 발생하면 Failover(시스템 대체 작업)를 진행해 StandbyDB가 MasterDB를 대체하게 됨.
+
+*읽기 전용 복제본 (Read Replica)
+읽기 용도로만 사용하는 MasterDB의 복제본
+비동기식 복제가 이루어지지만 복제가 짧은 시간에 이루어지기 때문에 데이터가 거의 동일하게 유지됨.
+다른 리전에서 빠르게 읽기위해 사용
+
+가용영역(AZ)(Availability Zone)

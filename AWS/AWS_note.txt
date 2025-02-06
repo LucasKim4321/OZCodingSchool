@@ -1,0 +1,56 @@
+
+
+ls ~/Desktop
+ls -al ~/Desktop/파일이름
+
+ls -al ~/Downloads/mykey03.pem
+
+맥에서 키 권한설정
+chmod 400 ~/Downloads/mykey02.pem
+
+ec2서버 접속
+ssh -i ~/Downloads/my-key.pem ec2-user@<EC2_PUBLIC_IP> -p <PORT>
+ssh -i ~/Downloads/mykey02.pem ubuntu@54.180.109.242
+ssh -i ~/Downloads/mykey02.pem bitnami@54.180.139.19
+
+인스턴스 생성
+wordpress bitnami
+
+free tier
+
+강제로 cpu에 스트레스 주는 프로그램 설치
+sudo apt-get install stress
+
+강제로 cpu에 스트레스 주기
+stress --cpu 4
+
+파일 확인
+ls
+
+bitnami 시스템 로그 확인
+cat bitnami_credentials
+
+마스터 아이디
+마스터 비밀번호
+엔드포인트
+
+vim 에디터로 열기
+vim /opt/bitnami/wordpress/wp-config.php
+
+파일 오류 확인
+php -l /opt/bitnami/wordpress/wp-config.php
+No syntax errors detected 나오면 정상
+
+vim에디터 사용법
+커맨드 모드(기본모드)
+입력모드에서 ESC
+
+입력모드
+i키
+
+기타
+나가기 :q
+저장 후 나가기 :wq
+
+버킷 이름
+taejin-bucket-250205
