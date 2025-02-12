@@ -54,3 +54,4 @@ i키
 
 버킷 이름
 taejin-bucket-250205
+

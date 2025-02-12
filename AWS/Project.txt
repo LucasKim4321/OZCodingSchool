@@ -1,0 +1,82 @@
+EC2 인스턴스 생성
+
+ssh 접속
+ssh -i ~/Downloads/mykey02.pem ubuntu@54.180.150.128
+
+패키지 목록 업데이트
+sudo apt-get update
+
+
+sudo apt-get install -y curl
+
+curl -fsSL https://deb.nodesource.com/setup_23.x -o nodesource_setup.sh
+
+
+sudo -E bash nodesource_setup.sh
+
+sudo apt-get install -y nodejs
+node -v
+npm --version
+
+sudo chown ubuntu:ubuntu project/
+
+
+
+https://expressjs.com/en/starter/installing.html
+
+
+
+vim ~/.vimrc
+
+set autoindent
+set ts=4
+set shiftwidth=4
+set nu
+
+# 3000번 포트에 hello world 출력 설정
+https://expressjs.com/en/starter/hello-world.html
+
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
+https://expressjs.com/en/starter/generator.html#express-application-generator
+
+ejs html js 같이 섞어서 쓸 수 있는 파일
+
+
+
+<script
+src="https://blueimp.github.io/jQuery-File-Upload/js/jquery.fileupload.js"
+crossorigin="anonymous"></script>
+
+POST /images 200 31.701 ms - -
+Error: No value provided for input HTTP label: Key.
+    at resolvedPath (/home/ubuntu/project/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:65:11)
+    at /home/ubuntu/project/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:124:19
+    at RequestBuilder.build (/home/ubuntu/project/node_modules/@smithy/core/dist-cjs/submodules/protocols/index.js:90:7)
+
+
+IAC
+Terraform
+
+개발 직군은 다양하다
+
+
+https://boto3.amazonaws.com/v1/documentation/api/latest/index.html
+
+배포환경 자동화
+CI/CD
+Jenkins
+Elastic beanstalk
+
+이인제_강사
+inje@soaple.io

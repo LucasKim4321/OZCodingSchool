@@ -263,3 +263,206 @@ alias는 명령어와 pipeline을 위한 닉네임입니다.
 alias들은 home 폴더에 .bash_aliases파일 안에 생성합니다.
 alias는 alias aliasName = "command1 - options args | command2 -options args..."
 alias들은 적용 후 터미널을 다시 시작해야 적용이 됩니다.
+
+현재 작업 폴더 경로
+pwd
+
+
+
+기본 폴더 경로
+cd /
+
+home 경로
+cd ~
+
+파일 목록
+ls
+
+분류된 파일목록
+ls -F
+
+자세한 목록
+ls -l
+ls -lh
+
+rwx  r read w write x execute
+
+절대경로
+cd /home/taejin/Downloads/
+
+홈경로 사용
+cd ~/Downloads
+
+홈경로 이동 후 사용
+cd Downloads/
+
+현재폴더로 이동
+cd .
+
+상위폴더로 이동
+cd ..
+
+----------------
+File Extension
+----------------
+
+file + 파일이름
+파일 정보 표시 
+
+
+-------------
+와일드 카드 (*)
+-------------
+
+ls *
+
+D로 시작하는 파일 푝시
+ls D*
+
+1~6번째 가지
+ls file[1-6]
+
+정규식은 텍스트를 일치키시는데 
+
+mkdir a b c
+mkdir "a b c "
+
+각 년도와 월을 조합해서 폴더 만들기
+mkdir {jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2024,2025,2026}
+
+각 폴더에 파일 100개씩 생성
+touch {jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2024,2025,2026}/file{1..100}
+touch {jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec}_{2024,2025,2026}/file{A..Z}
+
+Documents폴더에 파일생성
+touch Documents/file2.txt
+
+여러개 생성
+touch 파일명 파일명 파일명
+
+-------------
+파일 삭제하기
+-------------
+
+삭제 명령어 정보 확인
+man rm
+
+파일 삭제
+rm 파일명
+
+경로에 있는 해당 파일 삭제
+rm 경로/파일명
+
+여러개 삭제
+rm 경로/파일명 경로 파일명 경로 파일명
+
+모든 txt파일 삭제
+rm *.txt
+
+2가 포함된 모든 파일 삭제
+rm *2*
+
+1,2가 포함된 모든 파일 삭제
+rm *[1,3]*
+
+------------
+폴더 삭제
+------------
+
+폴더 삭제. -r 옵션 안주면 삭제 안됨. 하위 폴더도 삭제
+rm -r 폴더명
+
+대화형으로 상세히 삭제. 전부 물어보면서 원하는것만 삭제
+rm -ri 폴더명
+
+빈폴더만 삭제
+rmdir 파일명
+
+-----------------
+파일과 폴더 복사하기
+-----------------
+
+파일 생성
+echo "Hello World" > file1.txt
+
+cp 복사할 파일명 복사된 파일명
+cp file1.txt file2.txt
+
+파일을 폴더에 복사
+cp file1.txt file2.txt destination/
+
+폴더에 있는 파일들을 현재 경로(.)에 복사
+cp destination/* .
+
+폴더를 다른 폴더에 복사. -r 옵션 사용.
+cp -r copyfolder/ destination/
+
+
+------------------
+파일과 폴더의 이름 변경
+------------------
+
+파일 이름 변경
+mv 파일명 변경할 파일명
+mv file1.txt file2.txt
+
+폴더 이름 변경
+mv 폴더명 변결할 폴더명
+mv folder/ newfolder
+
+위치로 파일또는 폴더 이동
+mv 이름 위치
+mv newfolder/* .
+mv file* newfolder/
+mv newfolder/ ~/Documents/
+
+기존 파일을 이동시키면서 동시에 이름도 변경
+mv ~/Documents/newfolder/ ./newnamedfolder
+
+--------------------
+Nano를 이용해 파일 편집
+--------------------
+
+echo "hello world" > file.txt
+
+nano편집기로 파일 열기
+nano file.txt
+
+
+--------------------
+locate 명령어 사용하기
+--------------------
+
+plocate 설치
+sudo apt install plocate
+
+모든 .conf 파일 찾기
+locate *.conf
+
+대소문자 구분해제 옵션 사용
+locate -i *.CONF
+
+3개로 제한
+locate -i --limit 3 *.CONF
+
+새로 만든 파일은 업데이트 후 검색 가능
+목록은 주기적으로 업뎃
+혹은 수동으로 업뎃
+sudo updatedb
+
+-----------------
+find 명령어 사용하기
+-----------------
+설치 필요 없음
+
+현재 폴더의 모든 폴더 및 파일
+find
+
+해당 파일 찾기
+find 파일명
+
+새로 생성한 파일도 바로바로 검색됨
+
+locate는 데이터베이스를 기반으로 찾기 때문에 find 보다 빠름
+find 명령어가 검색 옵션이 더욱 다양하다
+
