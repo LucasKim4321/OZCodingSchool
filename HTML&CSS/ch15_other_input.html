@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    </style>
+</head>
+<body>
+    <fieldset>
+        <legend>음료 주문</legend>
+        <h2>음식을 고르세요</h2>
+        <select>
+            <option value="coffee">커피</option>
+            <option value="coke">콜라</option>
+            <option value="juice" selected>쥬스</option>
+            <option value="tea">차</option>
+            <option value="water">물</option>
+        </select>
+    
+        <select multiple size="5">
+            <option value="coffee">커피</option>
+            <option value="coke">콜라</option>
+            <option value="juice" selected>쥬스</option>
+            <option value="tea">차</option>
+            <option value="water">물</option>
+        </select>
+    
+        <h2>기타 음료를 원한다면 자유롭게 써주세요~</h2>
+        <textarea cols="30" rows="10"></textarea>
+    </fieldset>
+
+    <div style="border: 1px solid black;">
+        <legend>I'm ready</legend> <!-- border로는 안됨 -->
+        <h2>우리의 준비 상태는 아래와 같습니다.</h2>
+        <progress></progress>
+        <br>
+        <progress max="100" value="60"></progress>
+    
+        <h2>추가 용무가 있으면 호출해주세요</h2>
+        <button>push</button>
+        <input type="button" value="push">
+    </div>
+
+
+</body>
+</html>
