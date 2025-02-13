@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맛집 리뷰 이벤트</title>
+</head>
+<body>
+
+    <header>
+        <h1>맛집 리뷰 이벤트</h1>
+        <p>모든 항목에 빠짐없이 체크해주세요~</p>
+        <p>솔직하게 부탁드려요!</p>
+    </header>
+
+    <hr>
+
+    <main>
+        <form>
+            <fieldset>
+                <legend>개인정보</legend>
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" placeholder="본명을 입력하세요">
+                <br>
+                <label for="email">이메일</label>
+                <input type="email" id="email" name="email" placeholder="당첨시 이메일 수신용">
+            </fieldset>
+            <fieldset>
+                <legend>평가</legend>
+                <p>연령대가 어떻게 되십니까?</p>
+                <label><input type="radio" name="age" value="10"> 10대</label>
+                <label><input type="radio" name="age" value="20"> 20대</label>
+                <label><input type="radio" name="age" value="30"> 30대</label>
+                <label><input type="radio" name="age" value="40"> 40대</label>
+                <label><input type="radio" name="age" value="50"> 50대</label>
+                <br><br>
+                <p>음식을 평가해주세요</p>
+                <div>
+                    맛
+                    <label><input type="radio" name="taste" value="1"> 1점</label>
+                    <label><input type="radio" name="taste" value="2"> 2점</label>
+                    <label><input type="radio" name="taste" value="3"> 3점</label>
+                    <label><input type="radio" name="taste" value="4"> 4점</label>
+                    <label><input type="radio" name="taste" value="5"> 5점</label>
+                </div><br>
+                <div>
+                    식감
+                    <label><input type="radio" name="Texture" value="1"> 1점</label>
+                    <label><input type="radio" name="Texture" value="2"> 2점</label>
+                    <label><input type="radio" name="Texture" value="3"> 3점</label>
+                    <label><input type="radio" name="Texture" value="4"> 4점</label>
+                    <label><input type="radio" name="Texture" value="5"> 5점</label>
+                </div><br>
+                <div>
+                    가성비
+                    <label><input type="radio" name="value" value="1"> 1점</label>
+                    <label><input type="radio" name="value" value="2"> 2점</label>
+                    <label><input type="radio" name="value" value="3"> 3점</label>
+                    <label><input type="radio" name="value" value="4"> 4점</label>
+                    <label><input type="radio" name="value" value="5"> 5점</label>
+                </div><br>
+                <div>
+                    비주얼
+                    <label><input type="radio" name="presentation" value="1"> 1점</label>
+                    <label><input type="radio" name="presentation" value="2"> 2점</label>
+                    <label><input type="radio" name="presentation" value="3"> 3점</label>
+                    <label><input type="radio" name="presentation" value="4"> 4점</label>
+                    <label><input type="radio" name="presentation" value="5"> 5점</label>
+                </div><br>
+                <div>
+                    서비스
+                    <label><input type="radio" name="service" value="1"> 1점</label>
+                    <label><input type="radio" name="service" value="2"> 2점</label>
+                    <label><input type="radio" name="service" value="3"> 3점</label>
+                    <label><input type="radio" name="service" value="4"> 4점</label>
+                    <label><input type="radio" name="service" value="5"> 5점</label>
+                </div><br>
+                <div>
+                    청결
+                    <label><input type="radio" name="cleanliness" value="1"> 1점</label>
+                    <label><input type="radio" name="cleanliness" value="2"> 2점</label>
+                    <label><input type="radio" name="cleanliness" value="3"> 3점</label>
+                    <label><input type="radio" name="cleanliness" value="4"> 4점</label>
+                    <label><input type="radio" name="cleanliness" value="5"> 5점</label>
+                </div><br>
+                <div>
+                    재방문 의사
+                    <label><input type="radio" name="revisit" value="1"> 1점</label>
+                    <label><input type="radio" name="revisit" value="2"> 2점</label>
+                    <label><input type="radio" name="revisit" value="3"> 3점</label>
+                    <label><input type="radio" name="revisit" value="4"> 4점</label>
+                    <label><input type="radio" name="revisit" value="5"> 5점</label>
+                </div><br>
+            </fieldset>
+            <fieldset>
+                <legend>기타의견</legend>
+                <textarea rows="3" cols="30" name="comment"></textarea>
+            </fieldset>
+            <button>제출</button>
+        </form>
+    </main>
+
+    <hr>
+
+    <footer>
+        <p>입력하느라 수고하셨습니다!</p>
+    </footer>
+</body>
+</html>
