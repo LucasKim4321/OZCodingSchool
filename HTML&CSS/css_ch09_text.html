@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>텍스트 꾸미기</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: Arial, monospace;
+            
+        }
+
+        .hahmlet-font {
+        font-family: "Hahmlet", serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        }
+
+        html {
+            /* font-size: 8px; */
+        }
+
+        body {
+            font-size: 32px;
+        }
+
+        #first {
+            /* 기본값 */
+            /* font-size: 16px; */
+
+            /* 부모 요소 기준으로 배율 적용 */
+            /* 0.5배 */
+            /* font-size: 0.5em; */
+
+            /* 루트(html태그)를 기준으로 배율 적용 */
+            /* 3배 */
+            font-size: 3rem;
+
+            font-weight: 900;
+
+            /* line-height: 50px; */
+
+            /* 가운데 정렬 */
+            /* text-align: center; */
+
+            /* 자간을 조절해 글자를 양끝에 빈틈없이 채움. */
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+    <p id="first">에스프레소와 물을 섞으면 아메리카노가 됩니다.</p>
+    <p class="hahmlet-font">에스프레소와 물을 섞으면 아메리카노가 됩니다.</p>
+</body>
+</html>

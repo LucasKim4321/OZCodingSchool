@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배경을 깔아보자</title>
+    <style>
+        div {
+            width: 300px;
+            height: 300px;
+            padding: 20px;
+            margin: 20px;
+            border: 20px double lightsalmon;
+            
+            background-color: lightpink;
+            
+            /* 적용 범위 설정 기본값 테두리 */
+            background-clip: border-box;
+            /* 콘텐츠 박스까지만 적용 */
+            /* background-clip: content-box; */
+
+            background-image: url(images/dolphin.webp);
+            background-size: 160px;
+
+            /* 반복 설정 기본값 반복 */
+            background-repeat: repeat;
+            /* 반복 x */
+            background-repeat: no-repeat;
+            
+            /* 시작 영역 설정 */
+            background-origin: content-box;
+
+            /* 위치 설정 */
+            background-position: center;
+            background-position: 100px 50px;
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>색깔을 지정하는 다양한 방법</title>
+    <style>
+        p#one {
+            /* color: red; */
+            /* color: rgb(100%, 0%, 100%); */
+            color: rgb(100%, 100%, 100%);
+            color: rgb(0%, 0%, 0%);
+            color: rgb(0%, 50%, 0%);
+            opacity: 0.5;
+        }
+
+        p#two {
+            color: rgba(0%, 50%, 0%, 0.5);
+        }
+
+        p#three {
+            color: hsl(300, 100%, 70%, o.5)
+        }
+
+        p#four {
+            /* 0 1 2 3 4 5 6 7 8 9 A B C D E F */
+            /* O0 ~ FF : 255S */
+            color : #000000;
+            color : #FF00FF;
+        }
+    </style>
+</head>
+<body>
+    <p id="one">고소한 아몬드와 함께 여는 아침</p>
+    <p id="two">고소한 아몬드와 함께 여는 아침</p>
+    <p id="three">고소한 아몬드와 함께 여는 아침</p>
+    <p id="four">고소한 아몬드와 함께 여는 아침</p>
+</body>
+</html>
