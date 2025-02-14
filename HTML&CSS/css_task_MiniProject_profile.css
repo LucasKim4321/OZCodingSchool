@@ -1,0 +1,32 @@
+* {
+    text-align: center;
+    /* background-color: lightsalmon; */
+}
+
+html {
+    background-color: rgba(135, 206, 250, 0.5);
+}
+
+body {
+    width: 640px;
+
+    /* 너비에서 남는 여백을 동일하게 분배 */
+    margin: auto;
+
+    padding: 20px; 
+
+    border: 2px dashed lightskyblue;
+}
+
+h1 {
+    font-size: 48px;
+}
+
+img {
+    height: 200px;
+    border-radius: 100px;
+}
+
+p{
+    font-size: 1.5rem;
+}
