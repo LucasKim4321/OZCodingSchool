@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img[alt] {
+            border: 5px dashed red;
+        }
+
+        /* 속성선택자만 사용 가능 */
+        [alt] {
+            width: 150px;
+        }
+
+        /*
+        기호와 함께 사용하는 속성 선택자
+        * : 값의 포함 여부
+        ^ : 값의 시작 여부
+        $ : 값의 끝 여부
+        */
+        [width *= "2"] {
+            border: 5px dashed green;
+        }
+        [width $= "0"] {
+            width: 100px;
+        }
+
+        body p {
+            color: lightskyblue;
+        }
+
+        p > em {
+            color: blue;
+        }
+
+        #three + p {
+            color: red;
+        }
+
+        #three ~ p {
+            border: 1px solid black;
+        }
+
+        /* 형제 선택자는 뒤이어서 나오는 형제에 대해서만 선택 가능하다 */
+    </style>
+</head>
+<body>
+    <img src="./images/dolphin.webp" width="120">
+    <img src="./images/dolphin.webp" width="120" alt="돌고래">
+    <img src="./images/dolphin.webp" width="120" id="three">
+    <p>대전은 유노코딩의 고향이자, 현 거주지이기도 합니다.</p>
+    <p>대전은 유노코딩의 고향이자, 현 거주지이기도 합니다.</p>
+    <p>대전은 유노코딩의 고향이자, <em>현 거주지이기</em>도 합니다.</p>
+    <p>대전은 유노코딩의 고향이자, 현 거주지이기도 합니다.</p>
+</body>
+</html>
