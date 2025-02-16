@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 정보 입력받기</title>
+    <style>
+        * {
+             color: lightsalmon;
+             box-sizing: border-box;
+        }
+        html {
+            height: 100%;
+        }
+        body {
+            background-color: rgba(255, 160, 122, 0.5);
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .mybox {
+            width: 500px;
+            height: 300px;
+            border: 1px solid lightsalmon;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="mybox">
+        <div>
+            <h1 id="name">저는 ''입니다.</h1>
+            <p id="animal">저는 ''을 좋아합니다.</p>
+            <p id="fruit">저는 ''을 좋아합니다.</p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector("#name").textContent = `저는 ${prompt("이름을 입력해라!")}입니다!`
+        document.querySelector("#animal").textContent = `저는 ${prompt("좋아하는 동물을 입력해라!")}를(을) 좋아합니다!`
+        document.querySelector("#fruit").textContent = `저는 ${prompt("좋아하는 과일을 입력해라!")}를(을) 좋아합니다!`
+    </script>
+</body>
+</html>
