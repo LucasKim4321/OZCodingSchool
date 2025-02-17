@@ -324,3 +324,65 @@ placeholder     입력 요소의 플레이스홀더(자리표시자) 스타일�
 
 
 calc(계산식) 계산한 값을 반환. 계산식 사이에 공백 필요.
+
+
+## 변형과 transform 속성
+크기나 위치를 요소의 x축과 y축을 기준으로 바꾼다.
+변형을 적용하기 위해서는 transform 속성을 사용한다.
+
+translate(x,y)   x축과 y축 방향으로 이동
+scale(x,y)       x축과 y축으로 확대 및 축소
+skew(x,y)        x축과 y축으로 비틀어 왜곡한다.
+rotate(deg)      지정한 각도만큼 회전한다.
+
+
+## transition
+transition 속성을 이용하면 요소에 지정되어 있는 스타일 속성을 완전히 다른 스타일로 바굴 수 있다.
+스타일이 변화할 때 시간이나 변화 속도 등을 추가해 애니메이션 효과를 만들 수 있다.
+변화를 주고자 하는 속성이나 실행 시간, 실행 방법, 지연시간 등의 정보를 포함 할 수 있다.
+
+-property           속성을 지정
+-duration           지속 시간
+-delay              시작 지연 시간
+-timing-function    실행 곡선 방식
+
+# transition-timing-function
+실행 시간동안 속도 변화 방식을 지정
+
+ease        기본값으로, 점점 속도가 빨라지다가 끝날 때 다시 느려지는 방식
+liner       처음부터 끝가지 같은 속도로 진행
+ease-in     느리게 시작했다가 점점 빨라진다.
+ease-out    빠르게 시작했다가 점점 느려진다.
+
+
+## @keyframes, animation
+콘텐츠가 TV 애니메이션과 같은 동적 움직임을 구현할 수 있도록 @keyframes 모듈과 animation 속성을 지원한다.
+
+# keyframes
+애니메이션을 표현하는 여러 개의 프레임을 정의
+백분율을 이용해 프레임을 나누거나, 별도의 키워드로 간단하게 나눌 수도 있다.
+
+@keyframes 애니메이션_이름 {
+    from{ width: 100px;}
+    to{width: 200px;}
+}
+
+@keyframes 애니메이션_이름 {
+    0%{width: 100px;}
+    33%{width: 133px;}
+    66%{width: 166px;}
+    100%{width: 200px;}
+}
+
+# animation
+애니메이션의 실행 시간이나 방식 등을 정의
+
+-name (필수)         적용할 키프레임 이름
+-duration           애니메이션 지속 시간
+-delay              애니메이션 시작 전 시간
+-timing-function    속도 그래프
+-direction          동작 진행 방향
+-literation-count   반복 횟수
+-fill-model         전후 상태 설정
+-play-state         애니메이션 적용 여부
+
