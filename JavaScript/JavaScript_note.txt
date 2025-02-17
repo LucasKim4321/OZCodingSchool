@@ -243,3 +243,74 @@ target.appendChild(추가할 요소)
 const p = document.createElement("p")
 document.body.appendChild(p)
 
+
+## 함수
+함수는 '불러서 쓸 수 있는 코드 조각'이다.
+함수를 선언하고 기능을 정의하면 함수의 이름을 코드 조각 대신 사용할 수 있다.
+
+# 함수 선언식
+function 함수명() {
+    // 함수의 기능을 표현한 구문
+}
+
+# 함수 표현식
+const 함수명 = function() {
+    // 함수의 기능
+}
+
+# 선언된 함수를 사용하기 위해선 함수를 '호출'해야한다.
+
+함수명()
+
+함수 선언식으로 만들어진 함수는 위치 상관없이 호출 가능.
+함수 선언식 보다 먼저 호출해도 됨. (호이스팅 가능)
+
+함수 표현식으로 만들어진 함수는 호출시 함수 표현식보다 아래에서 호출해야함. (호이스팅 불가)
+
+# 함수를 호출할 때 인자(인수)(argument)를 전달 할 수 있다.
+
+함수명(인자)
+
+두개 이상의 인자 및 매개변수는 쉼표(,)로 구분.
+
+
+## 이벤트(event)
+DOM에서 발생하는 다양한 액션 또는 상오작용 동작을 나타내는 프로그래밍 인터페이스.
+
+이벤트 예
+클릭, 키다운, 제출 등등
+
+target.on이벤트명 = 이벤트 핸들러 함수
+button.onlick = handleClick
+
+addEventListner(이벤트명, 이벤트 핸들러)
+
+# 이벤트 객체
+추가적인 기능과 정보를 제공하기 위해 이벤트 핸들러에 자동으로 전달되는 데이터이다.
+이를 활용하기 위해 이벤트 핸들러 함수에 매개변수를 추가하여 이벤트 발생 시마다 전달받을 수 있도록 해야한다.
+
+taeget.addEventListner('click', function(event) {
+    // 이벤트 동작
+})
+
+
+## 입력 요소로부터 값 읽어들이기
+요소에 쓰여져 있는 텍스트에 접근하고 싶다 : textContent
+사용자가 직접 요소에 입력한 값에 접근하고 싶다 : value
+
+값을 읽어서 콘솔에 출력
+console.log(target.value)
+
+값을 변경
+target.value = "변경값"
+
+# <form> 요소
+name 속성값을 토대로 value에 접근 가능
+
+<form>
+    <input name="이름"/>
+</form>
+const form = document.querySelector("form")
+form.addEventListner("submit", function(e) {
+    console.log(e.target.이름.value)
+})
