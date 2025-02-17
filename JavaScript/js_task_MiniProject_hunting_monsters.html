@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>몬스터 잡기 게임</title>
+    <style>
+        html,body {height: 100%; margin: 0;}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #container {
+            width: 420px;
+            height: 450px;
+            background-color: lightsalmon;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="monster">
+            ⣿⣿⣿⣿⣿⣿⣿⡿⠛⠉⠉⠉⠉⠛⠻⣿⣿⠿⠛⠛⠙⠛⠻⣿⣿⣿⣿⣿⣿⣿<br>
+            ⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀⢀⣀⣀⡀⠀⠈⢄⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿<br>
+            ⣿⣿⣿⣿⠏⠀⠀⠀⠔⠉⠁⠀⠀⠈⠉⠓⢼⡤⠔⠒⠀⠐⠒⠢⠌⠿⢿⣿⣿⣿<br>
+            ⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⢀⠤⣒⠶⠤⠭⠭⢝⡢⣄⢤⣄⣒⡶⠶⣶⣢⡝⢿⣿<br>
+            ⡿⠋⠁⠀⠀⠀⠀⣀⠲⠮⢕⣽⠖⢩⠉⠙⣷⣶⣮⡍⢉⣴⠆⣭⢉⠑⣶⣮⣅⢻<br>
+            ⠀⠀⠀⠀⠀⠀⠀⠉⠒⠒⠻⣿⣄⠤⠘⢃⣿⣿⡿⠫⣿⣿⣄⠤⠘⢃⣿⣿⠿⣿<br>
+            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠓⠤⠭⣥⣀⣉⡩⡥⠴⠃⠀⠈⠉⠁⠈⠉⠁⣴⣾⣿<br>
+            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⠤⠔⠊⠀⠀⠀⠓⠲⡤⠤⠖⠐⢿⣿⣿⣿<br>
+            ⠀⠀⠀⠀⠀⠀⠀⠀⣠⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿<br>
+            ⠀⠀⠀⠀⠀⠀⠀⢸⣿⡻⢷⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣘⣿⣿<br>
+            ⠀⠀⠀⠀⠀⠠⡀⠀⠙⢿⣷⣽⣽⣛⣟⣻⠷⠶⢶⣦⣤⣤⣤⣤⣶⠾⠟⣯⣿⣿<br>
+            ⠀⠀⠀⠀⠀⠀⠉⠂⠀⠀⠀⠈⠉⠙⠛⠻⠿⠿⠿⠿⠶⠶⠶⠶⠾⣿⣟⣿⣿⣿<br>
+            ⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿<br>
+            ⣿⣿⣶⣤⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣟⢿⣿⣿⣿⣿⣿⣿⣿<br>
+            ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣶⣶⣶⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+        </div>
+        <div id="text">
+        </div>
+    </div>
+
+    <script>
+        console.log("start")
+        let monsterHP = 120
+        const text = document.getElementById("text")
+        const h1 = document.createElement("h1")
+        h1.innerHTML = "몬스터 잡기 게임을 시작합니다!<br>클릭하면 공격합니다!"
+        text.append(h1)
+
+        let attackDamage;
+
+
+        const monster = document.getElementById("monster")
+        monster.addEventListener('click', e => {
+            // console.log(e)
+            console.log('click')
+            if ( monsterHP > 0 ) {
+                attackDamage = Math.floor(Math.random()*16+5);
+                console.log(attackDamage)
+                monsterHP -= attackDamage
+                console.log(monsterHP)
+            }
+            
+            if ( monsterHP <= 0 ) {
+
+                monster.innerHTML = `
+                    ⠄⠀⠀⠀⠀⠀⢠⣶⣿⣿⡿⠿⠿⠿⢿⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀<br>
+                    ⠀⠀⠀⠀⣠⠔⠛⢉⣡⣴⣶⣶⡶⠿⠛⠛⠉⠳⢦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀<br>
+                    ⠀⠀⠀⠀⣀⣠⣶⣿⣿⡿⣛⡁⠀⣠⣴⣶⣶⣤⡀⠉⠁⠉⠒⠀⠀⠀⠀⠀⠀⠀<br>
+                    ⠀⢠⣶⣾⣿⣿⣿⣿⣯⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡷⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀<br>
+                    ⡎⢀⣿⣿⣧⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⢁⣠⣶⣶⡄⠀⣀⠀⠀⠀⠀⠀<br>
+                    ⠂⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣿⣿⣿⠿⢿⣄⠹⡆⠀⠀⠀⠀<br>
+                    ⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⣉⣽⣿⣿⣿⣏⡉⠉⠥⣴⣶⣿⣧⣀⠀⠀⠀⠀<br>
+                    ⠀⢸⣿⡟⠙⣿⣿⡟⠋⣠⣴⣾⣿⡿⠿⠋⣿⣿⣿⣷⣶⣼⣿⣿⣿⣿⡄⠀⠀⠀<br>
+                    ⠀⠘⣿⣷⣤⣿⣿⣷⣼⣿⣿⠿⠛⣀⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀<br>
+                    ⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣶⣿⣿⣿⣿⣿⡉⣿⣿⣿⣿⣍⢿⣿⣿⣿⣧⠀⠀<br>
+                    ⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢹⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀<br>
+                    ⠀⠀⠀⠀⠀⠙⠻⡿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠟⠃⠀⣼⣿⣿⡇⠀<br>
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣟⣀⣠⣴⣾⣿⣿⣿⣿⡇⠀<br>
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⠀<br>
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⢿⣿⣻⣿⣿⣿⣿⣿⣿⣿⠿⠟⠁⠀⠀
+                `
+                h1.textContent = "몬스터가 죽었습니다!!"
+                
+                document.querySelector("#container").style.backgroundColor = "rgba(255, 160, 122, 0.5)"
+                document.querySelector("body").style.backgroundColor = "rgba(66, 66, 66, 0.5)"
+            }
+            else if ( monsterHP <= 50 ) {
+
+                monster.innerHTML = `
+                    ⣿⣿⣿⣿⣿⣿⣿⠟⠋⠉⠁⠈⠉⠙⠻⢿⡿⠿⠛⠋⠉⠙⠛⢿⣿⣿⣿⣿⣿⣿<br>
+                    ⣿⣿⣿⣿⣿⠟⠁⠀⠀⢀⣀⣀⣀⣀⡀⠀⢆⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿<br>
+                    ⣿⣿⣿⣿⠃⠀⠀⠠⠊⠁⠀⠀⠀⠀⠈⠑⠪⡖⠒⠒⠒⠒⠒⠒⠶⠛⠿⣿⣿⣿<br>
+                    ⣿⣿⡿⡇⠀⠀⠀⠀⠀⠀⡠⢔⡢⠍⠉⠉⠩⠭⢑⣤⣔⠲⠤⠭⠭⠤⠴⢊⡻⣿<br>
+                    ⡿⠁⢀⠇⠀⠀⠀⣤⠭⠓⠊⣁⣤⠂⠠⢀⡈⠱⣶⣆⣠⣴⡖⠁⠂⣀⠈⢷⣮⣹<br>
+                    ⠁⠀⠀⠀⠀⠀⠀⠈⠉⢳⣿⣿⣿⡀⠀⠀⢀⣀⣿⡿⢿⣿⣇⣀⣥⣤⠤⢼⣿⣿<br>
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡟⠑⠚⢹⡟⠉⣑⠒⢺⡇⡀⠀⡹⠀⠀⣀⣴⣽⣿⣿<br>
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⣿⠒⠉⠀⠀⢠⠃⠈⠙⠻⣍⠙⢻⡻⣿⣿⣿<br>
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⣀⣘⡄⠀⠀⢸⡇⠀⠀⠀⠘⡇⠀⠀⠀⠘⡄⠀⢱⢸⣿⣿<br>
+                    ⠀⠀⠀⠀⠠⡀⠀⠾⣟⣻⣛⠷⣶⣼⣥⣀⣀⣀⠀⢧⠀⠀⠀⠠⣧⣀⣼⣴⢽⣿<br>
+                    ⠀⠀⠀⠀⠀⠈⠉⠁⠀⠹⡙⠛⠷⣿⣭⣯⣭⣟⣛⣿⣿⣿⣛⣛⣿⣭⣭⣾⣿⣿<br>
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⡀⠀⠀⣇⠀⠉⠉⠉⡏⠉⠙⠛⠛⡿⣻⣯⣷⣿⣿⣿<br>
+                    ⣶⣤⣀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⢸⠀⠀⠀⡸⠁⣠⣴⣶⣿⣿⣿⣿⣿⣿⣿⣿<br>
+                    ⣿⣿⣿⣿⣶⣶⣦⣤⣤⣤⣷⣤⣄⣈⣆⣤⣤⣧⣶⣷⣿⡻⣿⣿⣿⣿⣿⣿⣿⣿<br>
+                    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣾⢿⣿⣿⣿⣿⣿⣿
+                `
+
+                h1.innerHTML = `${attackDamage}만큼 데미지를 주었습니다!<br>현재 HP ${monsterHP}<br>몬스터가 아파서 울부짖습니다!`
+            }
+            else {
+                h1.innerHTML = `${attackDamage}만큼 데미지를 주었습니다!<br>현재 HP ${monsterHP}`
+            }
+        })
+        
+
+        
+
+    </script>
+</body>
+</html>

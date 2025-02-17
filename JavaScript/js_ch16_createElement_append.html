@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>createElement & append</title>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+        const div = document.getElementById("container");
+
+        const box = document.createElement("div");
+        box.style.color = "lightsalmon"
+        box.style.width = "200px"
+        box.style.height = "200px"
+        box.style.backgroundColor = "rgba(255, 160, 122, 0.5)"
+        box.textContent = "zzzzzzzz"
+
+        div.append(box)
+    </script>
+</body>
+</html>
