@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 양식</title>
+    <style>
+        * { box-sizing: border-box;}
+        html {
+            margin: 0;
+            padding: 0;
+            background-color: rgba(255, 160, 122, 0.3);
+        }
+        #container {
+            width: 640px;
+            margin: 60px auto 0; /* 좌우 여백을 동일하게 */
+            background-color: rgba(255, 160, 122, 0.3);
+            border-radius: 15px;
+        }
+        form {
+            padding: 20px;
+            border: 1px solid rgba(255, 160, 122, 0.3);
+            border-radius: 15px;
+        }
+        .table {
+            width: 80%;
+            margin: auto;
+        }
+        th {
+            width: 40%;
+            text-align: right;
+            padding: 5px;
+        }
+        td {
+            width: 60%;
+            text-align: left;
+            padding-left:  5px;
+        }
+        input, select, textarea {
+            width: 240px;
+            padding: 5px;
+        }
+        input[type="radio"] {
+            width: initial;
+        }
+        input[type="submit"], input[type="reset"] {
+            width: 80px;
+        }
+        textarea {
+            resize: none;
+            width: 240px;
+            min-height: 100px;
+        }
+        .buttons {
+            margin: 10px 0 0 0;
+            text-align: center;
+        }
+        .innerBox {
+            padding: 60px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <form id="form" action="#">
+            <table class="table">
+                <tr>
+                    <th>아이디</th>
+                    <td>
+                        <input name="id" placeholder="아이디" autocomplete="off" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>비밀번호</th>
+                    <td>
+                        <input type="password" name="pw1" placeholder="비밀번호" autocomplete="off" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>비밀번호</th>
+                    <td>
+                        <input type="password" name="pw2" placeholder="비밀번호" autocomplete="off" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>이름</th>
+                    <td>
+                        <input name="name" placeholder="사용자 이름" autocomplete="off" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>전화번호</th>
+                    <td>
+                        <input name="phone" placeholder="휴대전화 번호" autocomplete="off" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>원하는 직무</th>
+                    <td>
+                        <select name="position">
+                            <option value="developer">개발자</option>
+                            <option value="designer">웹디자이너</option>
+                            <option value="manager">기획자</option>
+                            <option value="undetermind" selected>미정</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>성별</th>
+                    <td>
+                        <label><input type="radio" name="gender" value="male" checked>남자</label>
+                        <label><input type="radio" name="gender" value="female">여자</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>이메일</th>
+                    <td>
+                        <input title="정확한 메일 주소를 작성해주세요" type="email" name="email" placeholder="이메일" autocomplete="off" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>자기소개</th>
+                    <td>
+                        <textarea name="intro"></textarea>
+                    </td>
+                </tr>
+            </table>
+            <div class="buttons">
+                <input type="submit" value="가입" class="btn" title="가입">
+                <input type="reset" value="리셋" class="btn" title="처음으로">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        console.log("start")
+
+        const form = document.getElementById("form")
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault()  // 기존 기능 차단
+
+            let userId = e.target.id.value
+            let userPw1 = e.target.pw1.value
+            let userPw2 = e.target.pw2.value
+            let userName = e.target.name.value
+            let userPhone = e.target.phone.value
+            let userPosition = e.target.position.value
+            let userGender = e.target.gender.value
+            let userEmail = e.target.email.value
+            let userIntro = e.target.intro.value
+
+            if(userId.length < 6) {
+                alert("아이디가 너무 짧습니다. 6자 이상 입력주세요")
+                return
+            }
+            if(userPw1 !== userPw2) {
+                alert("비밀번호가 일치하지 않습니다.")
+                return
+            }
+
+            document.querySelector("#container").innerHTML = `
+            <div class="innerBox">
+                <h1>${userId}님 환영합니다!</h1>
+                <p>회원가입시 입력하신 정보는 다음과 같습니다!
+                <p>아이디 : ${userId}</p>
+                <p>이름 : ${userName}</p>
+                <p>전화번호 : ${userPhone}</p>
+                <p>원하는 직무 : ${userPosition}</p>
+            </div>
+            `
+
+        })
+    </script>
+</body>
+</html>
