@@ -25,6 +25,9 @@ source "/Users/taejin/Desktop/learning/OZCodingSchool/RDBMS/#16Ch3336/DB/.venv/b
 pip3 install webdriver-manager
 pip3 install selenium
 
+# 삭제
+pip3 uninstall selenium
+
 # 강제고 패키지 재설치
 pip install <패키지명> --no-cache-dir --force-reinstall
 
