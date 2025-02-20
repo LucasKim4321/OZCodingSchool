@@ -10,7 +10,7 @@ Scale Up, Migration, Failover 등의 데이터 베이스 관리자가 해야할 
 *시스템 대체 작동 Failover
 주 시스템의 작동이 정지되면 예비 장치가 자동으로 대체 작동함
 
-*다중-AZ (Multi-AZ)
+*다중-AZ (Multi-AZ)(Multi-Availability-Zone)
 장애를 예방하기 위해 StandbyDB로 DB 이중화 작업을 하는 것
 MasterDB의 데이터는 StandbyDB로 동기식 복제가 이루어짐
 Master DB에 장애가 발생하면 Failover(시스템 대체 작업)를 진행해 StandbyDB가 MasterDB를 대체하게 됨.
