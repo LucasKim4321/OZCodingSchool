@@ -23,6 +23,11 @@ source "/Users/taejin/Desktop/learning/OZCodingSchool/RDBMS/#16Ch3336/DB/.venv/b
 가상환경 비활성화
 deactivate
 
+vscode에서 시작부터 가상환경 충돌시 가상환경 자동 활성화 설정 off
+컨트롤 시프트 p
+Preferences: Open Settings (UI)
+"python.terminal.activateEnvironment": false
+
 # 가상환경에서 모듈 설치
 # 가상환경을 활성화한 상태에서 설치시 가상환경에 설치됨
 pip3 install webdriver-manager

@@ -1,0 +1,97 @@
+Anaconda 설치
+
+다운로드
+https://www.anaconda.com/download
+
+터미널 실행
+
+아나콘다 설치 확인
+conda --version
+
+아나콘다 기본 가상환경 활성화
+conda activate base
+
+아나콘다 가상환경 비활성화
+conda deactivate
+
+아나콘다 기본 가상환경 자동활성화 비활성화
+conda config --set auto_activate_base false
+
+vscode에서 시작부터 가상환경 충돌시 가상환경 자동 활성화 설정 off
+컨트롤 시프트 p
+Preferences: Open Settings (UI)
+"python.terminal.activateEnvironment": false
+
+------------------------
+ ## 아나콘다 명령어 정리 ##
+------------------------
+ 
+아나콘다 버전 확인
+conda --version
+
+아나콘다 업데이트
+conda update conda
+
+아나콘다 가상환경 생성
+conda create --name 가상환경이름 설치할패키지
+conda create -n 가상환경이름 python=3.7
+
+생성한 가상환경 리스트 확인
+conda info --envs
+
+가상환경 활성화
+conda activate 가상환경이름
+
+가상환경 비활설화
+conda deactivate
+
+가상환경 정보
+conda info
+
+패키지 설치
+conda install 패키지이름
+
+설치된 패키지 리스트 확인
+conda list
+
+가상환경 삭제
+conda remove --name 가상환경이름 --all
+conda remove -n 가상환경이름 --all
+
+패키지만 삭제
+conda remove -n 가상환경이름 패키지이름
+
+캐시 삭제
+conda clean -all
+추가 설치
+
+opencv 최신버전 설치
+conda install -c conda-forge opencv
+
+matplotlib 설치
+conda install matplotlib
+conda install -c conda-forge matplotlib
+
+tensorflow
+conda install tensorflow
+
+conda install -c conda-forge scikit-image
+
+sklearn
+conda install sklearn
+pytorch 설치
+
+cuda 버전 확인
+nvidia-smi
+
+설치가능한 CUDA버전
+https://pytorch.kr/
+
+pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+주피터 노트북
+
+jupyter notebook 설치
+conda install jupyter notebook
+The kernel appears to have died. It will restart automatically
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'

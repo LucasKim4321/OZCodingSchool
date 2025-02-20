@@ -1,0 +1,174 @@
+<!DOCTYPE html><!-- 이 문서의 첫 번째 줄에 위치하는 DOCTYPE 선언은 HTML5를 사용하고 있음을 명시합니다. -->
+<html lang="ko">
+<head>
+    <!-- 메타 태그는 문서의 메타데이터를 정의합니다. 예를 들어, 문자의 인코딩 방식과 뷰포트를 설정합니다. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>다양한 HTML 요소들</title>
+    <!-- 링크 태그를 사용하여 외부 스타일 시트를 연결할 수 있습니다. -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        img { max-width: 100%; height: auto; }
+        form {display: flex; flex-direction: column;}
+        #main_title { color: red; }
+        .title { color: blue; }
+    </style>
+</head>
+<body>
+    <!-- 범용성 높은 div 요소: 가장 기본적인 박스 형태 -->
+    <div>이것은 div 요소로 만든 박스입니다.</div>
+    <br>
+    <!-- 제목을 표기할 땐 h1~h6 -->
+    <h1 id="main_title">메인 제목입니다</h1>
+    <h2>부 제목입니다</h2>
+    <h3 class="title">소제목 1</h3>
+    <h4 class="title">소제목 2</h4>
+    <h5 class="title">소제목 3</h5>
+    <h6 class="title">소제목 4</h6>
+    
+    <br>
+    <br>
+    <!-- 순서와 상관 없는 리스트 (unordered list) -->
+    <ul> 
+        <li>사과</li>
+        <li>바나나</li>
+        <li>체리</li>
+        <li>딸기</li>
+    </ul>
+    <!-- 순서가 필요한 리스트 (ordered list) -->
+    <ol>
+        <li>첫 번째 단계</li>
+        <li>두 번째 단계</li>
+        <li>세 번째 단계</li>
+        <li>네 번째 단계</li>
+    </ol>
+    <br>
+    <br>
+    <!-- 이미지 삽입은 img-->
+    <img src="IMG_7434.jpg" alt="예제 이미지" width="200px">
+    <br>
+    <br>
+    <!-- 입력을 받을 때는 input -->
+    <form>
+        <fieldset>
+            <!-- 범례:legend -->
+            <legend>기본 텍스트</legend>
+            <input type="text" placeholder="텍스트를 입력하세요">
+            <br>
+        </fieldset>
+        <fieldset>
+            <legend>라디오 버튼: 여러 옵션 중 하나만 선택 가능</legend>
+            <!-- radio버튼: 같은 name을 가진 요소 중 하나만 선택 가능 -->
+            <label><input type="radio" name="radio">옵션 1</label>
+            <label><input type="radio" name="radio">옵션 2</label>
+            <label><input type="radio" name="radio">옵션 3</label>
+            <label><input type="radio" name="radio">옵션 4</label>
+        </fieldset>
+        <br>
+        <fieldset>
+            <legend>체크박스: 여러 개 선택 가능</legend>
+            <!-- 체크박스: 여러 개 선택 가능 -->
+            <label><input type="checkbox" name="interest" value="technology"> 기술</label>
+            <label><input type="checkbox" name="interest" value="sports"> 스포츠</label>
+            <label><input type="checkbox" name="interest" value="music"> 음악</label>
+            <label><input type="checkbox" name="interest" value="travel"> 여행</label>
+            <label><input type="checkbox" name="interest" value="books"> 독서</label>
+            <label><input type="checkbox" name="interest" value="art"> 예술</label>
+        </fieldset>
+        <br>
+        <fieldset>
+            <legend>숫자, 비밀번호, 이메일</legend>
+            <!-- 숫자 -->
+            <input min="0" max="5" type="number" placeholder="숫자 입력">
+            <br>
+            <!-- 비밀번호 -->
+            <input type="password" placeholder="비밀번호">
+            <br>
+            <!-- 이메일 -->
+            <input type="email" placeholder="exam@ple.com">
+        </fieldset>
+        <fieldset>
+            <legend>그 외 다양한 input</legend>
+            <input type="time">
+            <input type="date">
+            <input type="color">
+            <input type="file" multiple>
+            <input type="file" accept="image/*">
+        </fieldset>
+        <button type="submit"> submit 버튼</button>
+        <button type="reset"> reset 버튼</button>
+        <button type="button"> 그냥 버튼</button>
+    </form>
+    <br>
+    <br>
+    <!-- 하이퍼링크는 a 요소 -->
+    <a href="https://developer.mozilla.org/ko/docs/Web/HTML/Element/a">mdn a 요소 </a>
+    <br>
+    <br>
+    <!-- 대표적인 inline 요소 span -->
+    <div>이 텍스트는 div 요소입니다.</div>
+    <div>div 요소는 대표적인 block 요소로 한 줄 전체를 차지합니다.</div>
+    <br>
+    <span>이 텍스트는 span 요소입니다.</span>
+    <span>span 요소는 inline 속성을 가지고 있기 때문에 한 줄에 여러 개가 위치할 수 있습니다.</span>
+    <br>
+    <!-- 문단을 표현할 때는 p -->
+    <p>이것은 문단입니다. 여러 문장으로 구성된 텍스트를 담을 때 사용합니다. 웹 페이지에서의 내용 전달에 주로 사용됩니다. 상하 margin이 있는 것이 특징입니다.</p>
+    <p>p요소는 자동으로 여백이 주어져서 문단을 구분합니다.</p>
+
+
+    <!-- HTML5에서 새롭게 추가된 의미론적(semantic) 요소들입니다.-->
+    <header>
+        <h3>헤더</h3>
+        <p>헤더는 페이지의 머리말을 정의합니다.</p>
+    </header>
+
+    <nav>
+        <h3>내비게이션</h3>
+        <p>내비게이션은 다른 페이지로 이동하는 링크를 포함합니다.</p>
+        <a href="#">홈</a>
+        <a href="#">소개</a>
+        <a href="#">연락처</a>
+    </nav>
+
+    <article>
+        <p>아티클은 독립적으로 구분될 수 있는 콘텐츠를 담습니다.</p>
+    </article>
+
+    <section>
+        <p>섹션은 관련된 콘텐츠를 그룹화합니다.</p>
+    </section>
+
+    <aside>
+        <p>어사이드는 페이지의 부가 정보를 담습니다.</p>
+    </aside>
+
+    <footer>
+        <p>푸터는 페이지의 바닥글을 정의합니다.</p>
+    </footer>
+    <!-- 오디오 요소는 오디오 파일을 삽입합니다. -->
+    <audio controls>
+        <source src="../src/sample.mp3" type="audio/mpeg">
+        <p>브라우저가 오디오를 지원하지 않습니다. <a href="sample-audio.mp3">여기</a>를 클릭하여 오디오를 다운로드하세요.</p>
+    </audio>
+    <br>
+    <!-- 비디오 요소는 비디오 파일을 삽입합니다. -->
+    <video controls width="250">
+        <source src="../src/IMG_9434.mov" type="video/mp4">
+        <p>브라우저가 비디오를 지원하지 않습니다. <a href="sample-video.mp4">여기</a>를 클릭하여 비디오를 다운로드하세요.</p>
+    </video>
+    <br>
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/HfaIcB4Ogxk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+</body>
+</html>
