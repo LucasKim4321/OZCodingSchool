@@ -24,6 +24,11 @@
                   </tr>
                 </thead>
                 <tbody>
+                    <!-- enumerate()를 사용하려 했으나 jinja템플릿에서 사용불가능 -->
+                    <!-- 대체 방법 1. 서버에서 enumerate()로 감싼 후 데이터를 넘겨준다. -->
+                    <!-- 대체 방법 2. loop.index사용. 인덱스1번부터 시작. jinja의 for문에는 loop라는 특별한 변수가 존재. -->
+                    <!-- loop.index0 하면 인덱스0번부터 시작 -->
+                    <!-- loop변수:  loop.length, loop.revindex0, loop.first 등 다양한 변수 사용 가능-->
                     {% if users %}
                         {% for user in users %}
                         <tr>
