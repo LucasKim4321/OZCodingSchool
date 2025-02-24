@@ -1,7 +1,13 @@
-import sys
+# print(dir(float()))
 
-n = int(sys.stdin.readline().strip())
-numbers = list(map(int, sys.stdin.readline().strip().split()))
-numbers.sort()
-print(numbers[0],numbers[-1])
+a = 0
+if a == 0:
+    b = 1
 
+print(b)
+
+for i in range(5):
+    c=i
+    print(c)
+
+print("result",c)
