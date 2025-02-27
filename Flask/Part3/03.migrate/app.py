@@ -13,7 +13,8 @@ from flask_migrate import Migrate # 데이터베이스 마이그레이션 관리
 # 모델에 변경사항이 있을때마다 새로운 마이그레이션 생성해야함
 # flask db migrate  마이그레이션 생성
 # flask db migrate -m "message"
-# flask db upgrate  생성된 마이그레이션 적용
+# flask db upgrade  생성된 마이그레이션 적용. 업그레이드
+# flask db downgrade 이전 마이그레이션 상태로. 다운그레이드
 
 
 app = Flask(__name__)

@@ -32,7 +32,7 @@ def login():
 
 @app.route('/secret')
 def secret():
-    if 'username' in session:
+    if 'username' in session:  # 로그인 했으면
         return render_template("secret.html")
     else:
         return redirect("/")
