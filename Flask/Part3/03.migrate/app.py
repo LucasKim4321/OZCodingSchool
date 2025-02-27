@@ -2,6 +2,19 @@ from flask import Flask
 from flask_smorest import Api
 from db import db  # db = SQLAlchemy()
 from models import User, Board  # models를 불러와야 테이블이 생성됨
+from flask_migrate import Migrate # 데이터베이스 마이그레이션 관리 모듈
+
+# flask_migrate
+# Alembic을 통해 SQLAlchemy 모델의 변경사항을 추적
+# 데이터베이스 마이그레이션을 관리하는 모듈.
+# pip3 install Flask-Migrate 설치.
+# 터미널에서 프로젝트 경로에 flask db migrate 실행
+
+# 모델에 변경사항이 있을때마다 새로운 마이그레이션 생성해야함
+# flask db migrate  마이그레이션 생성
+# flask db migrate -m "message"
+# flask db upgrate  생성된 마이그레이션 적용
+
 
 app = Flask(__name__)
 
@@ -9,6 +22,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/oz'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 객체가 바뀔때마다 추적할지 설정
 
 db.init_app(app)
+migrate = Migrate(app, db)  # Flask애플리케이션 및 SQLAlchemy 데이터베이스를 Migrate객체에 담음.
 
 # blueprint 설정
 # API 및 OpenAPI(Swagger) 관련 설정

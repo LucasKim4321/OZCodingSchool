@@ -60,7 +60,7 @@ find / -name 폴더명 -type d
 find ./ -name 폴더명 -type d
  
 
-2. 파일 찾기(ls)
+2. 파일 찾기(ls)(grep 사용)
 
 1) ls로 찾기
 ls -Rhal | grep '.*[.]html'  <---- 확장자가 html인것 찾음
@@ -77,8 +77,21 @@ find 경로(찾을범위) 경로옵션 ,옵션조건( ex 찾을값)
 옵션조건:  -print(기본값) -exec(외부 명령실행) 
 find /etc -name "*.conf"   <--  /etc 디렉토리 하위에 확장명이 .conf인 파일검색 
 
+grep 명령어: 특정 문자열 찾기
+grep은 리눅스에서 특정 패턴(문자열)을 검색하는 명령어.
+파일 내에서 원하는 텍스트를 찾거나, 다른 명령어의 출력에서 특정 문자열을 필터링할 때 사용.
+단독으로도 사용 가능
+
+grep [옵션] "찾을_문자열" 파일명
+
+
 # hello world 출력
 echo "hello world"
+
+------------------
+    date
+------------------
+시스템 시간을 확인하고 설정할 수 있는 명령어
 
 # date 기본 시간설정 UTC를 KST(한국표준시간)으로 변경
 서울 시간대가 있는지 확인
@@ -86,9 +99,9 @@ ls /usr/share/zoneinfo/Asia
 시간대 변경
 sudo ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 변경 후 date 명령어 사용시 한국시간대가 나옴
-date 
 
 표준시간대로 표시
+date 
 
 짧은 형태의 옵션 short form
 date -u
@@ -126,7 +139,13 @@ Linux 명령은 commandName -options input 구조를 따릅니다.
 일부 명령에는 긴 형식과 짧은 형식 옵션이 있을 수 있습니다. --universal  -u
 짧은 형식의 옵션에는 대시 1개(-)가 있고  긴 형식 옵션에는 대시 2개(--)가 있습니다.
 
-메뉴얼 보기
+
+------------------
+    메뉴얼 보기
+------------------
+
+man 명령어 이름
+
 man 1 which
 q 누르면 나가기
 
@@ -171,6 +190,8 @@ Command Arguments  ->                        -->  Standard Error(2)
 --> Standard Data Stream
 -> Not a Data Stream
 
+cat 파일명
+텍스트 파일을 화면에 출력
 
 새로운 파일을 만들어 내용을 작성함. 중복된 파일이 있으면 덮어씌움
 cat 1> 제목.확장자
@@ -264,8 +285,6 @@ alias들은 적용 후 터미널을 다시 시작해야 적용이 됩니다.
 현재 작업 폴더 경로
 pwd
 
-
-
 기본 폴더 경로
 cd /
 
@@ -279,8 +298,19 @@ ls
 ls -F
 
 자세한 목록
-ls -l
+ls -l     권한 확인도 가능
 ls -lh
+
+이런식으로 나옴
+drwxr-xr-x  2 user group  4096 Feb 26 10:00 Documents
+
+drwxr-xr-x  	파일 유형 + 권한 (d = 디렉토리, - = 일반 파일)
+2	            하드 링크 개수
+user            파일 소유자(Owner)
+group           파일 그룹(Group)
+4096            파일 크기 (바이트 단위, 폴더는 기본 4096B)
+Feb 26 10:00    파일 수정 날짜 및 시간
+Documents       파일/폴더 이름
 
 rwx  r read w write x execute
 
@@ -463,3 +493,77 @@ find 파일명
 locate는 데이터베이스를 기반으로 찾기 때문에 find 보다 빠름
 find 명령어가 검색 옵션이 더욱 다양하다
 
+
+-----------------
+    모니터링
+-----------------
+
+시스템 자원 모니터링 실시간 확인
+top
+
+특정한 프로그램의 정보만 한번만 갱신해서 출력
+top -l 1 | grep PhysMem
+
+디스크 사용량 분석 (모든 파일의 정보가 다 나옴)
+du
+du -h  가독성 향상
+
+메모리 사용량 확인
+free  기본단위 KB
+free -m  단위 MB
+free -g  단위 GB
+
+네트워크 인터페이스 설정 확인
+ifconfig
+
+-----------------
+    권한 설정
+-----------------
+
+특정 파일에 대한 권한 설정
+chmod 옵션 파일명
+
+특정 파일에 실행 권한만 추가
+chmod +x filename
+
+
+여러 옵션을 통해 권한 설정이 가능하다
+
+숫자 방식으로 권한 설정
+r--	4	읽기 (Read)
+-w-	2	쓰기 (Write)
+--x	1	실행 (Execute)
+rw-	6 (4+2)	읽기 + 쓰기
+r-x	5 (4+1)	읽기 + 실행
+rwx	7 (4+2+1)	읽기 + 쓰기 + 실행
+
+chmod 644 file.txt  # 소유자 읽기+쓰기, 그룹과 다른 사용자 읽기만 가능
+chmod 755 script.sh # 소유자는 모든 권한, 그룹과 다른 사용자는 읽기+실행
+chmod 777 myfile    # 모든 사용자에게 모든 권한 부여 (주의!)
+
+기호 방식
+u (user, 소유자)
+g (group, 그룹)
+o (others, 다른 사용자)
+a (all, 모든 사용자)
++ (권한 추가)
+- (권한 제거)
+= (지정된 권한만 설정)
+
+chmod u+x script.sh   # 소유자에게 실행 권한 추가
+chmod g-w file.txt    # 그룹의 쓰기 권한 제거
+chmod o=rx file.txt   # 다른 사용자는 읽기 및 실행만 가능하게 설정
+chmod a+r myfile      # 모든 사용자에게 읽기 권한 부여
+
+
+-----------------
+    압축 해제(추출)
+-----------------
+
+압축 해제 방법은 압축 파일마다 다름.
+
+.tar 압축해제
+tar -xvf 파일명
+
+.zip 압축해제
+unzip 파일명

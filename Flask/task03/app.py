@@ -1,11 +1,14 @@
 from flask import Flask
 from flask_smorest import Api
 from db import db  # db = SQLAlchemy()
-from models import User, Board  # models를 불러와야 테이블이 생성됨
+from models import User, Post
+# from models.users import User
+# from models.posts import Post
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/oz'  # DB유형+DB드라이버://아이디:비밀번호@접속경로/DB명
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/oz_blog'  # DB유형+DB드라이버://아이디:비밀번호@접속경로/DB명
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # 객체가 바뀔때마다 추적할지 설정
 
 db.init_app(app)
@@ -23,10 +26,11 @@ app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-
 # Flask 애플리케이션에 API 확장을 적용
 api = Api(app)
 
-from routes.board import board_blp
-from routes.user import user_blp
+from routes import user_blp, post_blp
+# from routes.user import user_blp
+# from routes.post import post_blp
 
-api.register_blueprint(board_blp)
+api.register_blueprint(post_blp)
 api.register_blueprint(user_blp)
 
 from flask import render_template
