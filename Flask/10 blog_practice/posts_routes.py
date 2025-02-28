@@ -6,12 +6,13 @@ from flask_smorest import Blueprint, abort
 def create_posts_blueprint(mysql):
     posts_blp = Blueprint("posts", __name__, description="posts api", url_prefix="/posts")
 
+    # 게시글 조회, 등록
     @posts_blp.route('/', methods=['GET','POST'])
     def posts():
 
         cursor = mysql.connection.cursor()
 
-        # 게시글 조회
+        # 전체 게시글 조회
         if request.method == 'GET':
             sql = "SELECT * FROM posts"
             cursor.execute(sql)
@@ -45,10 +46,8 @@ def create_posts_blueprint(mysql):
 
             return jsonify({'msg':'successfully created post data', 'title':title, 'content':content}),201
             # return jsonify({'msg':'successfully created post data'}),201
-    
-    # 1번 게시글만 조회하고 싶은 경우
-    # 게시글 수정 및 삭제
 
+    # 특정 게시물 조회, 수정, 삭제
     @posts_blp.route('/<int:id>', methods=['GET', 'PUT', 'DELETE'])
     def post(id):
         cursor = mysql.connection.cursor()
@@ -60,6 +59,7 @@ def create_posts_blueprint(mysql):
         if not post:
             abort(404, "Not found post")
 
+        # 특정 게시글 조회
         if request.method == 'GET':
             # sql = f'SELECT * FROM posts WHERE id = {id}'
             # cursor.execute(sql)
@@ -71,7 +71,7 @@ def create_posts_blueprint(mysql):
 
             return ({'id':post[0], 'title':post[1], 'content':post[2]})
         
-
+        # 게시글 수정
         elif request.method == 'PUT':
             # data = request.json
             # title = data['title']
@@ -86,7 +86,7 @@ def create_posts_blueprint(mysql):
             sql = f"UPDATE posts SET title='{title}', content='{content}' WHERE id={id}"
             
             # -- sql인젝션 예시.
-            # 입력폼에서 이런 데이터를 받으면 의도와 다르게 실행됨
+            # 입력폼에서 이런 데이터를 받으면 의도와 다르게 실행될 수도 있음
             # -- title = "Hacked', 'Malicious Code'); DROP TABLE posts; --"
             # -- content = "Safe Content"
             # INSERT INTO posts (title, content) VALUES ('Hacked', 'Malicious Code'); DROP TABLE posts; --', 'Safe Content');
@@ -96,6 +96,7 @@ def create_posts_blueprint(mysql):
 
             return jsonify({'msg':'Successfully updated title & content'})
 
+        # 게시글 삭제
         elif request.method == 'DELETE':
 
             sql = f'DELETE FROM posts WHERE id={id}'
