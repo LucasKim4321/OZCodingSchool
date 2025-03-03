@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask API 테스트</title>
+</head>
+<body>
+    <h1>Flask API 테스트</h1>
+    
+    <h2>사용자 목록</h2>
+    <button onclick="getUsers()">사용자 목록 가져오기</button>
+    <ul id="userList"></ul>
+
+    <h2>새 사용자 추가</h2>
+    <input type="text" id="newUsername" placeholder="사용자 이름">
+    <button onclick="addUser()">추가</button>
+    
+    <h2>특정 사용자의 게시글 조회</h2>
+    <input type="text" id="usernameQuery" placeholder="사용자 이름">
+    <button onclick="getUserPosts()">게시글 가져오기</button>
+    <ul id="postList"></ul>
+
+    <script>
+        function getUsers() {
+            fetch('/users')
+                .then(response => response.json())
+                .then(data => {
+                    let userList = document.getElementById("userList");
+                    userList.innerHTML = "";
+                    data.users.forEach(user => {
+                        let li = document.createElement("li");
+                        li.textContent = user.username;
+                        userList.appendChild(li);
+                    });
+                });
+        }
+
+        function addUser() {
+            let username = document.getElementById("newUsername").value;
+            fetch('/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("사용자가 추가되었습니다: " + data.username);
+                getUsers(); // 목록 갱신
+            });
+        }
+
+        function getUserPosts() {
+            let username = document.getElementById("usernameQuery").value;
+            fetch(`/users/post/${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    let postList = document.getElementById("postList");
+                    postList.innerHTML = "";
+                    if (data.posts) {
+                        data.posts.forEach(post => {
+                            let li = document.createElement("li");
+                            li.textContent = `${post.title} (Likes: ${post.likes})`;
+                            postList.appendChild(li);
+                        });
+                    } else {
+                        postList.innerHTML = "사용자를 찾을 수 없습니다.";
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
