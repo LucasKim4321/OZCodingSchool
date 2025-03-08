@@ -8,5 +8,18 @@ Languages &Frameworks
 Django
 Enable Django Support
 Django project root 프로젝트 폴더 선택
-Settings    mysite/mysite/settings.py
-Manage script  mysite/manage.py
+Settings    config/settings.py
+Manage script  manage.py
+
+
+파이참 인터프리터 설정
+
+setting 
+project
+interpreter
+add interpreter
+add local interpreter
+virtualenv
+select existing
+파일 찾기
+/Users/taejin/.pyenv/versions/가상환경이름/bin/python3  선택

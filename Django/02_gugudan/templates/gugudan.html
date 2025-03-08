@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>{{ dan }} 단</h1>
+{#    1번째 방법#}
+    {% for result in results %}
+        <h1>{{ dan }} * {{ forloop.counter }} = {{ result }}</h1>
+    {% endfor %}
+
+{#    2번째 방법#}
+{#    {% for i, result in results %}#}
+{#        <h1>{{ dan }} * {{ i }} = {{ result }}</h1>#}
+{#    {% endfor %}#}
+
+{#    3번째 방법#}
+{#    {% for i in range %}#}
+{#        widthratio num / 1 * i 를 의미 #}
+{#        <h1>{{ dan }} * {{ i }} = {% widthratio dan 1 i %}</h1>#}
+{#    {% endfor %}#}
+</body>
+</html>
