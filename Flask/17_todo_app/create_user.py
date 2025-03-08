@@ -9,3 +9,7 @@ with app.app_context():
     db.session.commit()
     user = User.query.filter_by(username='newuser').first()
     print(user)
+
+
+# 터미널에서 코드 실행
+# python3 입력하면 코드 입력 가능

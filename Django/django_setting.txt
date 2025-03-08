@@ -1,0 +1,12 @@
+pip3 install django
+
+django-admin startproject mysite   이렇게 하면 mysite/mysite/관련파일 이렇게 생성됨
+django-admin startproject config .   이렇게 하면 config/관련파일 이렇게 생성됨
+
+setting( 설정)
+Languages &Frameworks
+Django
+Enable Django Support
+Django project root 프로젝트 폴더 선택
+Settings    mysite/mysite/settings.py
+Manage script  mysite/manage.py

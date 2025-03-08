@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>test books.html</h1>
+    {% for book in books %}
+        {% if forloop.counter <= 3 %}
+            {{ forloop.counter }}. <a href="/book2/{{ forloop.counter0 }}">{{ book.title }}</a><br>
+        {% endif %}
+    {% endfor %}
+
+{#    {% for num in '0123456789'|make_list %}#}
+{#        <h1>number {{ num }}</h1>#}
+{#    {% endfor %}#}
+
+{#    {% for num in '0123456789' %}#}
+{#        <h1>number {{ num }}</h1>#}
+{#    {% endfor %}#}
+
+    {% for num in range %}
+        <h1>number {{ num }}</h1>
+    {% endfor %}
+</body>
+</html>

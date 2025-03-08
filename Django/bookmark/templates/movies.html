@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>test, test movies.html</h1>
+    {% for movie in movie_list %}
+        {% if forloop.counter <= 3 %}
+            {{ forloop.counter | add:-5 | add:5}}위: <a href="/movie2/{{ forloop.counter0 }}">{{ movie.title }}</a><br>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>

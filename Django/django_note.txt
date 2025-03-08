@@ -1,0 +1,81 @@
+Django (장고)
+
+1. ORM(Object relational Mapping) -> DB구조와 쿼리를 할 수 있는 기능
+2. Authentication & Authorization -> 인증 허가(로그인 관련 기능)
+3. Admin Interface -> 관리자 인터페이스 자동 생성 지원
+4. internationalization -> 국제화, 번역 기능
+5. URL Routing -> URL을 이용한 페이지 처리
+6. Template Engine
+
+MVT 구조 (MVC구조 이전의 구조)
+
+Model : DB관련 기능 수행
+View : 실질적인 메인 알고리즘
+Template : 유저들에게 보여주는 화면단
+
+장점
+
+개발 속도가 빠름
+코드 재사용 및 모듈화: 유연
+안전한 웹 애플리케이션 구축: 보안
+
+
+단점
+잘 쓰려면 숙련 및 개념 탑재 필요
+Django적인 개발 문법이 필요.
+익혀야하는 개념들이 조금 복잡함.
+
+쓰는 이유?
+Flask나 FastAPI는 여러개 패키지를 가져다 써야하는데 반해, 모두 준비가 되어 있음
+개발 시간을 줄여주는 관리자 페이지의 마법!!
+개발 시간 및 코드를 줄여주는 모듈화의 마법?
+획일화된 구조로 누가 코드를 봐도 적응 시간이 빠름
+수 많은 패키지와 잘 구축된 커뮤니티
+
+브라우저 -> Web Server -> urls.py -> Views.py(처리) -> Model.py -> DB
+DB -> Model.py -> Views.py -> Template -> Views.py -> Web Server -> 브라우저
+
+--------------
+장고 시작하기
+--------------
+
+
+ # oz라는 이름으로 가상환경 생성
+ pyenv virtualenv 3.12.1 oz
+ 
+ # 가상환경 실행
+ pyenv local oz
+ 
+ # poetry 설치
+ brew install poetry
+ 
+ # poetry 초기화
+ # Package name은 oz_bookmark로 설정
+ # Author에만 n을 입력하고 나머지는 전부 Enter를 눌러 진행합니다.
+ poetry init
+
+이것만 하고 나머진 엔터로 스킵해도 무관
+Package name [bookmark]:  이름입력
+Version [0.1.0]:  엔터
+Description []:  엔터
+Author [LucasKim4321 <xowls0131@naver.com>, n to skip]:  n입력
+
+poetry add django 최신버전 설치
+poetry add django==5.0.3 원하는 버전 설치
+
+서버 실행
+python3 manage.py runserver
+
+
+urls.py 기본 구조
+
+def index(request):
+    return HttpResponse('<h1>hello2</h1>')
+
+urlpatterns = [
+    path('admin/', admin.site.urls), # 기본적으로 만들어져있는 admin페이지
+    path('url경로', 사용할 함수),
+    path('', index),
+    path('book_list/<int:num>/', book),
+    path('language/<str:lang>/', language),  # <str>을 쓰면 모든 문자열이 인식되서 모든 경로에 영향을 끼침
+]

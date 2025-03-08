@@ -1,0 +1,64 @@
+
+pyenv버전 확인
+pyenv --version
+
+python --version
+
+현재 경로 확인
+pwd
+
+최상이 폴더에선 잘안될 수 있기 때문에 하위폴더 생성
+
+새로운 폴더 생성
+mkdir 이름
+
+파이썬 설치 가능 버전 확인
+pyenv install --list
+
+pyenv에 파이썬 설치
+pyenv install 3.12.2
+
+pyenv-virtualenv에서 설치한 파이썬 버전 사용 가능
+
+가상환경 생성
+pyenv virtualenv 3.12.2 이름
+
+가상환경 목록 확인
+pyenv virtualenvs
+
+가상환경 삭제
+pyenv uninstall 이름
+
+가상환경 실행
+가상환경을 실행할 때는 가상환경을 적용하고 싶은 폴더에서 실행
+pyenv local 이름
+
+가상환경 실행후
+해당 폴더에 .python-version이라는 파일이 자동 생성되며
+이후 해당폴더에 들어가면 자동으로 가상환경이 활성화됨.
+
+.python-version 확인
+ls -la ~/경로/.python-version
+
+삭제
+rm ~/경로/.python-version
+
+가상환경 실행 확인 (실행중인 가상환경 * 표시)
+pyenv versions
+
+
+파이참 인터프리터 설정
+
+setting 
+interpreter
+add interpreter
+add local interpreter
+virtualenv
+select existing
+파일 찾기
+/Users/taejin/.pyenv/versions/가상환경이름/bin/python3  선택
+
+
+가상환경 활성화 하지않고 특정 가상환경에 설치된 패키지 확인
+pyenv exec ~/.pyenv/versions/가상환경이름/bin/python -m pip list
+
