@@ -23,3 +23,9 @@ virtualenv
 select existing
 파일 찾기
 /Users/taejin/.pyenv/versions/가상환경이름/bin/python3  선택
+
+config
+setting.py
+TEMPLATES = [{
+    'DIRS': [BASE_DIR/'templates'],
+}]

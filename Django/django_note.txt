@@ -39,7 +39,6 @@ DB -> Model.py -> Views.py -> Template -> Views.py -> Web Server -> 브라우저
 장고 시작하기
 --------------
 
-
  # oz라는 이름으로 가상환경 생성
  pyenv virtualenv 3.12.1 oz
  
@@ -79,3 +78,165 @@ urlpatterns = [
     path('book_list/<int:num>/', book),
     path('language/<str:lang>/', language),  # <str>을 쓰면 모든 문자열이 인식되서 모든 경로에 영향을 끼침
 ]
+
+앱(app) 생성
+python3 manage.py startapp 앱이름
+python3 manage.py startapp bookmark
+프로젝트 폴더에 설정한 이름의 앱폴더가 생성됨
+
+앱 하위 요소
+models.py DB관련된 테이블, 컬런 관리
+views.py 메인 알고리즘
+tests.py 테스트 코드를
+app.py 장고 앱 설정
+admin.py 관리자 기능 설정
+__init__.py 파이선 패키지 만드는 파일
+migrations models.py 변경사항 기록
+
+앱 등록
+INSTALLED_APPS = [
+    '앱이름',
+]
+
+DB Browser for SQLite 설치
+open database
+프로젝트 폴더/db.sqlite3
+
+# 앱에 필요한 테이블 admin, auth, contenttypes, sessions
+# 마이그레이션하면 오류 내용 없어짐.
+
+# 마이그레이션
+# 마이그레이션 파일을 바탕으로 DB에 적용(마이그레이션)하는 과정
+python3 manage.py migrate
+
+# 마이그레이션 생성
+# 마이그레이션 할 내용을 작성하는 과정
+python3 manage.py makemigrations
+migrations/migration.py 파일을 생성
+
+
+admin페이지 관리자 계정 생성
+python3 manage.py createsuperuser
+
+장고 페이지 언어 설정
+setting.py
+LANGUAGE_CODE = 'ko-KR' # 모든 장고 페이지가 한글로 바뀜
+
+
+-----------------------
+    Django ORM
+-----------------------
+
+objects => 모델 매니저/ 쿼리를 할 수 있게 해줌
+
+모델의 모든 데이터 가져오기  (SELECT * FROM 테이블명)
+Bookmark = 모델명.objects.all()  # 리스트
+
+조건을 만족하는 모델 하나의 데이터 가져오기 (SELECT * FROM 모델명 WHERE id=id LIMIT 1)
+Bookmark = 모델명.objects.get(id=id)  # 단일데이터
+Bookmark = 모델명.objects.get(pk=pk)  # 단일데이터
+
+조건을 만족하는 모든 모델 데이터 가져오기 (SELECT * FROM 모델명 WHERE id=id)
+Bookmark = 모델명.objects.filter(pk=pk)  # 리스트
+
+조건을 만족하는 모든 모델 데이터 가져오기 (SELECT * FROM 모델명 WHERE created_at >= now)
+gte : greater than or equal  lte : less than or equal
+not = datetime.now()
+Bookmark = 모델명.objects.filter(created_at__gte = now)  # 리스트
+
+SELECT * FROM bookmark WHERE name='네이버'
+Bookmark = 모델명.objects.filter(name = '네이버')
+
+SELECT * FROM bookmark WHERE name LIKE '%네이버%'
+Bookmark = 모델명.objects.filter(name__icontains = '네이버')
+
+# 첫번째 요소 반환
+모델명.objects.first()
+
+# 마지막 요소 반환
+모델명.objects.last()
+
+# 특정 글자로 시작하는 요소 반환
+모델명.objects.filter(name__startswith='네')
+
+# 특정 글자로 끝나는 요소 반환
+모델명.objects.filter(name__endswith='버')
+
+# 네이버 또는 다음을 포함하는 요소 반환
+모델명.objects.filter(name__in=['네이버','다음'])
+
+# AND 조건
+모델명.objects.filter(name='네이버', url__startswith='https://naver')
+
+# 데이터 추가 1
+모델명.objects.create(name='야후', url='https://yahoo.com')
+
+# 데이터 추가 2
+bookmark = Bookmark(name='야후2', url='https://yahoo.com')  # save()하기전엔 데이터베이스에 반영되지 않음
+bookmark.save()
+bookmark.id  # save()전엔 id값이 없었는데 save()후 id값이 생김
+
+마지막 출력의 첫번째가 b에 저장됨.
+b = _.first()
+
+# id값을 없앰
+b.id = None
+
+# save()하면 id값이 없어서 새로운 객체로 인식해서 새로 저장됨.
+b.save()
+
+# 특정 데이터 수정
+Bookmark.objects.filter(url__icontains='naver.com').update(name='naver')
+
+# 한번에 데이터를 생성해서 쿼리문을 사용하는 횟수를 줄여 부담을 줄임.
+# bookmarks = [Bookmark(name=f'테스트 구글 {i}', url='https://google.com') for i in range(10)]
+# Bookmark.objects.bulk_create(bookmarks)
+
+Bookmark.objects.bulk_update()
+
+
+가져오기 실패시 404오류 반환
+# 1
+try:
+    bookmark = Bookmark.objects.get(pk=pk)
+except:
+    raise Http404
+# 2
+bookmark = get_object_or_404(Bookmark, pk=pk)
+
+
+장고 파이선 셀 사용
+python3 manage.py shell
+
+나가기
+컨트롤 d 또는 exit()
+
+
+poetry 사용
+Poetry는 Python 패키지 및 가상환경을 효율적으로 관리할 수 있도록 도와주는 패키지 관리 도구입니다.
+기존의 pip + virtualenv 조합보다 더 강력하고 간편한 방식으로 Python 프로젝트를 관리할 수 있습니다.
+
+# poetry프로젝트 초기화
+# pyproject.toml파일이 생성됨. pyproject.toml은 프로젝트의 의존성(패키지), Python 버전, 프로젝트 메타데이터 등을 관리하는 설정 파일입니다.
+poetry init
+
+# ipython을 Poetry 환경에 추가합니다.
+# 대화형 Python 인터프리터로, python보다 향상된 기능을 제공합니다.
+poetry add ipython
+
+poetry add ipython 한 후 파이선 셀을 실행하면 환경이 달라짐
+python3 manage.py shell
+
+# Django 개발을 편리하게 만들어주는 확장 기능 모음입니다.
+# 추가적인 관리 명령어(manage.py shell_plus 등)와 도구를 제공합니다.
+poetry add django-extensions
+
+settings.py
+INSTALLED_APPS
+'django_extensions', 추가
+
+터미널에서 실행
+python3 manage.py shell_plus
+
+shell_plus에선 기본적으로 대부분이 ipmort되어 있음
+Bookmark.objects.all() 이렇게 바로 import 안하고 바로 사용 가능
