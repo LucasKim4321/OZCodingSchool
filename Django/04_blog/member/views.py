@@ -29,6 +29,7 @@ def sign_up(request):
     }
     return render(request, 'registration/signup.html', context)
 
+# 사용자 지정 로그인
 def login(request):
     form = AuthenticationForm(request, request.POST or None)
 

@@ -270,16 +270,9 @@ path('accounts/', include('django.contrib.auth.urls')), # include() 장고에 �
 html에 설정 {# 장고로 로그인 기능 사용시 토큰 필요함 #}
 {% csrf_token %} 
 
-
-# 장고 기본 로그인 기능 이용
-# LOGIN_URL = '/accounts/login/'
-# 따로 만든 로그인 기능 이용
-LOGIN_URL = '/login/'
-
+settings.py
 # login 성공시 url 설정
 LOGIN_REDIRECT_URL = '/'
-# logout 성공시 url 설정
-LOGOUT_REDIRECT_URL = '/'
 
 
 요구 패키지 목록 생성
@@ -291,3 +284,113 @@ pip install -r requirements.txt
 패키지 목록을 최신버전으로 설치
 pip install --upgrade -r requirements.txt
 
+
+-----------------------
+    관리자(admin)
+-----------------------
+
+특정 모델에 대한 admin기능 활성화
+@admin.register(모델명)
+class 클래스명(admin.ModelAdmin):
+    pass
+
+class Blog(models.Model):
+    CATEGORY_CHOICES = (
+        ('free','자유'),
+        ('travel','여행'),
+        ('cat','고양이'),
+        ('dog','개'),
+    )
+    category = models.CharField('카테고리', max_length=20, choices=CATEGORY_CHOICES)  # 첫번째 매개변수 verbose_name(관리자 페이지에서 표시될 이름)
+    title = models.CharField('제목', max_length=100)
+    content = models.TextField('본문')
+    created_at = models.DateTimeField('작성일자', auto_now_add=True)  # 생성시 자동으로 현재 시간 추가
+    updated_at = models.DateTimeField('수정일자', auto_now_add=True)
+
+    # 관리자 페이지에서 blog object 라고 표시되는 사항 변경
+    def __str__(self):
+        return f'[{self.get_category_display()}] {self.title[:10]}'
+
+    class Meta: # 필수는 아니고 admin 등에서 사용 (없어도 무관)
+        verbose_name = '블로그'  # verbose_name 따로 지정. 지정하지 않으면 Blog
+        verbose_name_plural = '블로그 목록'  # verbose_name_plural 따로 지정. 지정하지 않으면 Blogs
+
+
+-----------------------
+    로그인(login)
+-----------------------
+
+# 장고에 내장된 login기능 사용
+path('accounts/', include('django.contrib.auth.urls')), # include() 장고에 내장된 url사용
+
+<form method="POST">
+    {# 장고로 로그인 기능 사용시 토큰 필요함 #}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>로그인</button>
+</form>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>회원가입</button>
+</form>
+
+{% if request.user.is_authenticated %}
+<form action="{% url 'logout' %}" method="POST" style="display:inline">
+    {% csrf_token %}
+    <button>로그아웃</button>
+</form>
+{{ request.user.username }}
+{% else %}
+<a href="{% url 'signup' %}">회원가입</a>
+<a href="{% url 'login' %}">로그인</a>
+{% endif %}
+
+# settings.py
+# 장고 기본 로그인 기능 이용
+# LOGIN_URL = '/accounts/login/'
+# 따로 만든 로그인 기능 이용
+LOGIN_URL = '/login/'
+
+# login 성공시 url 설정
+LOGIN_REDIRECT_URL = '/'
+# logout 성공시 url 설정
+LOGOUT_REDIRECT_URL = '/'
+
+def sign_up(request):
+    # username = request.POST['username'] # POST말고 다른 요청이 들어오면 브라우저에서 오류남.
+    # username = request.POST.get('username') # 다른 요청이 들어오면 None이 발생하지만 오류가 나진 않음
+    # print('username', username)
+
+    # if request.method == 'POST':
+    #     form = UserCreationForm(request.POST) # POST요청 데이터를 여러 처리과정(validation등)을 거친 후 form에 넣음
+    #     if form.is_valid(): # 요구 조건 통과 여부 확인
+    #         form.save() # 요구 조건이 맞으면 저장
+    #         return redirect('/accounts/login/')
+    # else:
+    #     form = UserCreationForm() # 장고에서 기본적으로 제공해주는 회원가입 폼
+
+    # 이렇게 하면 조건문 안써도 됨.
+    form = UserCreationForm(request.POST or None)
+    if form.is_valid(): # 요구 조건 통과 여부 확인
+        form.save() # 요구 조건이 맞으면 저장
+        return redirect(settings.LOGIN_URL)
+
+    context = {
+        'form':form,
+    }
+    return render(request, 'registration/signup.html', context)
+
+# 사용자 지정 로그인
+def login(request):
+    form = AuthenticationForm(request, request.POST or None)
+
+    if form.is_valid(): # 요구 조건 통과 여부 확인
+        django_login(request, form.get_user())  # 로그인을 시도함
+        return redirect(reverse('blog_list'))  # html의 {% url 'blog_list' %} 와 동일
+
+    context = {
+        'form':form
+    }
+    return render(request, 'registration/login.html', context)
