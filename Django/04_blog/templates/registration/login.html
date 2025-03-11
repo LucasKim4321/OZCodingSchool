@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="POST">
+        {# 장고로 로그인 기능 사용시 토큰 필요함 #}
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>로그인</button>
+    </form>
+</body>
+</html>
