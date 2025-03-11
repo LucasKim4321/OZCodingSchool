@@ -270,6 +270,24 @@ path('accounts/', include('django.contrib.auth.urls')), # include() 장고에 �
 html에 설정 {# 장고로 로그인 기능 사용시 토큰 필요함 #}
 {% csrf_token %} 
 
+
+# 장고 기본 로그인 기능 이용
+# LOGIN_URL = '/accounts/login/'
+# 따로 만든 로그인 기능 이용
+LOGIN_URL = '/login/'
+
 # login 성공시 url 설정
-settings.py
 LOGIN_REDIRECT_URL = '/'
+# logout 성공시 url 설정
+LOGOUT_REDIRECT_URL = '/'
+
+
+요구 패키지 목록 생성
+pip3 freeze > requirements.txt
+
+패키지 목록 설치
+pip install -r requirements.txt
+
+패키지 목록을 최신버전으로 설치
+pip install --upgrade -r requirements.txt
+
