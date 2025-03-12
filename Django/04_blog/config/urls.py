@@ -27,6 +27,9 @@ urlpatterns = [
     path('', index),
     path('blog/', blog_views.blog_list, name = 'blog_list'),
     path('blog/<int:pk>/', blog_views.blog_detail, name = 'blog_detail'),
+    path('create/', blog_views.blog_create, name = 'blog_create'),
+    path('blog/<int:pk>/update/',blog_views.blog_update, name = 'blog_update'),
+    path('<int:pk>/delete/', blog_views.blog_delete, name = 'blog_delete'),
     path('accounts/', include('django.contrib.auth.urls')), # include() 장고에 내장된 url사용
     path('signup/', member_views.sign_up, name = 'signup'),
     path('login/', member_views.login, name = 'login'),

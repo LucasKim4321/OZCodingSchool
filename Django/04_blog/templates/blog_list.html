@@ -1,32 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <nav>
-        <div style="text-align: right">
-            {% if request.user.is_authenticated %}
-            <form action="{% url 'logout' %}" method="POST" style="display:inline">
-                {% csrf_token %}
-                <button>로그아웃</button>
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <h1>블로그 목록 {{ count }}</h1>
+        <p style="text-align: right">
+            <a href="{% url 'blog_create' %}">생성</a>
+        </p>
+        {% for blog in page_object %}
+            <p>
+                <a href="{% url 'blog_detail' blog.pk %}">
+                    ({{ blog.id }}) {{ blog.title }} <small>by {{ blog.author.username }}</small> - <small>{{ blog.created_at | date:"Y-m-d"}}</small>
+                </a>
+            </p>
+        {% endfor %}
+        <div style="text-align:center; margin: 20px 0;">
+            <form method="get">
+                <input name="q" type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+                <button>검색</button>
             </form>
-            {{ request.user.username }}
-            {% else %}
-            <a href="{% url 'signup' %}">회원가입</a>
-            <a href="{% url 'login' %}">로그인</a>
+        </div>
+        <div style="text-align:center;">
+            {% if page_object.has_previous %}  {# 이전 페이지 존재시 #}
+                <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; 첫번째</a>
+                <a href="?page={{ page_object.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">이전</a>
             {% endif %}
 
+            {# 총 페이지 중에 현재 몇 페이지인지 표시 #}
+            {# <span> Page {{ page_object.number }} of {{ page_object.paginator.num_pages }} </span> #}
+
+            {# 현재페이지 -2 > 1 이면 ... #}
+            {% if page_object.number|add:-2 > 1 %}
+                <a href="?page={{ page_object.number|add:-3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
+            {% endif %}
+            {% for i in page_object.paginator.page_range %}
+                {% if page_object.number == i %}
+                    <span>(현재페이지)</span>
+                {# 현재페이지 - 2 <= 현재페이지 <= 현재페이지 + 2 #}
+                {% elif page_object.number|add:-2 <= i and i <= page_object.number|add:2 %}
+                    <a href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a>
+                {% endif %}
+            {% endfor %}
+            {# 최대페이지 > 현재페이지 + 2 이면 ... #}
+            {% if page_object.paginator.num_pages > page_object.number|add:2 %}
+                <a href="?page={{ page_object.number|add:3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&hellip;</a>
+            {% endif %}
+
+            {% if page_object.has_next %} {# 다음 페이지 존재시 #}
+                <a href="?page={{ page_object.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">다음</a>
+                <a href="?page={{ page_object.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">마지막 &raquo;</a>
+            {% endif %}
         </div>
-    </nav>
-    <h1>블로그 목록 {{ count }}</h1>
-    {% for blog in blogs %}
-        <p>
-            <a href="{% url 'blog_detail' blog.pk %}">
-                {{ blog.title }} - <small>{{ blog.created_at | date:"Y-m-d"}}</small>
-            </a>
-        </p>
-    {% endfor %}
-</body>
-</html>
+    </div>
+{% endblock %}

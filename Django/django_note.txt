@@ -261,6 +261,20 @@ session & cookie
 자원       클라이언트 자원                              서버의 자원
 용량 제한   한 도메인당 20개, 쿠키 하나당 4KB, 총 300개     서버가 허용하는 한 용량에 제한이 없음
 
+# 쿠키(cookie)
+# visit을 키값으로 쿠키를 가져오고 존재하지 않으면 0 있으면 +1
+visits = int(request.COOKIES.get('visits', 0 )) + 1
+response =  render(request, 'blog_list.html', context)
+response.set_cookie('visits', visits)
+return response
+
+# 세션(session)
+request.session['count'] = request.session.get('count', 0) +1
+context = {
+    'blogs': blogs,
+    'count': request.session['count'],
+}
+
 
 장고 로그인 기능 구현
 
@@ -366,7 +380,7 @@ def sign_up(request):
     # if request.method == 'POST':
     #     form = UserCreationForm(request.POST) # POST요청 데이터를 여러 처리과정(validation등)을 거친 후 form에 넣음
     #     if form.is_valid(): # 요구 조건 통과 여부 확인
-    #         form.save() # 요구 조건이 맞으면 저장
+    #         form.save() # 요구 조건이 맞으면 저장  # form에 내용을 DB에 반영하고 해당 데이터의 객체를 반환(리턴)함.
     #         return redirect('/accounts/login/')
     # else:
     #     form = UserCreationForm() # 장고에서 기본적으로 제공해주는 회원가입 폼
@@ -394,3 +408,238 @@ def login(request):
         'form':form
     }
     return render(request, 'registration/login.html', context)
+
+# 외례키 컬럼 추가
+class Blog(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)  # author_id
+    # models.CASCATE => 같이 삭제 => 유저 삭제시 같이 블로그도 같이 삭제
+    # models.PROTECT => 삭제가 불가능함 => 유저를 삭제하려고 할 때 블로그가 있으면 유저 삭제가 불가능 (기본값)
+    # models.SET_NULL => 널 값을 넣음 => 유저 삭제시 블로그의 author가 Null이 됨.
+
+    # 기존에 없던 author를 외례키로 추가하면 기존 블로그의 author값이 없어서 마이그레이션 할 때 에러남
+    # python3 manage.py makemigrations 하면 기존 블로그 데이터에 기본값을 줄건지 물어봄.
+    # 1번 기본값 주기 선택 후 기존 데이터의 초기값으로 주어질 id값 선택 하면 정상적으로 마이그레이션 됨.
+
+html에서 외례키 author 불러오는 방법
+{{ blog.author.username }}
+
+
+# extends 기능 사용
+# base가 되는 html문서 안에 외부 html문서를 내용으로 채우는 방식
+# base.html
+<body>
+    <div>
+        <h1>base title</h1>
+    </div>
+    {%  block content %}
+    {% endblock %}
+</body>
+
+# login.html
+{% extends 'base.html' %}
+{% block content %}
+    <form method="POST">
+        {# 장고로 로그인 기능 사용시 토큰 필요함 #}
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>로그인</button>
+    </form>
+{% endblock %}
+
+
+# order_by('정렬 기준 값') 오름차순(ASC)으로 정렬.  값에 '-'를 붙이면 내림차순(DESC)정렬
+blogs = Blog.objects.all().order_by('-created_at')
+
+
+# 게시글 생성 기능 구현
+@login_required # settings.py에 설정된 LOGIN_URL로 리다이렉트
+def blog_create(request):
+    # 로그인되어 있지 않으면 로그인화면으로 리다이렉트
+    # if not request.user.is_authenticated:
+    #     return redirect(reverse('login'))
+    
+    form = BlogForm(request.POST or None)
+    if form.is_valid():
+        # form.save() : form에 내용을 DB에 반영하고 해당 데이터의 객체를 반환(리턴)함.
+        blog = form.save(commit=False)  # DB에 반영하지 않고 객체만 반환함.
+        blog.author = request.user  # 작성자에 로그인된 유저를 넣음
+        blog.save()  # DB에 반영
+        return redirect(reverse('blog_detail', kwargs={'pk':blog.pk}))
+
+    context = {
+        'form':form,
+    }
+
+    return render(request, 'blog_create.html', context)
+
+# 사용자 지정 폼 정의
+from django import forms
+from blog.models import Blog
+
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        # fields = '__all__'  # 전체 적용
+        fields = ('title','content')  # 원하는 것만 적용
+
+# blog_create.html
+{% extends 'base.html' %}
+{% block content %}
+<form method="POST">
+    <h1>블로그 작성</h1>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>생성</button>
+</form>
+{% endblock %}
+
+
+# 게시글 수정 기능 구현
+@login_required
+def blog_update(request, pk):
+    # blog = get_object_or_404(Blog, pk=pk)
+    # if request.user != blog.author:
+    #     raise Http404
+    blog = get_object_or_404(Blog, pk=pk, author=request.user) # pk와 author가 일치하는 데이터만 가져옴
+
+    form = BlogForm(request.POST or None, instance=blog)  # instance 폼의 항목에 맞게 blog에서 데이터를 불러옴
+    if form.is_valid():
+        # form.save() : form에 내용을 DB에 반영하고 해당 데이터의 객체를 반환(리턴)함.
+        blog = form.save()  # DB에 반영
+        return redirect(reverse('blog_detail', kwargs={'pk':blog.pk}))
+
+    context = {
+        'blog':blog,
+        'form':form,
+   }
+
+    return render(request, 'blog_update.html', context)
+
+# blog_update.html
+{% extends 'base.html' %}
+{% block content %}
+<form method="POST">
+    <h1>블로그 수정</h1>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button>수정</button>
+</form>
+{% endblock %}
+
+
+--------------------------------
+# 페이지 기능 (pagination) 구현
+--------------------------------
+
+# blog/views.py
+def blog_list(request):
+    paginator = Paginator(blogs, 10)  # blogs를 10개 단위로 페이지를 만듬
+    page = request.GET.get('page')  # 파라미터 값으로 page값이 들어오면 page값 반환. 0이거나 최대페이지를 초과하는 페이지는 마지막 페이지를 반환. 숫자가 아닌값이 들어오면 첫페이지
+    page_object = paginator.get_page(page)  # 해당 페이지로 이동
+
+    context = {
+        'page_object': page_object,
+    }
+
+    return render(request, 'blog_list.html', context)
+
+# blog_list.html
+{% for blog in page_object %}
+    <p>
+        <a href="{% url 'blog_detail' blog.pk %}">
+            ({{ blog.id }}) {{ blog.title }} <small>by {{ blog.author.username }}</small> - <small>{{ blog.created_at | date:"Y-m-d"}}</small>
+        </a>
+    </p>
+{% endfor %}
+
+# v1
+<div style="text-align:center;">
+    {% if page_object.has_previous %}  {# 이전 페이지 존재시 #}
+    <a href="?page=1">&laquo; 첫번째</a>
+    <a href="?page={{ page_object.previous_page_number }}">이전</a>
+    {% endif %}
+    <span>
+        {# 총 페이지 중에 현재 몇 페이지인지 표시 #}
+        Page {{ page_object.number }} of {{ page_object.paginator.num_pages }}
+    </span>
+    {% if page_object.has_next %} {# 다음 페이지 존재시 #}
+        <a href="?page={{ page_object.next_page_number }}">다음</a>
+        <a href="?page={{ page_object.paginator.num_pages }}">마지막 &raquo;</a>
+    {% endif %}
+</div>
+
+# v2
+<div style="text-align:center;">
+    {% if page_object.has_previous %}  {# 이전 페이지 존재시 #}
+        <a href="?page=1">&laquo; 첫번째</a>
+        <a href="?page={{ page_object.previous_page_number }}">이전</a>
+    {% endif %}
+
+    {# 총 페이지 중에 현재 몇 페이지인지 표시 #}
+    {# <span> Page {{ page_object.number }} of {{ page_object.paginator.num_pages }} </span> #}
+
+    {# 현재페이지 -2 > 1 이면 ... #}
+    {% if page_object.number|add:-2 > 1 %}
+        <a href="?page={{ page_object.number|add:-3 }}">&hellip;</a>
+    {% endif %}
+    {% for i in page_object.paginator.page_range %}
+        {% if page_object.number == i %}
+            <span>(현재페이지)</span>
+        {# 현재페이지 - 2 <= 현재페이지 <= 현재페이지 + 2 #}
+        {% elif page_object.number|add:-2 <= i and i <= page_object.number|add:2 %}
+            <a href="?page={{ i }}">{{ i }}</a>
+        {% endif %}
+    {% endfor %}
+    {# 최대페이지 > 현재페이지 + 2 이면 ... #}
+    {% if page_object.paginator.num_pages > page_object.number|add:2 %}
+        <a href="?page={{ page_object.number|add:3 }}">&hellip;</a>
+    {% endif %}
+
+    {% if page_object.has_next %} {# 다음 페이지 존재시 #}
+        <a href="?page={{ page_object.next_page_number }}">다음</a>
+        <a href="?page={{ page_object.paginator.num_pages }}">마지막 &raquo;</a>
+    {% endif %}
+</div>
+
+
+------------------
+# 검색 기능 구현
+------------------
+
+# blog/views.py
+q = request.GET.get('q')
+if q:
+    blogs = blogs.filter(Q(title__icontains=q) | Q(content__icontains=q))
+    # blogs = blogs.filter(title__icontains=q)
+    
+# blog_list.html
+<div style="text-align:center; margin: 20px 0;">
+    <form method="get">
+        <input name="q" type="text" placeholder="검색어를 입력하세요." value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+        <button>검색</button>
+    </form>
+</div>
+
+
+------------------
+# 삭제 기능 구현
+------------------
+
+# blog/views.py
+@login_required
+@require_http_methods(['POST'])
+def blog_delete(request, pk):
+    # if request.method != 'POST':
+    #     raise Http404
+
+    blog = get_object_or_404(Blog, pk=pk, author=request.user) # pk와 author가 일치하는 데이터만 가져옴
+    blog.delete()
+
+    return redirect(reverse('blog_list'))
+
+# blog_detail.html
+<a href="{% url 'blog_delete' blog.pk %}">삭제</a>
+<form action="{% url 'blog_delete' blog.pk %}" method="POST" style="display:inline">
+    {% csrf_token %}
+    <button>삭제</button>
+</form>
