@@ -2,7 +2,7 @@
 {% block content %}
     <div>
         <h1>{{ blog.title }}</h1>
-        {% if request.user == blog.author or request.user.is_superuser %}
+        {% if request.user == blog.author or request.user.is_superuser %}{# request.user.is_superuser 하거나 request.user.is_staff하면 관리자 허용 #}
         <div style="text-align: right">
             <a href="{% url 'blog:update' blog.pk %}">수정</a>
             <form action="{% url 'blog:delete' blog.pk %}" method="POST" id="delete_form" style="display:inline">

@@ -92,6 +92,8 @@ class BlogUpdateView(LoginRequiredMixin, UpdateView):
     # 1
     def get_queryset(self):
         queryset = super().get_queryset()
+        if self.request.user.is_superuser:
+            return queryset
         return queryset.filter(author=self.request.user)
     # 2
     # def get_object(self, queryset=None):
@@ -111,7 +113,11 @@ class BlogDeleteView(LoginRequiredMixin, DeleteView):
     # 로그인 유저와 작성자가 같을 때만 삭제 가능하게 처리
     def get_queryset(self):
         queryset = super().get_queryset()
-        return queryset.filter(author=self.request.user)
+        # superuser가 아니면 로그인 유저와 글쓴이가 동일한 데이터만 반환
+        # 조건문이 많아지면 not으로 쓰는걸 더 추천한다고 함.
+        if not self.request.user.is_superuser:
+            return queryset.filter(author=self.request.user)
+        return queryset
 
     # delete 성공 시 동작
     def get_success_url(self):
