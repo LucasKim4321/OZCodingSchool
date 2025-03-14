@@ -889,3 +889,261 @@ python3 manage.py shell_plus
 # blog.objects.filter(category__isnull=true) # Null인 데이터 확인
 # Blog.objects.filter(category='')  # 비어있는 데이터 확인
 # Blog.objects.filter(category='').update(category='free')
+
+
+
+STATIC_URL = 'static/'
+STATIC_DIR = BASE_DIR / 'static'
+
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+
+STATIC_ROOT = BASE_DIR / 'static_root'
+
+{% load static %} # 최상단에 배치
+<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+<script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+
+
+# context 수정
+def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['sub_title'] = '수정'
+    context['btn_name'] = '수정'
+    return context
+
+# **kwargs, *args 구조
+# **kwargs 딕셔너리 형태
+# *args 리스트 형태
+#     test_dict = {
+#         'a' : 1,
+#         'b' : 2,
+#         'c' : 3,
+#     }
+#     self.test(a=test_dict['a'], b=test_dict['b'], c=test_dict['c'])
+#     self.test(**test_dict)
+#     test_list = [1,2,3]
+#     self.test(test_list[0], test_list[1], test_list[2])
+#     self.test(*test_list)
+#     return context
+# def test(self, a, b, c):
+#     return
+
+# 장고 템플릿 include 기능
+{% block js %}
+    {% include 'form_js.html' %}
+{% endblock %}
+
+# form_js.html
+<script>
+    document.querySelectorAll('select, input, textarea').forEach(function(ele) {
+        ele.classList.add('form-control')
+    });
+</script>
+
+
+# TimestampModel에서 created_at, updated_at을 상속받아서 사용
+# utils/models.py
+from django.db import models
+class TimestampModel(models.Model):
+    created_at = models.DateTimeField('작성일자', auto_now_add=True)
+    updated_at = models.DateTimeField('수정일자', auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+# blog/admin.py
+# TabularInline 표로 만들어서 inline으로 넣어주는 기능
+class CommentInline(admin.TabularInline):
+    model = Comment
+    fields = ['content', 'author']
+    extra = 1  # 기본 3개
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    inlines = [
+        CommentInline,
+    ]
+
+
+-------------------------
+# 댓글 기능
+-------------------------
+
+# 댓글 모델 생성
+
+blog/models.py
+
+class Comment(TimestampModel):
+    # TimestampModel에서 created_at, updated_at을 상속받음
+    # created_at = models.DateTimeField('작성일자', auto_now_add=True)
+    # updated_at = models.DateTimeField('수정일자', auto_now_add=True)
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+    content = models.CharField('본문', max_length=255)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __stf__(self):
+        return f'{self.blog.title} 댓글'
+
+    class Meta:
+        verbose_name = '댓글'
+        verbose_name_plural = '댓글 목록'
+        ordering = ('-created_at', '-id',) # 댓글 최신순으로 정렬
+
+
+# 어드민의 블로그 페이지에서도 댓글 수정 가능하게 설정
+
+# blog/admin.py
+
+admin.site.register(Comment)
+
+# TabularInline 표로 만들어서 inline으로 넣어주는 기능
+class CommentInline(admin.TabularInline):
+    model = Comment
+    fields = ['content', 'author']
+    extra = 1  # 기본 3개
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    inlines = [
+        CommentInline,
+    ]
+
+
+# 댓글 생성 기능 (CreateView사용)
+-----------------------------
+
+# 방법 1
+# BlogDetailView에서 post요청으로 댓글을 처리하는 기능
+# blog/cb_views.py DetailView에 추가
+class BlogDetailView(DetailView):
+    queryset = Blog.objects.all().prefetch_related('comment_set', 'comment_set__author')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
+
+    # post요청시
+    def post(self, *args, **kwargs):
+        comment_form = CommentForm(self.request.POST)
+
+        if not comment_form.is_valid():
+            self.object = self.get_object()
+            context = self.get_context_data(object=self.object)
+            context['comment_form'] = comment_form
+            return self.render_to_response(context)
+
+        if not self.request.user.is_authenticated:
+            raise Http404
+
+        comment = comment_form.save(commit=False)
+        # comment.blog = self.get_object() # 블로그 정보 저장
+        comment.blog_id = self.kwargs['pk']  # blog_id 직접 설정
+        comment.author = self.request.user
+        comment.save()
+
+        return HttpResponseRedirect( reverse_lazy('blog:detail', kwargs={'pk':self.kwargs['pk']}))
+
+
+# 폼 정의
+
+# blog/forms.py
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('content',)
+        # 특정 필드에 TextInput 삽입
+        widgets = {
+            'content': forms.TextInput(attrs={'class':'form-control'}) # content필드에 textinput 삽입
+        }
+        # Comment 모델이 가지고있는 verbose_name 쓰지 않고 따로 지정
+        labels = {
+            'content': '댓글'
+        }
+
+# blog_detail에서 댓글 생성하는 post요청 추가
+# blog_detail.html
+
+{% if request.user.is_authenticated %}
+    <form method="post" >
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <div class="text-end">
+            <button class="btn btn-primary opacity-50">댓글작성</button>
+        </div>
+    </form>
+{% endif %}
+
+
+# 방법 2
+# blog/cb_views.py
+# /comment/create/<int:blog_pk>/
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+
+    def get(self, *args, **kwargs):
+        raise Http404
+
+    def form_valid(self, form):
+        blog = self.get_blog()
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.blog = blog
+        self.object.save()
+        return HttpResponseRedirect(reverse('blog:detail', kwargs={'pk':blog.pk} ))
+
+    def get_blog(self):
+        pk = self.kwargs['blog_pk']
+        blog = get_object_or_404(Blog, pk=pk)
+        return blog
+
+
+# blog/urls.py
+path('comment/create/<int:blog_pk>/', cb_views.CommentCreateView.as_view(), name = 'comment-create'),
+
+# action에 요청을 처리할 url설정
+    <form method="post" action="{% url 'blog:comment-create' blog.pk %}">
+
+
+------------------
+# 댓글 조회
+------------------
+
+Django에서는 ForeignKey(외래 키) 관계가 설정되면, 역참조(Reverse Lookup)를 위한 관련 매니저가 자동으로 생성됩니다.
+즉, Comment 모델이 Blog 모델을 참조하고 있다면, Django는 자동으로 blog.comment_set이라는 매니저를 제공하여 해당 Blog 객체에 연결된 모든 Comment를 가져올 수 있도록 합니다.
+{% for comment in blog.comment_set.all %}
+    <div>
+        {{ comment.content }}
+        <p class="text-end">
+            <small>{{ comment.created_at | date:'Y-m-d H:i' }} | {{ comment.author.username }}</small>
+        </p>
+    </div>
+{% endfor %}
+
+# comment_set 때문에 쿼리가 두번 실행되기 때문에
+# 블로그 데이터를 불러올 때 댓글도 같이 불러와서 쿼리가 한번반 실행되도록 수정
+# 쿼리셋에 comment_set을 조인 시킴
+
+# blog/models.py
+#class BlogDetailView(DetailView)에 추가
+queryset = Blog.objects.all().prefetch_related('comment_set', 'comment_set__author')
+
+
+----------------------------
+#댓글 페이지 네이션 기능 추가
+----------------------------
+
+댓글 여러개 생성
+comment_list = Comment.objects.filter(blog_id=144)
+new_list = []
+
+for i in range(10):
+    for comment in comment_list:
+        comment.id = None
+        new_list.append(comment)
+
+Comment.objects.bulk_create(new_list)

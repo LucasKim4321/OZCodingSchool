@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="mt-2">
     <form method="POST">
-        {# 장고로 로그인 기능 사용시 토큰 필요함 #}
+        <h1>블로그 {{ sub_title }}</h1>
         {% csrf_token %}
         {{ form.as_p }}
-        <button class="btn btn-secondary opacity-50">로그인</button>
+        <button class="btn btn-secondary opacity-50">{% if btn_name %}{{ btn_name }}{% else %}저장{% endif %}</button>
     </form>
+</div>
 {% endblock %}
 {% block js %}
     {% include 'form_js.html' %}
