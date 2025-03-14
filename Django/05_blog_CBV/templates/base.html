@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <title>블로그 프로젝트</title>
 {#    <link href="..static/css/bootstrap.css">#} {#    경로 바뀌면 안될 수도 있기 때문에 잘 안씀#}
-    <link class="text-decoration-none text-white" href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-    {% block css %}{% endblock %}
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
     <style>
         .page-link{
             color: gray;
@@ -25,6 +24,7 @@
             border-color: gray;
         }
     </style>
+    {% block css %}{% endblock %}
 </head>
 <body>
     <nav class="d-flex justify-content-between py-2 px-4 bg-black opacity-50 text-white">

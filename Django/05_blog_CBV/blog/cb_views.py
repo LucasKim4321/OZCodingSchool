@@ -34,19 +34,21 @@ class BlogListView(ListView):
 #     "object_list": queryset,
 # }
 
-# class BlogDetailView(DetailView): # 기존 디테일뷰
+# 기존 디테일뷰
+# class BlogDetailView(DetailView):
 #     model = Blog
 #     글을 불러올때 댓글도 같이 불러오게 설정. 설정하지 않으면 요청을 두 번하게됨.
 #     queryset = Blog.objects.all().prefetch_related('comment_set', 'comment_set__author')
 #     Django에서는 ForeignKey(외래 키) 관계가 설정되면, 역참조(Reverse Lookup)를 위한 관련 매니저가 자동으로 생성됩니다.
 #     즉, Comment 모델이 Blog 모델을 참조하고 있다면, Django는 자동으로 blog.comment_set이라는 매니저를 제공하여 해당 Blog 객체에 연결된 모든 Comment를 가져올 수 있도록 합니다.
+# 상세 페이지에서 댓글 페이지 기능을 사용하기 위해 리스트뷰를 사용
 class BlogDetailView(ListView):  # 댓글
     model = Comment
     template_name = 'blog_detail.html'
     paginate_by = 10
     # pk_url_kwarg = 'blog_id'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
 
-
+    # 블로그 정보 불러옴.
     def get(self, request, *args, **kwargs):
         self.object = get_object_or_404(Blog, pk=kwargs.get('blog_pk'))
         return super().get(request, *args, **kwargs)

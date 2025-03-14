@@ -891,7 +891,8 @@ python3 manage.py shell_plus
 # Blog.objects.filter(category='').update(category='free')
 
 
-
+# js, css파일 적용하기 위해 static폴더 생성 및 설정
+# config/settings.py
 STATIC_URL = 'static/'
 STATIC_DIR = BASE_DIR / 'static'
 
@@ -899,8 +900,13 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
-STATIC_ROOT = BASE_DIR / 'static_root'
+# STATIC_ROOT - 배포환경에서 static파일들을 한곳에 모아서 관리할 수 있음.
+STATIC_ROOT = BASE_DIR / '.static_root'
 
+
+# static폴더에 다운받은 부트스트랩 js, css파일 복사
+
+# base.html
 {% load static %} # 최상단에 배치
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
@@ -1134,7 +1140,7 @@ queryset = Blog.objects.all().prefetch_related('comment_set', 'comment_set__auth
 
 
 ----------------------------
-#댓글 페이지 네이션 기능 추가
+# 댓글 페이지 네이션 기능 추가
 ----------------------------
 
 댓글 여러개 생성
@@ -1147,3 +1153,93 @@ for i in range(10):
         new_list.append(comment)
 
 Comment.objects.bulk_create(new_list)
+
+# 기존 디테일뷰
+# class BlogDetailView(DetailView):
+#     model = Blog
+#     글을 불러올때 댓글도 같이 불러오게 설정. 설정하지 않으면 요청을 두 번하게됨.
+#     queryset = Blog.objects.all().prefetch_related('comment_set', 'comment_set__author')
+#     Django에서는 ForeignKey(외래 키) 관계가 설정되면, 역참조(Reverse Lookup)를 위한 관련 매니저가 자동으로 생성됩니다.
+#     즉, Comment 모델이 Blog 모델을 참조하고 있다면, Django는 자동으로 blog.comment_set이라는 매니저를 제공하여 해당 Blog 객체에 연결된 모든 Comment를 가져올 수 있도록 합니다.
+
+# 상세 페이지에서 댓글 페이지 기능을 사용하기 위해 리스트뷰를 사용
+class BlogDetailView(ListView):  # 댓글
+    model = Comment
+    template_name = 'blog_detail.html'
+    paginate_by = 10
+    # pk_url_kwarg = 'blog_id'  # url에서 pk말고 다른 이름으로 id값 가져올 시 설정
+
+    # 블로그 정보 불러옴.
+    def get(self, request, *args, **kwargs):
+        self.object = get_object_or_404(Blog, pk=kwargs.get('blog_pk'))
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return self.model.objects.filter(blog=self.object).prefetch_related('author')
+
+    # context에 블로그 추가
+    # 사용자 지정 context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        context['blog'] = self.object
+        return context
+
+# 페이지 기능을 include를 사용해 재사용하기 위해 pagination.html 추가
+# 링크에 fragment 추가
+
+# pagination.html
+
+<div class="text-align-center d-flex justify-content-center">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}  {# 이전 페이지 존재시 #}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if fragment %}#{{ fragment }}{% endif %}">&laquo; 첫번째</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if fragment %}#{{ fragment }}{% endif %}">이전</a></li>
+        {% endif %}
+
+        {# 총 페이지 중에 현재 몇 페이지인지 표시 #}
+        {# <span> Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </span> #}
+
+        {# 현재페이지 -2 > 1 이면 ... #}
+        {% if page_obj.number|add:-2 > 1 %}
+            <il class="page-item">
+                <a class="page-link" href="?page={{ page_obj.number|add:-3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if fragment %}#{{ fragment }}{% endif %}">&hellip;</a>
+            </il>
+        {% endif %}
+        {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+                <il class="page-item">
+                    <a class="page-link active" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if fragment %}#{{ fragment }}{% endif %}">{{ i }}</a>
+                </il>
+            {# 현재페이지 - 2 <= 현재페이지 <= 현재페이지 + 2 #}
+            {% elif page_obj.number|add:-2 <= i and i <= page_obj.number|add:2 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if fragment %}#{{ fragment }}{% endif %}">{{ i }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        {# 최대페이지 > 현재페이지 + 2 이면 ... #}
+        {% if page_obj.paginator.num_pages > page_obj.number|add:2 %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.number|add:3 }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if fragment %}#{{ fragment }}{% endif %}">&hellip;</a>
+            </li>
+        {% endif %}
+
+        {% if page_obj.has_next %} {# 다음 페이지 존재시 #}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if fragment %}#{{ fragment }}{% endif %}">다음</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if fragment %}#{{ fragment }}{% endif %}">마지막 &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+
+# include기능을 사용해 pagination.html을 불러옴
+{%  include 'pagination.html' %}
+{%  include 'pagination.html' with fragment='comment_wrapper' %}
+
