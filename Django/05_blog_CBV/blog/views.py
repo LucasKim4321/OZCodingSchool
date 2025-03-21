@@ -85,13 +85,21 @@ def blog_create(request):
 
 @login_required
 def blog_update(request, pk):
-    # blog = get_object_or_404(Blog, pk=pk)
-    # if request.user != blog.author:
-    #     raise Http404
-    blog = get_object_or_404(Blog, pk=pk, author=request.user) # pk와 author가 일치하는 데이터만 가져옴
+    # 관리자 접근 허용
+    if request.user.is_superuser:
+        blog = get_object_or_404(Blog, pk=pk)
+    else:
+        # blog = get_object_or_404(Blog, pk=pk)
+        # if request.user != blog.author:
+        #     raise Http404
+        blog = get_object_or_404(Blog, pk=pk, author=request.user) # pk와 author가 일치하는 데이터만 가져옴
 
-    form = BlogForm(request.POST or None, instance=blog)  # instance 폼의 항목에 맞게 blog에서 데이터를 불러옴
+    # form = BlogForm(None, None, instance=blog)
+    form = BlogForm(request.POST or None, request.FILES or None, instance=blog)  # instance 폼의 항목에 맞게 blog에서 데이터를 불러옴
+    # print(request.POST) # POST요청시 들어오는 데이터를 볼 수 있음
+    print(request.FILES) # 요청된 파일 목록을 기져옴.
     if form.is_valid():
+        # print(form.cleaned_data)
         # form.save() : form에 내용을 DB에 반영하고 해당 데이터의 객체를 반환(리턴)함.
         blog = form.save()  # DB에 반영
         return redirect(reverse('fb:detail', kwargs={'pk':blog.pk}))

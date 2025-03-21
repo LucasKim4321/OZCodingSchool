@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.shortcuts import redirect, render
 from django.urls import path, include, reverse
@@ -54,4 +56,11 @@ urlpatterns = [
     path('redirect/', RedirectView.as_view(pattern_name='about'), name='redirect'),
     path('redirect2/', lambda req: redirect('about')),
     path('test/', TestView.as_view(), name='test'),
+    #summernote
+    path('summernote/', include('django_summernote.urls')),
 ]
+
+# config.settings 보단 django.conf의 settings가 나음.
+# 현재 장고 실행환경에서 셋팅을 불러옴.  배포환경에서는 경로가 달라질 수 있기 때문에 이렇게함.
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # django.conf.urls.static

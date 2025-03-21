@@ -1,11 +1,16 @@
 from django import forms
+from django_summernote.widgets import SummernoteWidget
+
 from blog.models import Blog, Comment
 
 class BlogForm(forms.ModelForm):
     class Meta:
         model = Blog
         # fields = '__all__'  # 전체 적용
-        fields = ('title','content',)  # 원하는 것만 적용
+        fields = ('category','title', 'image', 'content')  # 원하는 것만 적용, 순서대로 적용됨.
+        widgets = {
+            'content': SummernoteWidget()
+        }
 
 
 class CommentForm(forms.ModelForm):

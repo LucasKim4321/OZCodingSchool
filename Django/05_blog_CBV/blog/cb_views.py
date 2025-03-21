@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from blog.forms import CommentForm
+from blog.forms import CommentForm, BlogForm
 from blog.models import Blog, Comment
 
 
@@ -104,7 +104,8 @@ class BlogCreateView(LoginRequiredMixin,CreateView):
     template_name = 'blog_form.html'
     # form 설정
     # fields = '__all__'
-    fields = ('category','title','content')
+    # fields = ('category','title','content')
+    form_class = BlogForm  # 써머노트 쓸 때 fields 대신 사용
     # success_url = reverse('cb_blog_list') # 서로가 서로를 임포트하는 서큘러 임포트가 발생
     # success_url = reverse_lazy('cb_blog_list')  # create 성공시 동작
     # success_url = reverse_lazy('cb_blog_detail', kwargs={'pk':object.pk})  # 오류남.
@@ -149,7 +150,8 @@ class BlogCreateView(LoginRequiredMixin,CreateView):
 class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     template_name = 'blog_form.html'
-    fields = ('category','title','content')
+    # fields = ('category','title','content')
+    form_class = BlogForm  # 써머노트 쓸 때 fields 대신 사용
 
     # 로그인 유저와 작성자가 같을 때만 수정 가능하게 처리
     # 1
@@ -164,6 +166,10 @@ class BlogUpdateView(LoginRequiredMixin, UpdateView):
     #     if self.object.author != self.request.user:
     #         raise Http404
     #     return self.object
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

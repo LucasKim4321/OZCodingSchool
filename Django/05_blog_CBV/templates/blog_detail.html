@@ -13,9 +13,13 @@
             </div>
             {% endif %}
         </div>
+        {% if blog.image %}
+            <img src="{{ blog.image.url }}" alt="" class="w-100">
+        {% endif %}
         <hr>
         <div>
-            {{ blog.content }}
+{#            {{ blog.content }}#}
+            {{ blog.content | safe }}  <!-- 써머노트 쓸 때 html코드를 사용할 수 있게 설정. -->
         </div>
         <hr>
         {% if request.user.is_authenticated %}

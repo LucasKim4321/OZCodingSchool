@@ -1243,3 +1243,348 @@ class BlogDetailView(ListView):  # 댓글
 {%  include 'pagination.html' %}
 {%  include 'pagination.html' with fragment='comment_wrapper' %}
 
+
+
+---------------------------
+서머노트 (summernote)
+글쓰기 기능과 각종 이미지 첨부, 파일첨부 등 각종 기능을 쉽게 사용할 수 있게 해주는 패키지
+https://summernote.org/
+https://github.com/lqez/django-summernote
+
+
+# 서머 노트를 받고 마이그레이트
+
+poetry add django-summernote
+python3 manage.py migrate 
+
+
+# 셋팅 설정
+
+# settings.py
+
+THIRD_PARTY_APPS = [
+    'django_summernote',
+]
+#media
+# 유저가 올리는 각종 파일들을 저장하는 경로
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# admin.py
+
+@admin.register(Blog)
+# class BlogAdmin(admin.ModelAdmin):
+class BlogAdmin(SummernoteModelAdmin):
+    summernote_fields = ['content',]
+    inlines = [
+        CommentInline,
+    ]
+
+
+#config/urls.py
+
+# config.settings 보단 django.conf의 settings가 나음.
+# 현재 장고 실행환경에서 셋팅을 불러옴.  배포환경에서는 경로가 달라질 수 있기 때문에 이렇게함.
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # django.conf.urls.static
+    
+urlpatterns = [
+    path('summernote/', include('django_summernote.urls')),
+]
+
+
+# 랜덤 이미지 써머노트에 붙여넣기
+
+랜덤 이미지 사이트
+https://picsum.photos/
+https://picsum.photos/200/300
+
+{{ blog.content | safe }}  <!-- 써머노트 쓸 때 html코드를 사용할 수 있게 설정 -->
+
+
+
+# 폼 설정
+# forms.py
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        # fields = '__all__'  # 전체 적용
+        fields = ('category','title','content',)  # 원하는 것만 적용
+        widgets = {
+            'content': SummernoteWidget()
+        }
+
+cv_views.py
+blog_create, blog_update에 적용
+form_class = BlogForm  # 써머노트 쓸 때 fields 대신 사용
+
+서머노트 옵션 설정
+깃허브에 옵션 복사
+
+# settings.py
+맨아래 설정 
+# summernote
+SUMMERNOTE_CONFIG = {
+    # Using SummernoteWidget - iframe mode, default
+
+    # Or, you can set it to `False` to use SummernoteInplaceWidget by default - no iframe mode
+    # In this case, you have to load Bootstrap/jQuery sources and dependencies manually.
+    # Use this when you're already using Bootstrap/jQuery based themes.
+    'iframe': False,
+
+    # You can put custom Summernote settings
+    'summernote': {
+        # As an example, using Summernote Air-mode
+        'airMode': False,
+
+        # Change editor size
+        'width': '100%',
+        'height': '480',
+
+        # Use proper language setting automatically (default)
+
+        # Toolbar customization
+        # https://summernote.org/deep-dive/#custom-toolbar-popover
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']],  # 코드뷰 보기해서 코드 넣으면 실행됨.
+        ],
+
+        # Or, explicitly set language/locale for editor
+        'lang': 'ko-KR',
+
+        # You can also add custom settings for external plugins
+        'print': {
+            'stylesheetUrl': '/some_static_folder/printable.css',
+        },
+        'codemirror': {
+            'mode': 'htmlmixed',
+            'lineNumbers': 'true',
+            # You have to include theme file in 'css' or 'css_for_inplace' before using it.
+            'theme': 'monokai',
+        },
+    },
+
+    # Require users to be authenticated for uploading attachments.
+    'attachment_require_authentication': True,
+
+    # You can completely disable the attachment feature.
+    'disable_attachment': False,
+
+    # Set to `False` to return attachment paths in relative URIs.
+    'attachment_absolute_uri': True,
+
+    # test_func in summernote upload view. (Allow upload images only when user passes the test)
+    # https://docs.djangoproject.com/en/2.2/topics/auth/default/#django.contrib.auth.mixins.UserPassesTestMixin
+
+    # # You can add custom css/js for SummernoteWidget.
+    # 'css': (
+    # ),
+    # 'js': (
+    # ),
+    #
+    # # You can also add custom css/js for SummernoteInplaceWidget.
+    # # !!! Be sure to put {{ form.media }} in template before initiate summernote.
+    # 'css_for_inplace': (
+    # ),
+    # 'js_for_inplace': (
+    # ),
+    #
+    # # Codemirror as codeview
+    # # If any codemirror settings are defined, it will include codemirror files automatically.
+    # 'css': (
+    #     '//cdnjs.cloudflare.com/ajax/libs/codemirror/5.29.0/theme/monokai.min.css',
+    # ),
+    #
+    # # Lazy initialization
+    # # If you want to initialize summernote at the bottom of page, set this as True
+    # # and call `initSummernote()` on your page.
+    # 'lazy': True,
+    #
+    # # To use external plugins,
+    # # Include them within `css` and `js`.
+    # 'js': {
+    #     '/some_static_folder/summernote-ext-print.js',
+    #     '//somewhere_in_internet/summernote-plugin-name.js',
+    # },
+}
+
+# 계산기 앱
+# 옵션 설정 안하면 이와 같은 스크립트 사용가능
+https://www.geeksforgeeks.org/javascript-calculator/
+
+
+image = models.ImageField('이미지', null=True, blank=True, upload_to='blog/%Y/%m/%d')
+# 2024/4/23일
+# blog/2024/4/23/이미지파일.jpg
+# ImageField, FieldField와 같은데 이미지만 업로드하게 되어있다.
+# varchar => 경로만 저장을 함
+
+이미지 필드를 사용하기 위해 pillow를 설치
+poetry add pillow
+
+필드 추가후 마이그레이션
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+
+# 데이터 처리
+# CBV에서 데이터 처리는 def from_falid(self, form):
+# FBV에서 데이터 처리는 if is_valid():
+def form_valid(self, form):
+    print(form.cleaned_data)
+    return super().form_valid(form)
+
+장고는 저장할 때 파일 이름이 난수를 사용해 이름을 변경해 저장한다.
+
+# form.py
+폼 필드에 추가
+fields = ('category','title', 'image', 'content')  # 원하는 것만 적용, 순서대로 적용됨.
+
+# form.html
+# 타입설정
+# multipart 여러개 업로드 가능하게 설정
+<form method="POST" enctype="multipart/form-data">
+
+# 이미지 보이게 설정하기
+
+이미지가 제대로 처리될 수 있게 선언
+
+# views.py
+# def blog_update(request, pk):
+#       form = BlogForm(request.POST or None, request.FILES or None, instance=blog)  # instance 폼의 항목에 맞게 blog에서 데이터를 불러옴
+# request FILES of None
+# form = BlogForm(None, None, instance=blog) # 순서대로 매개변수
+
+# blog_list.html, blog_detail.html
+{% if blog.image %}
+    <img src="{{ blog.image.url }}" alt="" class="col-2">
+{% endif %}
+
+--------------------------
+# 썸네일 이미지
+--------------------------
+원본을 바로 가져오면 서버가 느려지기 때문에 썸네일을 가져오도록 처리
+
+무료 이미지 사이트
+pexels
+
+# models.py
+thumbnail = models.ImageField('썸네일', null=True, blank=True, upload_to="blog/%Y/%m/%d/thumbnail")
+
+from PIL import Image
+
+# models.py
+    # 썸네일 이미지 가져오는 함수
+    def get_thumbnail_image_url(self):
+        if self.thumbnail:
+            return self.thumbnail.url
+        elif self.image:
+            return self.image.url
+        return None
+    
+    # save()함수 override
+    def save(self, *args, **kwargs): # *args 리스트 **kwargs 키워드
+        if not self.image:
+            return super().save(*args, **kwargs)
+
+        image = Image.open(self.image)
+        image.thumbnail((300, 300))
+        image_path = Path(self.image.name)
+        thumbnail_name = image_path.stem # /blog/2024/4/23/database.png => 파일 이름만 불러옴
+        thumbnail_extension = image_path.suffix.lower() # 파일의 확장자를 가져옴 # 소문자로 바꿔서 처리
+        thumbnail_filename = f'{thumbnail_name}_thumb{thumbnail_extension}' # 이름_thumb.확장자
+
+        if thumbnail_extension in ['.jpg','jpeg']:
+            file_type = 'JPEG'  # jpg일때 처리가 안되서 바꿔서 처리
+        elif thumbnail_extension == '.gif':
+            file_type = 'GIF'
+        elif thumbnail_extension == '.png':
+            file_type = 'PNG'
+        else:
+            return super().save(*args, **kwargs)
+
+        temp_thumb = BytesIO()
+        image.save(temp_thumb, file_type)
+        temp_thumb.seek(0)
+        self.thumbnail.save(thumbnail_filename, temp_thumb, save=False)
+        temp_thumb.close()
+        return super().save(*args, **kwargs)
+        
+
+--------
+텍스트
+--------
+
+- CharField 짧은글 / 길이 제한 o
+- TextField 길글 / 길이 제한 x
+- URLField: URL 저장 / CharField  / url validation 가능
+- SlugField : Slug 저장 / CharField  url주소에 '-' 연결된 것 / 잘 안씀
+- UUIDField : UUID 저장/ 잘 안씀
+
+--------
+파일
+--------
+
+- EmailField :  이메일을 저장
+- FileField : 파일 저장
+- ImamgeField : 이미지 저장 / 저장할 파일 선택할 때 이미지만 활성화됨
+
+
+
+--------
+숫자
+--------
+
+IntegerField : 숫자 필드
+PositiveIntegerField: 양수만 가능한
+BigIntegerField : 큰 숫자 필드
+PositiveBigIntegerField : 양수만 가능한 큰 숫자필드
+DecimalField : Decimal 저장 / 부동소수점 오차가 없는 필드
+FloatField : Float 저장
+
+
+Float => 부동 소수점
+- 조금 부정확하지만 큰 수를 표현
+
+Decimal => 고정 소수점
+- 정환하지만 상대적으로 작은 수
+
+
+--------
+날짜 시간
+--------
+DateTimeField : 날짜 및 시간을 저장
+DateField : 날짜만 저장
+TimeField : 시간만 저장
+
+
+--------
+연결
+--------
+
+ ForeignKey : 1:N 관계 / 자신이 N
+ ManyToManyField : N:N관계
+ OneToOneField : 1:1 관계
+
+--------
+ 기타
+--------
+ JSONField : JSON 형태의 데이터를 저장
+ 
+
+django fields 검색
+
+
+-----------------
+DB 설계를 잘하는 법
+-----------------
+제일 중요한 것은 중복된 데이터를 많이 적지 않습니다.
+Join을 과하게 많이 하지 않습니다.
