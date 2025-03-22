@@ -127,6 +127,8 @@ class User(AbstractBaseUser):  # 기본 기능은 상속받아서 사용
 # 기존에 존재하는 컬럼 is_superuser, is_superuser가 가진 기능을 사용하려고 사용.
 # 혹은  is_superuser = models.BooleanField(default = False) 이렇게 필드를 만들어 줘도 되지만 해당 필드를 사용하지 않을거기 때문에 @property사용
 
+# AbstractBaseUser: Django의 추상 기반 클래스 중 하나로, 비밀번호 및 인증 관련 필드와 메서드만을 제공하며, 사용자 정의 필드를 추가하여 완전한 User 모델을 구성할 수 있습니다.
+
 
 settings.py
 
@@ -158,12 +160,265 @@ python manage.py createsuperuser
 커스텀 유저 모델에 유저 이름과 이메일을 모두 이메일로 지정했기 때문에 유저 이름을 묻지 않고 이메일만 물어봄
 
 
-settings.py
 # 개발 환경에서 사용하는 경로
 STATIC_URL = 'static/'
 STATIC_DIR = BASE_DIR / 'static'
 
-STATIC_FILES_DIRS = [
+STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
+# 배포할 때 사용하는 경로
+STATIC_ROOT = BASE_DIR / '.static_root'
+
+
+# member/forms.py
+
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+
+# 유저 모델 가져오기
+# get_user_model()을 하면 settings에 설정된 AUTH_USER_MODEL 을 가져옴
+# Auth유저를 바꿨기 때문에
+User = get_user_model()
+
+class SignupForm(UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # class_default_fields = ('password1', 'password2')
+        # for field in class_default_fields:
+        for field in ('password1', 'password2'):
+            self.fields[field].widget.attrs['class'] = 'form-control'
+            self.fields[field].widget.attrs['placeholder'] = 'password'
+            if field.startswith('password1'):
+                self.fields[field].label = '비밀번호'
+            else:
+                self.fields[field].label = '비밀번호 확인'
+
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('email', 'nickname',)
+        labels = {
+            'email' : '이메일',
+            'nickname': '닉네임',
+        }
+        widgets = {
+            'email' : forms.EmailInput(
+                attrs= {
+                    'placeholder' : 'example@example.com',
+                    'class' : 'form-control',
+                }
+            ),
+            'nickname': forms.TextInput(
+                attrs= {
+                    'placeholder':'닉네임',
+                    'class': 'form-control',
+                }
+            )
+        }
+
+
+# settings.py
+# 템플릿 경로 설정
+TEMPLATES = [
+    {
+    'DIRS': [BASE_DIR / 'templates'],
+    }
+]
+
+
+# member/views.py
+
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import FormView
+
+from member.forms import SignupForm
+
+
+class SignupView(FormView):
+    template_name = 'auth/signup.html'  # 템플릿 설정
+    form_class = SignupForm  # 폼 설정
+    # success_url = reverse_lazy('signup_done')  # 완료시 url
+    # success_url은 클래스가 로딩될 때 설정됩니다.
+    # 만약 reverse()를 쓴다면, 클래스가 로딩될 시점에 URLConf가 완전히 로딩되지 않았을 수도 있어
+    # ImportError 또는 ImproperlyConfigured 오류가 발생할 수 있습니다.
+    # reverse_lazy() → 나중에 실제로 URL이 필요할 때 계산 (지연 평가)
+
+    def form_valid(self,form):
+        # form.save()
+        # return HttpResponseRedirect(self.get_success_url())
+
+        user = form.save()
+        return render(
+            self.request,
+            template_name= 'auth/signup_done.html',
+            context={'user':user}
+        )
+
+
+# templates/base.html
+
+{%  load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pystagram</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+</head>
+<body>
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+</body>
+</html>
+
+# templates/signup.html
+{%  extends 'base.html' %}
+{% block content %}
+    <div>
+        <h1 class="title">회원가입</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group row mb-2">
+                    <labe class="form-label col-md-2" for="{{ field.auto_id }}">{{ field.label }}</labe>
+                    <div class="col-md-10">
+                        {{ field }}
+                    </div>
+                    {% for error in field.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {%  endfor %}
+            {% for error in form.non_field_error %}
+                <p class="text-danger">{{ error }}</p>
+            {% endfor %}
+            <button class="btn btn-success opacity-50">회원가입</button>
+        </form>
+    </div>
+{% endblock %}
+
+
+# config/urls.py
+
+from django.contrib import admin
+from django.urls import path
+from django.views.generic import TemplateView
+
+from member import views as member_views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('signup/', member_views.SignupView.as_view(), name='signup'),
+    # path('signup/done/', TemplateView.as_view(template_name='auth/signup_done.html'), name='signup_done'),
+]
+
+
+# signup_done.html
+
+{% extends 'base.html' %}
+{% block content %}
+    <div class="col-8 offset-2">
+        <h1>회원가입이 거의 완료되었습니다.</h1>
+        <p>
+            이메일 인증을 하여 회원가입을 완료해주세요.
+            <br>
+            ({{ user.email }})
+        </p>
+    </div>
+{% endblock %}
+
+
+
+<aside>
+💡 **환경변수**는 민감한 정보를 코드에서 분리하여 노출을 최소화합니다. 
+환경에 따라 설정을 쉽게 변경할 수 있어 코드 수정 없이 다양한 환경에 대응할 수 있습니다. 
+개발 팀 내에서 동일한 코드를 사용하되, 각자 환경에 맞는 설정을 사용할 수 있어 협업이 원활해집니다.
+
+</aside>
+
+GitHub에 올릴 때는 `.gitignore` 파일을 이용하여 푸시하지 않을 수 있습니다.
+
+### python-dotenv
+
+보편적으로 환경변수는 `python-dotenv` 를 이용해 관리합니다.
+
+`python-dotenv`는 파이썬 애플리케이션에서 환경 변수를 쉽게 관리하기 위한 라이브러리입니다. `.env` 파일에 저장된 환경 변수를 자동으로 불러와서 파이썬 코드 내에서 사용할 수 있게 해줍니다.
+
+[python-dotenv](https://pypi.org/project/python-dotenv/)
+
+### 주요 기능
+
+- **환경 변수 관리**: `.env` 파일에 환경 변수들을 정의하고, 이를 코드에서 쉽게 불러와서 사용할 수 있습니다.
+- **보안성**: API 키나 데이터베이스 비밀번호 같은 민감한 정보를 소스 코드에 직접 작성하지 않고 `.env` 파일로 분리함으로써 보안을 강화할 수 있습니다.
+- **유연성**: 코드의 실행 환경에 따라 다른 설정을 사용할 수 있어 개발, 테스트, 프로덕션 환경 간의 설정 차이를 쉽게 관리할 수 있습니다.
+
+### 사용 예시
+
+1. **설치**:
+    
+    ```bash
+    >> pip install python-dotenv
+    ```
+    
+2. **.env 파일 생성**: 프로젝트 루트에 `.env` 파일을 생성하고, 환경 변수를 작성합니다.
+    
+    ```bash
+    # .env 파일 예시
+    DATABASE_URL=postgres://user:password@localhost:5432/mydatabase
+    SECRET_KEY=mysecretkey
+    ```
+    
+3. **파이썬 코드에서 사용**:
+    
+    ```python
+    from dotenv import load_dotenv
+    import os
+    
+    load_dotenv()  # .env 파일의 환경 변수를 불러옵니다
+    
+    database_url = os.getenv('DATABASE_URL')
+    secret_key = os.getenv('SECRET_KEY')
+    
+    print(f"Database URL: {database_url}")
+    print(f"Secret Key: {secret_key}")
+    
+    ```
+    
+이렇게 `.env` 파일에 정의된 환경 변수를 코드에서 불러와 사용할 수 있습니다. 이는 프로젝트의 설정을 관리하고 민감한 정보를 보호하는 데 유용합니다.
+
+
+# config_secret
+
+.config_secret 디렉토리를 생성해서 환경변수를 관리하면 민감한 정보를 안전하게 보관하고 코드와 환경 설정을 분리하기 좋습니다. 이 방법을 사용하면 환경별로 다른 설정을 쉽게 관리할 수 있습니다. 
+secret.json 파일을 통해 json 형태로 정보를 관리할 경우, 여러 개의 DB를 한 곳에 묶거나의 방식을 통해 관리가 용이합니다. 이 때는 파일을 읽어와서 json.loads 라는 명령어를 통해서 json string을 dictionary 형태로 바꿔 사용할 수 있습니다.
+사용 예시
+import os
+import json
+
+# 현재 환경을 지정 (보통 환경 변수로 지정하거나 기본 값을 사용)
+current_env = os.getenv('ENV', 'development')
+
+# 해당 환경의 secret.json 파일 경로 설정
+secret_file = os.path.join('config_secret', f'{current_env}.json')
+
+# secret.json 파일 로드
+with open(secret_file) as f:
+    secrets = json.load(f)
+
+# JSON 데이터를 사용해 환경 변수를 설정합니다.
+DEBUG = secrets['DEBUG']
+DATABASE_URL = secrets['DATABASE_URL']
+SECRET_KEY = secrets['SECRET_KEY']
+
+print(f"DEBUG: {DEBUG}")
+print(f"DATABASE_URL: {DATABASE_URL}")
+print(f"SECRET_KEY: {SECRET_KEY}")
