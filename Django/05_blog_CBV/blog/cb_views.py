@@ -202,6 +202,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     form_class = CommentForm
 
+    # post요청만 받기 위해 get 요청시 에러 발생
     def get(self, *args, **kwargs):
         raise Http404
 

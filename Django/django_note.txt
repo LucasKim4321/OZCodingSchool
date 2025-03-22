@@ -1112,7 +1112,16 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 path('comment/create/<int:blog_pk>/', cb_views.CommentCreateView.as_view(), name = 'comment-create'),
 
 # action에 요청을 처리할 url설정
-    <form method="post" action="{% url 'blog:comment-create' blog.pk %}">
+    {% if request.user.is_authenticated %}
+{#            <form method="post">#}
+        <form method="post" action="{% url 'blog:comment-create' blog.pk %}">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <div class="text-end">
+                <button class="btn btn-primary opacity-50">댓글작성</button>
+            </div>
+        </form>
+    {% endif %}
 
 
 ------------------
@@ -1144,6 +1153,7 @@ queryset = Blog.objects.all().prefetch_related('comment_set', 'comment_set__auth
 ----------------------------
 
 댓글 여러개 생성
+python3 manage.py shell_plus
 comment_list = Comment.objects.filter(blog_id=144)
 new_list = []
 
@@ -1482,41 +1492,46 @@ thumbnail = models.ImageField('썸네일', null=True, blank=True, upload_to="blo
 from PIL import Image
 
 # models.py
-    # 썸네일 이미지 가져오는 함수
-    def get_thumbnail_image_url(self):
-        if self.thumbnail:
-            return self.thumbnail.url
-        elif self.image:
-            return self.image.url
-        return None
-    
-    # save()함수 override
-    def save(self, *args, **kwargs): # *args 리스트 **kwargs 키워드
-        if not self.image:
+
+    class Blog(TimestampModel):
+        image = models.ImageField('이미지', null=True, blank=True, upload_to='blog/%Y/%m/%d')
+        thumbnail = models.ImageField('썸네일', null=True, blank=True, upload_to="blog/%Y/%m/%d/thumbnail")
+
+        # 썸네일 이미지 가져오는 함수
+        def get_thumbnail_image_url(self):
+            if self.thumbnail:
+                return self.thumbnail.url
+            elif self.image:
+                return self.image.url
+            return None
+        
+        # save()함수 override
+        def save(self, *args, **kwargs): # *args 리스트 **kwargs 키워드
+            if not self.image:
+                return super().save(*args, **kwargs)
+
+            image = Image.open(self.image)
+            image.thumbnail((300, 300))
+            image_path = Path(self.image.name)
+            thumbnail_name = image_path.stem # /blog/2024/4/23/database.png => 파일 이름만 불러옴
+            thumbnail_extension = image_path.suffix.lower() # 파일의 확장자를 가져옴 # 소문자로 바꿔서 처리
+            thumbnail_filename = f'{thumbnail_name}_thumb{thumbnail_extension}' # 이름_thumb.확장자
+
+            if thumbnail_extension in ['.jpg','jpeg']:
+                file_type = 'JPEG'  # jpg일때 처리가 안되서 바꿔서 처리
+            elif thumbnail_extension == '.gif':
+                file_type = 'GIF'
+            elif thumbnail_extension == '.png':
+                file_type = 'PNG'
+            else:
+                return super().save(*args, **kwargs)
+
+            temp_thumb = BytesIO()
+            image.save(temp_thumb, file_type)
+            temp_thumb.seek(0)
+            self.thumbnail.save(thumbnail_filename, temp_thumb, save=False)
+            temp_thumb.close()
             return super().save(*args, **kwargs)
-
-        image = Image.open(self.image)
-        image.thumbnail((300, 300))
-        image_path = Path(self.image.name)
-        thumbnail_name = image_path.stem # /blog/2024/4/23/database.png => 파일 이름만 불러옴
-        thumbnail_extension = image_path.suffix.lower() # 파일의 확장자를 가져옴 # 소문자로 바꿔서 처리
-        thumbnail_filename = f'{thumbnail_name}_thumb{thumbnail_extension}' # 이름_thumb.확장자
-
-        if thumbnail_extension in ['.jpg','jpeg']:
-            file_type = 'JPEG'  # jpg일때 처리가 안되서 바꿔서 처리
-        elif thumbnail_extension == '.gif':
-            file_type = 'GIF'
-        elif thumbnail_extension == '.png':
-            file_type = 'PNG'
-        else:
-            return super().save(*args, **kwargs)
-
-        temp_thumb = BytesIO()
-        image.save(temp_thumb, file_type)
-        temp_thumb.seek(0)
-        self.thumbnail.save(thumbnail_filename, temp_thumb, save=False)
-        temp_thumb.close()
-        return super().save(*args, **kwargs)
         
 
 --------

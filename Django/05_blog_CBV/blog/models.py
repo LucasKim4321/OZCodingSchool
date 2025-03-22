@@ -120,7 +120,7 @@ class Comment(TimestampModel):
     content = models.CharField('본문', max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def __stf__(self):
+    def __str__(self):
         return f'{self.blog.title} 댓글'
 
     class Meta:
