@@ -1138,12 +1138,11 @@ Django에서는 ForeignKey(외래 키) 관계가 설정되면, 역참조(Reverse
         </p>
     </div>
 {% endfor %}
-
 # comment_set 때문에 쿼리가 두번 실행되기 때문에
 # 블로그 데이터를 불러올 때 댓글도 같이 불러와서 쿼리가 한번반 실행되도록 수정
 # 쿼리셋에 comment_set을 조인 시킴
 
-# blog/models.py
+# blog/models.pyßß
 #class BlogDetailView(DetailView)에 추가
 queryset = Blog.objects.all().prefetch_related('comment_set', 'comment_set__author')
 
