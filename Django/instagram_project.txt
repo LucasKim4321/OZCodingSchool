@@ -422,3 +422,44 @@ SECRET_KEY = secrets['SECRET_KEY']
 print(f"DEBUG: {DEBUG}")
 print(f"DATABASE_URL: {DATABASE_URL}")
 print(f"SECRET_KEY: {SECRET_KEY}")
+
+
+이메일 인증 기능
+네이버 이메일 환경설정
+POP3/SMTP, IMAP/SMTP  활성화
+
+secret.json
+"email": {
+    "user": "xowls0131@naver.com",
+    "password": "20s820asxS!"
+  },
+
+settings.py
+# Email
+# from django.core.mail.backends.smtp import EmailBackend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.naver.com'
+EMAIL_USE_TLS = True  # 보안연n결
+EMAIL_PORT = 587  # 네이버 메일 환경설정에서 확인 가능
+EMAIL_HOST_USER = SECRET["email"]["user"]
+EMAIL_HOST_PASSWORD =  SECRET["email"]["password"]
+
+네이버
+2단계 인증 해제
+
+python3 manage.py shell_plus
+
+In [1]: from django.core.mail import send_mail
+
+In [2]: title = '제목입니다.'
+
+In [3]: message = '이것은 django에서 보낸 메시지입니다.'
+
+In [4]: from_email = settings.EMAIL_HOST_USER
+
+In [5]: to_email = ['xowls0131@naver.com']
+
+In [6]: send_mail(title, message, from_email, to_email)
+
+
+
