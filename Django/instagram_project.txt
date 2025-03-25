@@ -462,4 +462,85 @@ In [5]: to_email = ['xowls0131@naver.com']
 In [6]: send_mail(title, message, from_email, to_email)
 
 
+---------------------
+# swiper (슬라이드)
+---------------------
 
+https://swiperjs.com/get-started#use-swiper-from-cdn
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<!-- Slider main container -->
+<div class="swiper">
+  <!-- Additional required wrapper -->
+  <div class="swiper-wrapper">
+    <!-- Slides -->
+    <div class="swiper-slide">Slide 1</div>
+    <div class="swiper-slide">Slide 2</div>
+    <div class="swiper-slide">Slide 3</div>
+    ...
+  </div>
+  <!-- If we need pagination -->
+  <div class="swiper-pagination"></div>
+
+  <!-- If we need navigation buttons -->
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+
+  <!-- If we need scrollbar -->
+  <div class="swiper-scrollbar"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
+---------------------
+# font-awesome (아이콘)
+---------------------
+
+https://fontawesome.com/
+
+start for free
+
+download
+https://fontawesome.com/download
+
+free for web
+
+Docs
+
+Getting Started
+
+webfonts
+
+
+----------------
+무한 스크롤
+----------------
+
+
+https://github.com/imakewebthings/waypoints
+
+In [1]: post_list = Post.objects.all()
+
+In [2]: for _ in range(20):
+   ...:     for post in post_list:
+   ...:         images = PostImage.objects.filter(post=post)
+   ...:         post.id = None
+   ...:         post.save()
+   ...:         for image in images:
+   ...:             image.id = None
+   ...:             image.post = post
+   ...:             image.save()
+
+
+
+폼셋
+https://cdnjs.com/libraries/jquery.formset
+
+
+# 마이그레이션 목록 표시
+python3 manage.py showmigrations
+
+# 해당 마이그레이션으로 돌아감
+python3 manage.py migrate post 0001
