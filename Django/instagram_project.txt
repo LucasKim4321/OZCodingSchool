@@ -544,3 +544,35 @@ python3 manage.py showmigrations
 
 # 해당 마이그레이션으로 돌아감
 python3 manage.py migrate post 0001
+
+
+------------
+좋아요
+------------
+
+------------
+팔로우
+------------
+
+In [1]: u = User.objects.get(email='admin@admin.com')
+
+In [2]: u2 = User.objects.first()
+
+In [3]: u
+Out[3]: <User: real-admin>
+
+In [4]: u2
+Out[4]: <User: 111>
+
+In [5]: UserFollowing.objects.create(to_user=u, from_user=u2)
+Out[5]: <UserFollowing: UserFollowing object (1)>
+
+In [6]: u.followers.count()
+Out[6]: 1
+
+In [7]: u2.following.count()
+Out[7]: 1
+
+In [9]: u2.followers.count()
+Out[9]: 0
+
