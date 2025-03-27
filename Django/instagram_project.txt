@@ -592,7 +592,7 @@ https://developers.naver.com/main/
 이메일 주소 체크
 
 로그인 오픈 API
-서비스 환경	
+서비스 환경
 
 PC웹
 서비스 URL
