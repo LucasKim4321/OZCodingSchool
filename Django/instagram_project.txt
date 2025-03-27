@@ -600,13 +600,7 @@ http://localhost:8000
 
 네이버 로그인
 Callback URL (최대 5개)
-http://localhost:8000/naver/callback
-
-비로그인 오픈 API
-서비스 환경
-
-WEB 설정
-http://localhost:8000
+http://localhost:8000/oauth/naver/callback
 
 등록하기
 
@@ -622,3 +616,37 @@ NAVER_CALLBACK_URL = '/naver/callback/'
 documents -> api명세
 
 https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=클라이언트_아이디&redirect_uri=http://localhost:8000/naver/callback/&state=abc
+
+
+https://nid.naver.com/oauth2.0/token
+
+확인
+python3 manage.py shell_plus
+user = User.objects.last()
+user
+user.nickname
+user.password
+
+
+----------------
+깃허브 로그인
+----------------
+
+깃허브에서 홈페이지에서
+Settings/Developer settings/Oauth Apps
+New Oauth App 클릭
+
+Homepage URL 설정
+http://localhost:8000
+
+Authorization callback URL 설정
+http://localhost:8000/oauth/github/callback/
+
+github oauth documents
+https://docs.github.com/ko/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+
+요청을 보내면 이런식으로 데이터가 들어와서 파싱을 해줘야함.
+access_token=gho_16C7e42F292c6912E7710c838347Ae178B4a&scope=repo%2Cgist&token_type=bearer
+
+파싱
+https://docs.python.org/ko/3.13/library/urllib.parse.html
