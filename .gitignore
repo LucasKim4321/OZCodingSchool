@@ -4,3 +4,4 @@ __pycache__/
 .DS_Store
 .vscode/
 .python-version
+.config_secret/

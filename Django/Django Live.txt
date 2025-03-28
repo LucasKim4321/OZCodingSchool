@@ -1,0 +1,311 @@
+
+Django View
+클라이언트의 요청을 처리하고 적절한 응답을 반환하는 역할
+
+------------------------------
+MVC 패턴
+Model - View - Controller
+------------------------------
+
+어디에?
+소프트 개발에 사용
+
+왜 쓸까?
+역할 분리, 디자인 패턴, 유지보수성, 확장성
+
+개발
+사용자의 문제를 효과적으로 해결하는 것이 소프트웨어 개발의 핵심
+
+Model: 데이터를 다루는 영역
+
+View: 데이터가 보여지는 영역
+
+Controller: 데이터를 처리하는 영역
+
+
+MTV
+Model - Template - View
+
+MVC와 비교하면
+Model(Model) - Template(View) - View(Controller)
+
+Django는 MTV를 사용
+
+-------------------------------------
+HTTP ( Hyper Text Transfer Protocol)
+-------------------------------------
+
+HTTP란?
+Hyper Text Transfer(전송) Protocol(규약, 약속)
+: 클라이언트가 서버에 요청하는 방식을 정의하는 프로토콜
+
+클라이언트 -> HTTP로 소통하자 -> 
+
+HTTP Method
+대표적인 메소드 CRUD
+- GET -> Read
+- POST -> Create
+- PUT,PATCH -> Update
+- DELETE -> Delete
+... (더 있음)
+
+- Update
+PUT: Replace(완전 대체)
+PATCH: Patch(일부 수정)
+
+User
+- username : elon musk
+- age: 50
+- lang: en
+
+PUT: {'name':'elen', 'age':51, 'lang':'en'}
+PATCH: {'age':51}
+
+객체 지향(OOP)메소드
+
+객체 지향 프로그래밍(OOP)?
+: OOP(Object Oriented Programming)
+
+OBjedcdt: 객체
+Oriented: ~를 고려한, 통한
+Programming: 프로그래밍
+
+객체 지향 프로그래밍 : 모든 것을 객체로 표현하는 프로그래밍 방식
+
+클래스(Class)
+: 속성(데이터) 메소드(기능/동작)
+
+class User:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def greeting(self):
+        print(self.name)
+
+instance1 = User(name='elon', age=50)
+instance1.greeting()
+
+user2 = User(name='jeff', age=60)
+
+함수 = def foo(): pass
+그 중에서도 클래스 안에 정의되면, 인스턴스 메소드
+
+
+--------------------------
+Django View(=Controller)
+--------------------------
+
+웹 서버 내에서의 데이터 처리를 담당
+
+클라이언트 요청 -> [Django-view] -> 
+
+Django View 만드는 방법?
+-> 함수
+
+# 함수형 View(= Function Based View)
+def hello(request):   # View
+    # HTTP Method
+    if request.method == 'GET':
+        return HttpResponse("ehllo, world")
+    elif request.method == 'POST':
+        return
+
+# 클래스형 View(= Class Based View)
+# 재사용성이 좋음.
+class HellowView(views.View):
+    # 객체 지향에서 메소드
+    def get(self, request):
+        pass
+    def post(self, request):
+        pass
+
+urlpatterns = [
+    path('hello/', views.hello, name='hello'),
+    path('hello2/', views.HellowView, name='HellowView'),
+]
+
+DRF를 활용한 API개발
+    API개발 시 반복적인 패턴
+    - 기본적인 CRUD API 개발시, 비슷한 형식의 코드가 반복적으로 사용
+        1. 클라잉던트가 보낸 데이터 읽기
+        2. 데이터 유효성 검사
+        3. 데이터베이스에 데이터 저장
+        4. 응답 반환
+    - 달라지는 부분
+        - 어떤 serializer를 사용할지, 어떤 모델에 데이터를 저장할지 등
+
+--------------
+Serializer
+--------------
+
+Serializer?
+= serialize : 직렬화한다.
+
+직렬화(python data 타입 -> JSON)
+역직렬화(JSON -> python data 타입)
+
+1. 역직렬화
+:요청 처리할 때 사용
+2. 직렬화
+:응답할 때 사용
+
+JSON( = JavaScript Object Notation)
+: 데이터를 표현하는 형식 (파이썬 딕셔너리랑 생김새는 비슷)
+
+1. 파이썬 dict
+{'name':'elen', 'age':50, 'lang':'en'}
+
+2. Python List
+["alice", "bob", "charlie"]
+
+3. Django ORM instance
+class User(models.Model):
+    pass
+User(name="elon", age=50)
+
+-> 클라이언트로 바로 전달할 수 없음 
+-> Serializer
+-> JSON
+{"name":"elen", "age":50, "lang":"en"}
+
+
+------------
+실습
+------------
+
+python -m venv .instagram
+source .instagram/bin/activate
+
+pip3 install djangorestframework
+mkdir instagram
+cd instagram
+
+python3 manage.py startapp user
+python3 manage.py startapp feed
+
+MSA(Micro Services Architecture)
+물리적 분리
+
+
+
+# Django에서 회원관리 기능 구현하는 방법
+
+# 1. Django에 내장된 User 모델 사용
+# 장점: 간단함, 조금 더 안전, 검증된 코드
+# 단점: 커스텀 어려움, 필요하지 않는 컬럼(데이터)까지도 저장
+# from django.contrib.auth.models import User
+# 내장된 기능 사용
+# python manage.py createsuperuser -> User(is_staff=True, is_admin=True)
+
+# 2. AbStractUser 상속 받아서 필요한 부분만 사용
+# from django.contrib.auth.models import AbstractUser
+
+# 3. 처음부터 직접 다 구현
+# 장점: 내 마음대로, 직관적
+# 단점: 귀찬다, 실수, 보안
+
+프로젝트폴더/docker-compose.yml
+services:
+  db:
+    container_name: instagram
+    image: postgres:16
+    restart: always
+    volumes:
+      - local_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: instagram
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: securepassword
+      PGDATA: /var/lib/postgresql/data/instagram/
+    ports:
+      - "54322:5432"   # 외부포트/내부포트
+
+volumes:
+  local_db:
+
+컴퓨터를 켜면 제일 먼저 동작하는 프로그램? 운영체제(O/S)
+
+운영체제 : 컴퓨터 관리해주는 프로그램
+- Windows
+- MacOS
+
+docker desktop 설치
+https://www.docker.com/products/docker-desktop/
+도커 다운로드
+docker google 로그인
+
+도커 백그라운드로 실행
+docker compose up -d
+
+확인
+docker ps
+
+도커 종료
+
+docker compose down
+도커 확인
+docker ps
+
+도커 실행
+docker compose up
+
+docker compose up -d
+docker exec -it instagram bash
+ls /var/lib/postgresql/data/instagram
+
+파이참 우측에 데이터베이스 클릭
++ databasesource postgresql
+docker-compose.yml 설정 파일 보고 설정
+
+pip3 install psycopg2-binary
+
+# member/models.py
+# 장고 기본 유저 적용 안되도록 설정
+from django.contrib.auth.models import AbstractUser
+
+class CustomUser(AbstractUser):
+    pass
+
+# config/settings.py
+AUTH_USER_MODEL = "user.CustomUser"  # User 모델 변경
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'instagram',
+        'USER': 'dev_user',
+        'PASSWORD': 'securepassword',
+        'HOST': 'localhost',
+        'PORT': '54322',
+    }
+}
+
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+# AbstractUser: username(unique), email(중복)
+# CustomUser: email(unique)
+
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = 'email'  # USERNAME 사용자를 고유하게 식별하는 기준 설정
+    REQUIRED_FIELDS = ['username']
+    
+
+python3 manage.py makemigrations user  # 유저 모델만 마이그레이션
+python3 manage.py migrate
+
+
+
+1. 데이터 모델링
+- ERD, 관계 매핑 1:1, 1:N, M:N
+
+2. 기능 구현
+- like, 팔로우
+
+3. EC2 배포

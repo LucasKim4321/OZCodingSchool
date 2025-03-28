@@ -126,3 +126,21 @@ https://www.django-rest-framework.org/
 https://www.django-rest-framework.org/tutorial/quickstart/
 
 poetry add djangorestframework
+
+
+poetry add django-extentions
+poetry add ipython
+
+설치된 앱 목록(INSTALLED_APPS)에 추가
+INSTALLED_APPS = [
+    # 3rd party
+    'django_extensions',
+]
+
+
+In [2]: blog_list = Blog.objects.all()
+
+In [3]: for _ in range(20):
+   ...:     for blog in blog_list:
+   ...:         blog.id = None
+   ...:         blog.save()
