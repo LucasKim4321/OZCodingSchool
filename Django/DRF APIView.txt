@@ -1,0 +1,12 @@
+APIView
+
+blog-list 
+
+    GET : 목록
+    POST : 생성
+
+blog-detail
+
+    GET : 상세(1개)
+    PUT,PATCH : 수정
+    DELETE : 삭제

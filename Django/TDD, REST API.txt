@@ -144,3 +144,11 @@ In [3]: for _ in range(20):
    ...:     for blog in blog_list:
    ...:         blog.id = None
    ...:         blog.save()
+
+
+git ls-files | grep '__pycache__' | xargs git rm --cached
+git commit -m "Remove __pycache__ and all its contents from tracking"
+git push origin main
+
+
+
