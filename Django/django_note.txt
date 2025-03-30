@@ -1934,3 +1934,476 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
 
         obj = view.get_object(request, *view.args, **view.kwargs)
         return obj.author == request.user
+
+
+----------------
+generic view
+----------------
+
+
+-------------------------
+JWT (JSON Web Token)
+-------------------------
+
+Session
+세션 기반에서는 블로그와 유저 정보가 필요하면 요청을 2번처리함.
+
+Token
+필요한 정보들을 토큰에 함께 담아서 보냄.
+클라이언트가 요청을 하면 서버가 필요한 모든 정보를 토큰에 담아서 한번에 주고받음.
+
+토큰 구조
+header + payload + verify signature
+
+header (헤더)
+서명 생성과 검증 시 사용될 정보를 담고있음.
+
+payload (화물, 적재물)
+사용자의 정보나 토큰 관련 데이터를 클레임(claim) 형식으로 담음.
+클라이언트와 서버가 이 데이터를 공유하게 되며, 서버는 별도로 DB 조회 없이 인증 처리
+단, 서명되지 않은 정보이므로 위조 가능성이 있고 민감한 데이터는 절대 넣으면 안 됨.
+
+verify signature (서명 확인)
+JWT의 위조 여부를 검증하는 역할을 합니다.
+클라이언트가 보낸 토큰의 header와 payload를 서버가 다시 암호화해 본 뒤, 서명값이 같으면 정상 토큰으로 판단합니다.
+비밀 키(secret_key)를 아는 서버만 서명을 만들 수 있기 때문에, 서명 일치 여부로 무결성(integrity)을 보장합니다.
+
+HEADER:
+{
+  "alg": "HS256",  # 알고리즘 : 서명을 생성할 때 사용할 알고리즘 (여기서는 HMAC + SHA256)
+  "typ": "JWT"  # 타입 : 이 토큰의 타입이 JWT임을 명시
+}
+
+PAYLOAD:
+{
+  "token_type": "access",  # 토큰 타입 : 이 토큰이 access 토큰임을 명시
+  "exp": 1743322450,  # expire 토큰 만료 시간
+  "iat": 1743320650,  # issued at : 토큰이 발급된 시간 
+  "jti": "7fd9100bf3fa4fdfb046b526e3daad02",  # JWT 고유 식별자 (JWT ID, 주로 중복 방지용)
+  "user_id": 1,  # 사용자 고유 ID
+  "user_name": "admin"  # 사용자 이름 또는 닉네임
+}
+
+VERIFY SIGNATURE:   # JWT의 위조 여부를 검증하는 역할
+HMACSHA256(
+  base64UrlEncode(header) + "." + base64UrlEncode(payload),  #  서명 대상 문자열
+  your-256-bit-secret  # 비밀 키 (서버만 알고 있어야 함)
+)
+
+
+simplejwt 시작
+https://django-rest-framework-simplejwt.readthedocs.io/en/latest/getting_started.html
+
+simplejwt 설치
+poetry add djangorestframework-simplejwt
+
+# config/settings.py
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        ...
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ...
+    ]
+}
+INSTALLED_APPS = [
+    ...
+    'rest_framework_simplejwt',
+    ...
+]
+
+# config/urls.py
+
+urlpatterns = [
+    ...
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    ...
+]
+
+simplejwt 세팅
+https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#
+
+
+simplejwt 커스터 마이징
+https://django-rest-framework-simplejwt.readthedocs.io/en/latest/customizing_token_claims.html
+
+# utils/jwt_serializers.py
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['user_name'] = user.username  # 토큰에 유저 이름을 함께 담아서 보냄
+
+        return token
+
+# config/settings.py
+# JWT 설정
+SIMPLE_JWT = {
+  # It will work instead of the default serializer(TokenObtainPairSerializer).
+  "TOKEN_OBTAIN_SERIALIZER": "utils.jwt_serializers.MyTokenObtainPairSerializer",
+  # ...
+}
+
+토큰 정보 보는 법
+https://jwt.io/
+
+토큰 만료시간 수정
+# JWT 설정
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    # It will work instead of the default serializer(TokenObtainPairSerializer).
+    "TOKEN_OBTAIN_SERIALIZER": "utils.jwt_serializers.MyTokenObtainPairSerializer",
+    # ...
+}
+
+브라우저의 개발자도구의 콘솔창에 new Date(토큰만료시간+000) 입력하면 정확히 언제 만료되는지 확인 가능
+토큰만료시간은 https://jwt.io/여기에서 토큰 입력하면 decode해줌
+
+
+# JWT를 이용한 회원가입 기능 구현
+
+python3 manage.py startapp user
+
+config/settings.py
+INSTALLED_APPS = [
+    'user',
+]
+
+# user/views.py
+from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
+
+from user.serializers import SignUpSerializer
+
+
+class SignUpAPIView(CreateAPIView):
+    serializer_class = SignUpSerializer
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from rest_framework import serializers
+
+User = get_user_model()
+
+# user/serializers.py
+
+class SignUpSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+        extra_kwargs = {
+            'password': {'write_only':True}
+        }
+
+    # 데이터 검증
+    def validate(self, data):
+        user = User(**data)
+
+        errors = dict()
+        try:
+            # validate_password는 settings.py에 AUTH_PASSWORD_VALIDATORS 설정된 조건을 만족하는지 검사
+            validate_password(password=data['password'], user=user)
+        except ValidationError as e:
+            errors['password'] = list(e.messages)
+
+        if errors:
+            raise serializers.ValidationError(errors)
+
+        return super().validate(data)
+
+
+터미널에서 python3 manage.py shell_plus 입력
+확인해보면 새로만든 유저의 비밀번호가 암호화 되지 않음.
+
+In [1]: User.objects.last()
+Out[1]: <User: test2>
+
+In [2]:  u = _
+
+In [3]: u.username
+Out[3]: 'test2'
+
+In [4]: u.password
+Out[4]: 'qwer1234!'
+
+In [5]: User.objects.first().password
+Out[5]: 'pbkdf2_sha256$870000$sFWawKbQsD76kzUVYayTDR$0Y8y/c0ztXPBmSI8tvrM8v/QPqo0z/LAFZWoSDZ5qvM='
+
+
+# user/serializers.py
+# SignUpSerializer 클래스에 create 메소드 추가
+
+class SignUpSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        user = User(**validated_data)
+
+        # set_password() 함수를 사용해 비밀번호 암호화
+        user.set_password(validated_data['password'])
+        user.save()
+
+        return user
+
+# 확인해보면 암호화 잘 되어있음.
+
+In [2]: User.objects.last()
+Out[2]: <User: test3>
+
+In [3]: User.objects.last().password
+Out[3]: 'pbkdf2_sha256$870000$0bM5vNl90k2jo6FODH35ZB$yaf0tNwDow4ZYPJ0S58CDjW23qjz0uv7ZMuzyjylRqM='
+
+
+자동 swagger 문서화 패키지
+https://drf-yasg.readthedocs.io/en/stable/
+https://drf-yasg.readthedocs.io/en/stable/readme.html
+
+설치
+poetry add drf-yasg
+
+적용
+
+config/settings.py
+INSTALLED_APPS = [
+    ...
+    'drf_yasg',
+    ...
+]
+
+
+# config/schema.py
+
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Blog API",
+        default_version='v1',
+        description="Django REST Framework API document",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@snippets.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny,],
+)
+
+config/urls.py
+
+urlpatterns = [
+    ...
+    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    ...
+]
+
+
+스웨거 커스텀
+
+# user/view.py
+
+class SignUpAPIView(CreateAPIView):
+    serializer_class = SignUpSerializer
+
+    @swagger_auto_schema(
+        request_body=SignUpSerializer,
+        responses={201: UsernameSerializer(many=False)}
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+# user/serializers.py
+
+class UsernameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['username']
+
+
+스웨서 API 리드미
+http://127.0.0.1:8000/redoc/
+
+스웨거 JSON화
+http://127.0.0.1:8000/swagger.json/
+내용을 복사해서 .json파일로 만듬
+
+스웨거 에디터
+Swagger(OpenAPI) 문서를 직접 작성, 편집, 시각화, 테스트할 수 있는 공식 웹 기반 도구
+https://editor.swagger.io/
+File → Import File -> 만든 파일 선택
+
+
+디버그 모드
+
+# config/settings.py
+
+# DEBUG = True일시 잘못된 url로 들어가면 모든 url이 노출되고 오류원인도 나옴.
+DEBUG = False
+
+# DEBUG = False 일 때 ALLOWED_HOSTS를 설정해줘야함.
+ALLOWED_HOSTS = ['127.0.0.1:8000']
+
+
+------------------------------------------
+배포환경과 개발환경 구분해서 settings.py 사용하기
+------------------------------------------
+
+# config/settings.py의 DEBUG, ALLOWED_HOSTS, DATABASES 등의 설정을 분리해서 관리할 필요가 있기 때문에 구분
+
+.gitignore에 추가
+config/settings.py
+
+
+# 배포환경
+
+# config/prod.py
+
+from .local import *
+DEBUG = False
+ALLOWED_HOSTS = ['127.0.0.1:8000']
+
+터미널에 입력
+prod.py와 연결된 settings.py를 만듬 (실제로 존재하진않음. 바로가기같은 개념)
+ln -sf prod.py settings.py
+
+확인
+ls -al
+
+
+# 개발환경
+
+config/settings.py를 local.py로 변경
+cd config
+local.py와 연결된 settings.py를 만듬 (실제로 존재하진않음. 바로가기같은 개념)
+ln -sf local.py settings.py
+확인
+ls -al
+
+
+-------------------------------------
+pythonanywhere에 배포하기
+-------------------------------------
+
+https://www.pythonanywhere.com/
+free 회원가입
+
+web apps
+open web tab
+add a new web app
+manual configuration
+python 버전 선택
+
+웹페이지
+Configuration for xowls0131.pythonanywhere.com
+
+디렉토리
+code - Go to directory
+open bash console here
+
+서버에 리파짓토리 복사
+git clone https://github.com/LucasKim4321/rest-blog.git
+
+프라이빗 리파짓토리의 경우 ssh keygen으로 key 생성
+ssh keygen 검색
+key 생성 후 깃에 셋팅에 가서 키 셋팅
+
+프로젝트 폴더/config에 들어감
+cd rest-blog/config
+
+프로젝트 셋팅파일 설정
+ln -sf prod.py settings.py
+
+확인
+ls -al
+
+poetry 명령어로 requirements.txt 생성
+poetry export --without-hashes --format=requirements.txt > requirements.txt
+
+pip3 명령어로 requirements.txt 생성
+pip3 freeze > requirements.txt
+
+
+----------------------------------------
+brew로 설치한 poetry의 export 명령어 에러 해결
+----------------------------------------
+
+poetry export 명령어 실행 불가능
+
+poetry self add poetry-plugin-export 설치시 anyio install이 안된다고 에러남
+
+# Poetry 제거
+brew uninstall poetry
+
+# 공식 방식으로 재설치
+curl -sSL https://install.python-poetry.org | python3 -
+
+# 환경 적용
+export PATH="$HOME/.local/bin:$PATH"
+
+# export 플러그인 설치. 정상 실행됨
+poetry self add poetry-plugin-export
+
+다시 poetry 명령어로 requirements.txt 생성. 성공
+poetry export --without-hashes --format=requirements.txt > requirements.txt
+
+# 서버에 적용하기
+
+config/prod.py
+ALLOWED_HOSTS = ['xowls0131.pythonanywhere.com]
+
+config/local.py
+STATIC_ROOT = '.static_root'
+
+# 서버 터미널에 입력
+pip3 install -r requirements.txt
+
+# .static_root폴더 생성
+python3 manage.py collectstatic
+
+code/source code 
+/home/xowls0131/rest-blog
+
+
+Code / WSGI configuration file: link
+
+
+# HELLO_WORLD = """<html>  여기부터
+# yield content.encode('utf8') 여기까지 주석
+
+# +++++++++++ DJANGO +++++++++++
+# 장고 부분 주석해제
+path = '/home/xowls0131/rest-blog'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'config.settings'
+
+python3 manage.py migrate
+
+static files
+/static/     /home/xowls0131/rest-blog/.static_root
+
+
+서버에서 이상한 오류가 뜬다.
+Something went wrong :-(
+Something went wrong while trying to load this website; please try again later.
+If it is your site, you should check your logs to determine what the problem is.
+There was an error loading your PythonAnywhere-hosted site. There may be a bug in your code.
+Error code: Unhandled Exception
+
+서버 콘솔을 확인해보니
+python3 --version 했을때 
+파이썬이 3.13.1 버전이 실행되고 있었고
+"Web" 탭의 Python 버전 설정은 3.12로 되어 있어서 에러가 남.
+분명히 만들때 3.12로 설정하고 만들었는데 서버가 설정대로 안돌아간다.
+3.13으로 설정을 바꿔주면 제대로 돌아감.
