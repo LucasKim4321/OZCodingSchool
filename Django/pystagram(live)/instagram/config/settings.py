@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,6 +29,20 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = "user.CustomUser"  # User 모델 변경
 
+# JWT설정
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),  #JWT 토큰 만료 시간 7일
+    # "TOKEN_OBTAIN_SERIALIZER": "user.jwt_serializers.CustomTokenObtainPairSerializer",
+    # "TOKEN_OBTAIN_SERIALIZER": "user.jwt_serializers.MyTokenObtainPairSerializer",
+}
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )
+# }
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +55,9 @@ INSTALLED_APPS = [
     # own
     "user.apps.UserConfig",  # User앱 등록
     "feed.apps.FeedConfig",  # feed앱 등록
+    # 3rd party apps
+    'rest_framework',
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -130,3 +147,37 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# pip3 install djangorestframework
+# pip3 install psycopg2-binary
+# pip3 install djangorestframework-simplejwt
+
+
+# docker desktop 설치
+# https://www.docker.com/products/docker-desktop/
+# 도커 다운로드
+# docker google 로그인
+#
+# 도커 백그라운드로 실행
+# docker compose up -d
+#
+# 확인
+# docker ps
+#
+# 도커 종료
+# docker compose down
+#
+# 도커 확인
+# docker ps
+#
+# 도커 실행
+# docker compose up
+#
+# docker compose up -d
+# docker exec -it instagram bash
+# ls /var/lib/postgresql/data/instagram
+#
+# 파이참 우측에 데이터베이스 클릭
+# + databasesource postgresql
+# docker-compose.yml 설정 파일 보고 설정

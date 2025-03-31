@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("users/", include("user.urls")),  # 유저 앱 라우팅
+    path("", include("feed.urls")),  # 피드 앱 라우팅
 ]
