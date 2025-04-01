@@ -11,6 +11,8 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings') # 셋팅 설정
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')  # 로컬 환경 셋팅
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')  # 로컬 환경 셋팅
 
 application = get_wsgi_application()

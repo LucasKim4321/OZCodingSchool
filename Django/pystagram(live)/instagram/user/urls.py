@@ -1,3 +1,7 @@
+# 공통으로 사용할 환경변수
+# settings/base.py -> settings/local.py : 로컬환경
+# settings/local.py -> settings/prod.py : 로컬환경
+
 from django.urls.conf import path
 
 from user import apis

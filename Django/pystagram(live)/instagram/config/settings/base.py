@@ -13,7 +13,8 @@ from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6%b-5m5p0#fh@$a&uag(yop0bmp*l74))m^3v-)lf8c=tq95q5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = "user.CustomUser"  # User 모델 변경
 
@@ -36,12 +37,12 @@ SIMPLE_JWT = {
     # "TOKEN_OBTAIN_SERIALIZER": "user.jwt_serializers.MyTokenObtainPairSerializer",
 }
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.BasicAuthentication',
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     )
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # Application definition
 
@@ -95,16 +96,16 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'instagram',
-        'USER': 'dev_user',
-        'PASSWORD': 'securepassword',
-        'HOST': 'localhost',
-        'PORT': '54322',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'instagram',
+#         'USER': 'dev_user',
+#         'PASSWORD': 'securepassword',
+#         'HOST': 'localhost',
+#         'PORT': '54322',
+#     }
+# }
 
 
 # Password validation
@@ -148,6 +149,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+STATIC_URL = 'static/'
+STATIC_ROOT = 'staticfiles'
 
 # pip3 install djangorestframework
 # pip3 install psycopg2-binary

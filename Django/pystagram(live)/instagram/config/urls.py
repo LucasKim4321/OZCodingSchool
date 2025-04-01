@@ -17,9 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
+from django.conf.urls.static import static
+from config.settings import base as base_settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("users/", include("user.urls")),  # 유저 앱 라우팅
     path("", include("feed.urls")),  # 피드 앱 라우팅
-]
+# ]
+] + static(base_settings.STATIC_URL, document_root=base_settings.STATIC_ROOT) # 로컬 환경에서 설정
+# static경로에 접근가능하게 설정
