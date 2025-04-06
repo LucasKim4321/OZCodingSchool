@@ -242,8 +242,8 @@ docker compose up -d
 docker ps
 
 도커 종료
-
 docker compose down
+
 도커 확인
 docker ps
 
@@ -309,3 +309,366 @@ python3 manage.py migrate
 - like, 팔로우
 
 3. EC2 배포
+
+
+
+MVC -> MTV
+
+Django View
+- 프로그램 로직
+
+Serializer(직력화/역직렬화)
+- 직렬화 : xxx -> JSON : 뭔가를 다른형태로 바꾸는 것 
+- 역직렬화 : JSON -> Python : 다른현태로 바뀐것을 다시 바꾸는것
+
+FBV (Function-Based View)
+- 뷰를 함수로 작성하는 방법
+- 파이썬 함수 : View
+
+def hello_handler():
+    pass
+
+
+CBV (Class-Based View)
+
+class HelloAPIView(APIView):
+    def get(request):
+        pass
+    def post(request):
+        pass
+
+
+HTTP 메소드            vs              인스턴스 메소드
+
+- HTTP 프로토콜 상에 정의된 행위를 나타내는 것
+    - GET, POST, PUT, PATCH, DELETE
+
+- GET : 조회
+- POST : 생성
+- PUT : 수정/덮어쓰기
+- PATCH : 수정/일부 수정
+- DELETE : 삭제
+
+
+GenericAPIView
+- 로직의 흐름/처리(1,2,3,4)
+- Model, Serializer만 정의하면 됨.
+
++ mixins
+    (로직의 흐름/처리(1,2,3,4))
+
+
+[게시글 생성]
+1. 사용자로부터 데이터를 받는다
+    - 제목, 본문, 이미지 등
+
+2. 넘겨 받은 데이터를 검증한다.
+    - 제목이 1000자를 넘지 않는지
+    - 본문에 욕설이 포함되어 있지 않은지
+
+3. 데이터르르 처리한다(읽기/쓰기/수정/삭제)
+    - 게시글을 데이터베이스에 저장
+
+4. 결과를 반환한다.
+    - 성공했다고 알려준다.
+
+바뀌는거
+1. Model
+2. Serializer
+
+1. 게시글 생성
+    Post, PostSerializer
+2. 상품 주문
+    Order, OrderSerializer
+
+3. xxx
+
+
+docker
+
+
+-----------------------------------------
+JWT (JSON Web Token) - https://jwt.io/
+-----------------------------------------
+
+- 웹 애플리케이션에서 안전하게 정보를 전달하기 위해 사용하는 토큰 인증 방식
+
+구성 요소
+1. 2. 3. 헤더(Header): 토큰의 타입과 사용된 알고리즘 정보 포함
+    a. 예: { "alg": "HS256", "typ": "JWT" }
+
+페이로드(Payload): 실제 전달하려는 데이터 포함
+    a. Base64Url로 인코딩. 민감한 데이터는 포함하면 안 됨
+    b. 예: { "sub": "1", "name": "John Doe", "iat": 1516239022}
+
+서명(Signature): 토큰의 유효성을 확인하기 위해 서명
+    a. 헤더와 페이로드를 인코딩한 후, 비밀 키를 사용하여 생성
+    b. 토큰이 위변조 되지 않았음을 보장
+
+
+해싱(Hashing)
+- 데이터를 고정된 크기의 고유한 해시 값으로 변환하는 과정
+
+hello  ->  해시 함수(SHA256)  ->  2cf24db…
+
+JWT 서명 과정
+- <Header + Payload + 비밀키>를 해싱하여 Signature 생성
+
+세션(Session)과 비교
+- 공통점: 사용자의 인증 및 로그인 상태 관리를 위한 방법
+
+저장 위치 & 상태 관리
+- 세션
+    - 서버에 저장. 클라이언트는 세션 ID만 저장하고, DB에 세션 데이터
+    - 세션 만료나 자동 로그아웃 처리가 쉬움 (ref. 넷플릭스 동시 접속 제한)
+- JWT
+    - 클라이언트에 저장. 보통 로컬 스토리지나 쿠키에 저장.
+    - 데이터베이스 조회 없이도 토큰을 통해 인증 정보 확인.
+
+설치
+pip3 install djangorestframework-simplejwt
+
+
+------------------------------------------------------------------------------------------
+실행은 잘되는데 빨간줄 → PyCharm이 경로를 못 인식함 (실제 Python 해석기와 PyCharm 인식 간의 불일치)
+------------------------------------------------------------------------------------------
+
+기본적으로 하는 셋팅 인터프리터 설정, 장고 서포트 설정
+추가로 프로젝트 스트럭처(Project Structure)설정에서 프로젝트 폴더를 소스 폴더로 지정
+
+
+# 멱등성 (idempotency)
+동일한 연산을 무한히 반복해도 결과가 달라지지 않는 성질
+중복 연산이 되어선 안되는 것에 적용. 예) follow기능
+REST API: 동일한 요청을 여러 번 보냈을 때, 서버 상태가 동일하게 유지
+
+Follow 기능의 멱등성
+- Follow API를 여러번 호출해도 팔로잉 상태가 유지(중복 팔로우 X, 취소
+X)
+
+get_or_create()
+- 객체를 조회하거나, 객체가 없을 경우 새로 생성
+- 여러 번 호출하더라도 동일한 조건에서 동일한 객체가 반환되므로
+멱등성 보장
+
+
+데이터베이스(Database)란?
+: 데이터를 저장하고 관리해주는 프로그램
+
+관계형 데이터베이스 (RDBMS) (Relational Database Management System)
+관계된 데이터베이스 특징: 두 개 이상의 테이블 간의 논리적인 연결성을 맺을 수 있다.
+외례키를 추가해서 관계를 갖는다.
+
+1:1 관계 (일대일) 
+1:n 관계 (일대다)
+n:m 관계 (다대다) (일대다+다대일)
+
+
+- EC2
+    - 인스턴스(instance)
+- 보안그룹(Security Group):
+    - 방화벽
+- VPC(Virtual Private Cloud)
+    - 네트워크
+
+--------------------
+배포하기
+--------------------
+
+# 개발자 환경과 배포환경 분리
+
+# settings package 생성
+
+# settings.py -> base.py  수정
+
+# local.py  생성
+
+from .base import *
+
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'instagram',
+        'USER': 'dev_user',
+        'PASSWORD': 'securepassword',
+        'HOST': 'localhost',
+        'PORT': '54322',
+    }
+}
+
+# asgi.py
+# manage.py
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')  # 로컬 환경 셋팅
+
+
+# prod.py 생성
+
+from .base import *
+
+DEBUG = False
+
+ALLOWED_HOSTS = [
+]
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'instagram',
+        'USER': 'dev_user',
+        'PASSWORD': 'securepassword',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+# asgi.py
+# manage.py
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.prod')  # 배포 환경 셋팅
+
+
+# docker-compose-prod.yml 생성
+
+services:
+  db:
+    container_name: instagram
+    image: postgres:16
+    restart: always
+    volumes:
+      - local_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: instagram
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: securepassword
+      PGDATA: /var/lib/postgresql/data/instagram/
+    ports:
+      - "54322:5432"
+  ###################### 추가 ############################
+  backend:
+    container_name: instagram_backend
+    build: .
+    restart: always   
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings.prod
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  #######################################################
+
+volumes:
+  local_db:
+
+
+# Dockerfile 생성
+
+FROM python:3.13.1-slim
+
+WORKDIR /app
+
+COPY requirements.txt .   # requirements.txt/대상경로
+RUN pip install --no-cache-dir -r requirements.txt   # requirements.txt  사용해 패키지 
+
+COPY . .
+
+CMD [ "gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application" ]
+
+# requirements.txt 생성
+
+
+gunicorn --bind 127.0.0.1:8000 config.wsgi:application
+
+
+Django
+- DEBUG=True -> static 파일 찾아서 사용
+- DEBUG=False -> /static 없음
+
+
+ls
+
+# docker 이미지 생성
+# docker build
+docker build -t instagram_backend . 
+
+docker run instagram_backend
+
+
+
+sudo yum install -y docker
+sudo yum install -y docker
+docker --version
+sudo systemctl start docker
+sudo systemctl enable docker
+ssh -i ~/Downloads/mykey02.pem ec2-user@13.124.181.116
+
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+
+
+mv ~/Downloads/mykey02.pem ~/.ssh  
+ls -l
+
+chmod 400 mykey02.pem   # 읽기 모드 설정
+ls -l
+
+ssh -i ~/.ssh/mykey02.pem ec2-user@13.124.181.116
+
+
+1. scp&docker-compose
+2. GitHub & docker-compose  (보안위협)
+3. docker build
+
+서버에 프로젝트 복사
+
+프로젝트 경로에서 명령어 입력
+scp -i ~/.ssh/mykey02.pem -r . ec2-user@13.124.181.116:~/app
+
+sudo docker-compose -f docker-compose-prod.yml up -d
+
+sudo docker ps
+
+ec2 서버안의 도커 이미지에 접속
+sudo docker exec -it instagram_backend bash
+
+환경변수 확인
+echo $DJANGO_SETTINGS_MODULE
+
+python3 manage.py makemigrations
+
+python3 manage.py migrate
+
+python3 manage.py createsuperuser
+
+
+
+컨테이너 정지 및 제거
+sudo docker-compose -f docker-compose-prod.yml down
+
+변경사항 반영하여 재빌드 및 재실행
+sudo docker-compose -f docker-compose-prod.yml up --build -d
+
+cd /etc/nginx/conf .d/
+
+
+docker-compose : 도커 컨테이너를 '여러개' 실행하고 싶을 때 사용하는 기술
+
+코드.yml   ->   이미지    ->    컨테이너
+
+compose.yml
+volumes:
+  local_db:
+이렇게 쓰면 앱이름+'_local_db' 이름의  볼륨이 자동생성 되고 관리됨
+
+
+Dcoker Volumes
+- Host
+
+
+docker compose
+- 여러개의 이미지와 컨테이너를 한번에 다루는 기술

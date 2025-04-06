@@ -1734,7 +1734,7 @@ https://www.django-rest-framework.org/tutorial/quickstart/
 poetry add djangorestframework
 
 
-poetry add django-extentions
+poetry add django-extensions
 poetry add ipython
 
 설치된 앱 목록(INSTALLED_APPS)에 추가

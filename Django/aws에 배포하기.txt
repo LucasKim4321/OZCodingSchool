@@ -1,0 +1,347 @@
+
+
+
+ls ~/Desktop
+ls -al ~/Desktop/파일이름
+
+ls -al ~/Downloads/mykey03.pem
+
+폴더 만들기
+mkdir ~/.ssh
+
+폴더 열기
+open ~/.ssh
+
+다른 폴더로 이동
+mv ~/Downloads/mykey02.pem ~/.ssh/
+
+맥에서 키 권한설정
+400 소유자에게만 읽기 권한
+600 소유자에게만 읽기/쓰기 권한
+등등 더 있음
+chmod 400 ~/Downloads/mykey02.pem
+
+ec2서버 접속
+ssh -i ~/Downloads/my-key.pem ec2-user@<EC2_PUBLIC_IP> -p <PORT>
+ssh -i ~/.ssh/mykey02.pem ubuntu@13.125.182.248
+
+-------------------
+# Local설정 (필수아님)
+-------------------
+로케일은 시스템이 언어, 문자 인코딩, 시간/날짜 형식, 숫자 표기 등을 어떻게 처리할지를 정하는 환경 변수입니다.
+
+변수             의미
+LANG            시스템의 기본 언어/로케일 설정입니다. 대부분의 프로그램은 이 값을 따릅니다.
+LC_ALL          모든 LC_ 변수들보다 우선되는 강제 로케일입니다. 디버깅이나 임시 설정에 주로 사용되며, 항상 지정하는 건 권장되지 않습니다.
+LC_CTYPE        문자 인코딩 및 문자 분류 방식 설정. 예를 들어 터미널에서 한글이나 UTF-8 문자를 올바르게 인식할 수 있도록 해줍니다.
+
+항목              C.UTF-8                         en_US.UTF-8
+언어 번역 메시지     없음 (최소화)                      영어 메시지
+유니코드 지원       가능 ✅                           가능 ✅
+날짜/숫자 형식      고정                              미국식 설정
+용도              테이너, 서버, 프로그래밍 환경에 적합     데스크탑, 사용자 환경에 적합
+
+sudo vi /etc/default/locale
+
+dd 줄 삭제
+u 복구
+i 입력  esc편집모드로 돌아감
+
+기존에 있던거 지운 후 입력
+
+LC_CTYPE="en_US.UTF-8"
+LC_ALL="en_US.UTF-8"
+LANG="en_US.UTF-8"
+
+저장 후 종료
+:wq
+
+exit해서 서버 접속 해제
+
+다시 접속
+ssh -i ~/.ssh/mykey02.pem ubuntu@13.125.182.248
+
+접속 시 오류 안나면 잘된거
+
+--------------------
+# zsh적용하기 (필수아님)
+--------------------
+
+업데이트
+질문 나오면 그냥 엔터
+
+시스템이 사용하는 패키지 목록(데이터베이스) 을 업데이트
+sudo apt-get update
+
+설치된 패키지를 최신 버전으로 업그레이드하면서, 의존성 변화도 반영
+sudo apt-get dist-upgrade
+
+파이썬 설치
+sudo apt-get install python3-pip
+
+Z Shell 설치
+sudo apt-get install zsh
+sudo curl -L http://install.ohmyz.sh | sh
+기본 쉘 zsh로 변경
+sudo chsh ubuntu -s /usr/bin/zsh
+
+zsh(z shell)을 쓰면 자동완성 기능이 더 잘되고 오타날 확률이 줄어듬.
+
+
+---------------------
+# python 설정하기
+---------------------
+
+sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget
+sudo apt-get install -y curl llvm libncurses5-dev libncursesw5-dev xz-utils libpq-dev python3-dev liblzma-dev
+
+# pyenv 설치
+https://github.com/pyenv/pyenv
+Installation / Getting Pyenv / Automatic installer (Recommended)
+curl -fsSL https://pyenv.run | bash
+
+터미널 환경 수정
+.zshrc 수정
+sudo vi ~/.zshrc
+
+시프트 g 누르면 맨 밑으로 내려감.
+
+아래 작성하고 :wq 저장  (bash 빼고 입력)
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+eval "$(pyenv virtualenv-init -)"
+
+pillow 사용할 때 필요한 패키지 설치
+sudo apt-get install python-setuptools
+sudo apt-get install python3-setuptools
+터미널 리부트
+source ~/.zshrc
+
+# pyenv 확인
+which pyenv 확인
+pyenv --version 
+
+pyenv에 파이썬 3.12.2버전 설치
+pyenv install 3.12.2
+
+-------------------------------------
+설치할 때 liblzma-dev 오류나면 설치
+sudo apt-get install -y liblzma-dev
+pyenv uninstall 3.12.2
+pyenv install 3.12.2
+-------------------------------------
+
+-------------------
+# 깃허브 RSA 연동
+-------------------
+
+https://docs.github.com/ko/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+# 깃허브 ssh키 적용
+새 SSH 키를 생성
+ssh-keygen -t rsa -b 4096 -C "xowls0131@naver.com"
+엔터
+
+ssh-agent에 SSH 키 추가
+eval "$(ssh-agent -s)"
+
+sudo vi ~/.ssh/config
+
+아래에 추가
+Host github.com
+        AddKeysToAgent yes
+        IdentityFile ~/.ssh/id_rsa
+
+ssh-add -k ~/.ssh/id_rsa
+
+vim으로 id_rsa.pub파일 열기
+sudo vi ~/.ssh/id_rsa.pub
+
+id_rsa.pub파일내에서 처음부터 이메일 전 '=='까지 내용 복사 깃에서 키값에 붙여넣기
+
+깃허브 웹페이지에서 SSH키 생성
+github/settings/SSH and GPG keys/new SSH key
+제목과 키 입력
+
+본인코드 다운로드
+깃 리파짓토리 폴더가서 코드에 SSH코드 복사 (HTTPS코드 아님)
+
+리파짓토리 복제
+git clone ssh-code
+
+프로젝트 경로로 이동
+
+가상환경 생성
+pyenv virtualenv 3.12.2 pystagram
+가상환경 활성화
+pyenv local pystagram
+
+poetry 설치
+curl -sSL https://install.python-poetry.org | python3 -
+
+쉘 환경설정 추가
+vi ~/.zshrc
+export PATH="/home/ubuntu/.local/bin:$PATH"` to your shell configuration file.
+쉘 재시작
+source ~/.zshrc
+poetry확인
+poetry --version
+
+프로젝트 경로에서 패키지 설치
+poetry install --no-root
+
+software-properties-common 설치
+sudo apt-get install software-properties-common
+
+nginx설치
+sudo apt-get install nginx
+
+폴더 이동
+cd /etc/nginx/sites-available
+
+목록에서 default파일 확인
+ls
+
+default 삭제
+sudo rm default
+
+pystagram.conf 생성 및 작성
+sudo vi pystagram.conf
+
+pystagram.conf에 작성
+server {
+        server_name 13.125.182.248;
+        location / {
+                include proxy_params;
+                proxy_pass http://localhost:8000/;
+        }
+}       
+
+sudo ln -sf 파일 경로
+경로에 파일 심볼릭 링크 생성
+sudo ln -sf /etc/nginx/sites-available/pystagram.conf /etc/nginx/sites-enabled/
+
+확인
+ls /etc/nginx/sites-enabled
+
+default 삭제
+sudo rm /etc/nginx/sites-enabled/default
+
+확인
+ls /etc/nginx/sites-enabled
+
+nginx 재시작
+sudo systemctl restart nginx.service
+오류 메시지 없으면 정상
+
+명령어 쓸 때 탭키를 누르면 자동완성됨.
+
+nginx 상태 확인
+active 상태면 정상
+sudo systemctl status nginx.service
+
+프로젝트 경로로 이동
+cd ~/pystagram
+
+앱 실행
+python3 manage.py runserver
+
+오류남
+
+파이참으로 돌아가서
+local.py prod.py 추가 후
+from .base import *  추가
+
+prod.py 에만 추가
+
+DEBUG = False
+ALLOWED_HOSTS = [
+    '13.125.182.248'
+]
+
+config 폴더로 가서 settings.py 심볼릭 링크(바로가기) 생성
+cd config
+ln -sf local.py settings.py
+
+충돌 날 수 있으니
+서버는 다운로드만 받는다
+
+.gitignore에
+.config_secret/ 추가 ** 매우 중요
+config/settings.py 추가
+
+차이점 
+.config_secret/  폴더의 모든 파일, 하위폴더, 하위폴더 파일 무시
+.config_secret/*  폴더의 파일만 무시 하위폴더와 하위폴더의 파일은 무시안됨
+
+이미 깃이 추적중인 파일 및 폴더 추적 제거
+git rm --cached -r __pycache__/
+git rm --cached -r */__pycache__/
+git rm --cached -r */*/__pycache__/
+
+서버에서 충돌나는 폴더 제거
+rm -rf __pycache__/
+
+서버에 설정
+config 폴더로 가서 settings.py 심볼릭 링크(바로가기) 생성
+cd config
+ln -sf prod.py settings.py
+
+
+DEBUG = False 설정 시
+# 배포할 때 사용하는 경로
+STATIC_ROOT = BASE_DIR / '.static_root'
+
+배포환경에서 static 파일 설정
+
+정적 파일 수집
+python manage.py collectstatic
+확인
+ls -l .static_root
+
+
+nginx 설정
+
+폴더로 이동
+cd /etc/nginx/sites-available
+
+pystagram.conf 생성 및 작성
+sudo vi pystagram.conf
+
+server {
+    server_name 13.125.182.248;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://localhost:8000/;
+    }
+
+    location /static/ {
+        alias /home/ubuntu/pystagram/.static_root/;
+    }
+}
+
+nginx 재시작
+sudo systemctl restart nginx.service
+오류 메시지 없으면 정상
+
+▶️ 개발 환경 (DEBUG = True)
+STATICFILES_DIRS와 각 앱의 static 폴더에서 Django가 자동 서빙
+
+collectstatic, STATIC_ROOT, Nginx 설정 필요 없음
+
+개발용 runserver가 정적 파일을 직접 처리함
+
+→ STATIC_ROOT 없어도 정적 파일 잘 보임
+
+⚠️ 배포 환경 (DEBUG = False)
+Django는 정적 파일을 절대 서빙하지 않음
+
+반드시 collectstatic을 통해 STATIC_ROOT로 모아야 함
+
+정적 파일은 Nginx 같은 웹 서버가 /static/ 요청을 처리해야 함
+
+→ STATIC_ROOT 없으면 정적 파일은 웹에서 100% 안 보임

@@ -5,7 +5,19 @@ ls -al ~/Desktop/파일이름
 
 ls -al ~/Downloads/mykey03.pem
 
+폴더 만들기
+mkdir ~/.ssh
+
+폴더 열기
+open ~/.ssh
+
+다른 폴더로 이동
+mv ~/Downloads/mykey02.pem ~/.ssh/
+
 맥에서 키 권한설정
+400 소유자에게만 읽기 권한
+600 소유자에게만 읽기/쓰기 권한
+등등 더 있음
 chmod 400 ~/Downloads/mykey02.pem
 
 ec2서버 접속
