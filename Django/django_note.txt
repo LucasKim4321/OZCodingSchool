@@ -1832,70 +1832,74 @@ def is_server_error(code):
     return 500 <= code <= 599
 
 
-HTTP_100_CONTINUE = 100
-HTTP_101_SWITCHING_PROTOCOLS = 101
-HTTP_102_PROCESSING = 102
-HTTP_103_EARLY_HINTS = 103
-HTTP_200_OK = 200
-HTTP_201_CREATED = 201
-HTTP_202_ACCEPTED = 202
-HTTP_203_NON_AUTHORITATIVE_INFORMATION = 203
-HTTP_204_NO_CONTENT = 204
-HTTP_205_RESET_CONTENT = 205
-HTTP_206_PARTIAL_CONTENT = 206
-HTTP_207_MULTI_STATUS = 207
-HTTP_208_ALREADY_REPORTED = 208
-HTTP_226_IM_USED = 226
-HTTP_300_MULTIPLE_CHOICES = 300
-HTTP_301_MOVED_PERMANENTLY = 301
-HTTP_302_FOUND = 302
-HTTP_303_SEE_OTHER = 303
-HTTP_304_NOT_MODIFIED = 304
-HTTP_305_USE_PROXY = 305
-HTTP_306_RESERVED = 306
-HTTP_307_TEMPORARY_REDIRECT = 307
-HTTP_308_PERMANENT_REDIRECT = 308
-HTTP_400_BAD_REQUEST = 400
-HTTP_401_UNAUTHORIZED = 401
-HTTP_402_PAYMENT_REQUIRED = 402
-HTTP_403_FORBIDDEN = 403
-HTTP_404_NOT_FOUND = 404
-HTTP_405_METHOD_NOT_ALLOWED = 405
-HTTP_406_NOT_ACCEPTABLE = 406
-HTTP_407_PROXY_AUTHENTICATION_REQUIRED = 407
-HTTP_408_REQUEST_TIMEOUT = 408
-HTTP_409_CONFLICT = 409
-HTTP_410_GONE = 410
-HTTP_411_LENGTH_REQUIRED = 411
-HTTP_412_PRECONDITION_FAILED = 412
-HTTP_413_REQUEST_ENTITY_TOO_LARGE = 413
-HTTP_414_REQUEST_URI_TOO_LONG = 414
-HTTP_415_UNSUPPORTED_MEDIA_TYPE = 415
-HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE = 416
-HTTP_417_EXPECTATION_FAILED = 417
-HTTP_418_IM_A_TEAPOT = 418
-HTTP_421_MISDIRECTED_REQUEST = 421
-HTTP_422_UNPROCESSABLE_ENTITY = 422
-HTTP_423_LOCKED = 423
-HTTP_424_FAILED_DEPENDENCY = 424
-HTTP_425_TOO_EARLY = 425
-HTTP_426_UPGRADE_REQUIRED = 426
-HTTP_428_PRECONDITION_REQUIRED = 428
-HTTP_429_TOO_MANY_REQUESTS = 429
-HTTP_431_REQUEST_HEADER_FIELDS_TOO_LARGE = 431
-HTTP_451_UNAVAILABLE_FOR_LEGAL_REASONS = 451
-HTTP_500_INTERNAL_SERVER_ERROR = 500
-HTTP_501_NOT_IMPLEMENTED = 501
-HTTP_502_BAD_GATEWAY = 502
-HTTP_503_SERVICE_UNAVAILABLE = 503
-HTTP_504_GATEWAY_TIMEOUT = 504
-HTTP_505_HTTP_VERSION_NOT_SUPPORTED = 505
-HTTP_506_VARIANT_ALSO_NEGOTIATES = 506
-HTTP_507_INSUFFICIENT_STORAGE = 507
-HTTP_508_LOOP_DETECTED = 508
-HTTP_509_BANDWIDTH_LIMIT_EXCEEDED = 509
-HTTP_510_NOT_EXTENDED = 510
-HTTP_511_NETWORK_AUTHENTICATION_REQUIRED = 511
+HTTP_100_CONTINUE = 100                              클라이언트가 요청을 계속 진행해도 된다는 의미
+HTTP_101_SWITCHING_PROTOCOLS = 101                   프로토콜 전환을 승인함
+HTTP_102_PROCESSING = 102                            서버가 요청을 처리 중임을 나타냄 (WebDAV)
+HTTP_103_EARLY_HINTS = 103                           응답 헤더를 미리 보내는 중간 상태
+
+HTTP_200_OK = 200                                    요청이 성공적으로 처리됨
+HTTP_201_CREATED = 201                               요청이 성공적으로 처리되었고 새로운 리소스가 생성됨
+HTTP_202_ACCEPTED = 202                              요청이 접수되었으나 처리는 완료되지 않음
+HTTP_203_NON_AUTHORITATIVE_INFORMATION = 203         응답은 성공했지만, 원래의 권한 있는 정보는 아님
+HTTP_204_NO_CONTENT = 204                            요청 성공, 그러나 응답할 콘텐츠 없음
+HTTP_205_RESET_CONTENT = 205                         클라이언트가 폼 등을 초기화해야 함
+HTTP_206_PARTIAL_CONTENT = 206                       일부 콘텐츠만 반환 (부분 요청)
+HTTP_207_MULTI_STATUS = 207                          다중 상태 응답 (WebDAV)
+HTTP_208_ALREADY_REPORTED = 208                      이미 보고된 항목 (WebDAV)
+HTTP_226_IM_USED = 226                               IM(Instance Manipulations)이 사용된 응답
+
+HTTP_300_MULTIPLE_CHOICES = 300                      여러 개의 응답 중 선택 가능
+HTTP_301_MOVED_PERMANENTLY = 301                     리소스가 영구적으로 다른 URI로 이동됨
+HTTP_302_FOUND = 302                                 리소스가 임시로 다른 위치에 있음
+HTTP_303_SEE_OTHER = 303                             다른 URI로 리다이렉트함 (GET 방식)
+HTTP_304_NOT_MODIFIED = 304                          캐시된 버전 그대로 사용해도 됨
+HTTP_305_USE_PROXY = 305                             프록시를 사용하라는 지시 (더 이상 사용 안 함)
+HTTP_306_RESERVED = 306                              예약된 코드 (사용되지 않음)
+HTTP_307_TEMPORARY_REDIRECT = 307                    임시 리다이렉트 (요청 방식 유지)
+HTTP_308_PERMANENT_REDIRECT = 308                    영구 리다이렉트 (요청 방식 유지)
+
+HTTP_400_BAD_REQUEST = 400                           잘못된 요청
+HTTP_401_UNAUTHORIZED = 401                          인증이 필요함
+HTTP_402_PAYMENT_REQUIRED = 402                      결제가 필요함 (현재는 사용되지 않음)
+HTTP_403_FORBIDDEN = 403                             서버가 요청을 거부함 (권한 없음)
+HTTP_404_NOT_FOUND = 404                             요청한 리소스를 찾을 수 없음
+HTTP_405_METHOD_NOT_ALLOWED = 405                    허용되지 않은 요청 메서드
+HTTP_406_NOT_ACCEPTABLE = 406                        요청한 리소스를 제공할 수 없음 (클라이언트가 수용 불가)
+HTTP_407_PROXY_AUTHENTICATION_REQUIRED = 407         프록시 인증이 필요함
+HTTP_408_REQUEST_TIMEOUT = 408                       클라이언트의 요청 시간이 초과됨
+HTTP_409_CONFLICT = 409                              리소스 상태 충돌
+HTTP_410_GONE = 410                                  리소스가 영구적으로 사라짐
+HTTP_411_LENGTH_REQUIRED = 411                       Content-Length 헤더가 필요함
+HTTP_412_PRECONDITION_FAILED = 412                   조건이 실패함
+HTTP_413_REQUEST_ENTITY_TOO_LARGE = 413              요청 본문이 너무 큼
+HTTP_414_REQUEST_URI_TOO_LONG = 414                  요청 URI가 너무 김
+HTTP_415_UNSUPPORTED_MEDIA_TYPE = 415                지원하지 않는 미디어 타입
+HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE = 416       요청한 범위를 만족할 수 없음
+HTTP_417_EXPECTATION_FAILED = 417                    Expect 헤더 조건 실패
+HTTP_418_IM_A_TEAPOT = 418                           나는 주전자입니다 (만우절 장난 코드)
+HTTP_421_MISDIRECTED_REQUEST = 421                   잘못된 서버로 요청이 전송됨
+HTTP_422_UNPROCESSABLE_ENTITY = 422                  구문은 맞지만 처리할 수 없음 (WebDAV)
+HTTP_423_LOCKED = 423                                리소스가 잠겨 있음 (WebDAV)
+HTTP_424_FAILED_DEPENDENCY = 424                     이전 요청이 실패했기 때문에 현재 요청도 실패함 (WebDAV)
+HTTP_425_TOO_EARLY = 425                             너무 이른 요청 (Replay 공격 방지)
+HTTP_426_UPGRADE_REQUIRED = 426                      클라이언트는 다른 프로토콜로 업그레이드해야 함
+HTTP_428_PRECONDITION_REQUIRED = 428                 조건부 요청 필요
+HTTP_429_TOO_MANY_REQUESTS = 429                     요청이 너무 많음 (Rate limiting)
+HTTP_431_REQUEST_HEADER_FIELDS_TOO_LARGE = 431       요청 헤더 필드가 너무 큼
+HTTP_451_UNAVAILABLE_FOR_LEGAL_REASONS = 451         법적 사유로 인해 접근 불가
+
+HTTP_500_INTERNAL_SERVER_ERROR = 500                 서버 내부 오류
+HTTP_501_NOT_IMPLEMENTED = 501                       서버가 기능을 구현하지 않음
+HTTP_502_BAD_GATEWAY = 502                           게이트웨이 또는 프록시 오류
+HTTP_503_SERVICE_UNAVAILABLE = 503                   서비스 사용 불가 (과부하, 점검 등)
+HTTP_504_GATEWAY_TIMEOUT = 504                       게이트웨이 응답 시간 초과
+HTTP_505_HTTP_VERSION_NOT_SUPPORTED = 505            지원하지 않는 HTTP 버전
+HTTP_506_VARIANT_ALSO_NEGOTIATES = 506               투명한 협상 순환 참조 오류
+HTTP_507_INSUFFICIENT_STORAGE = 507                  저장 공간 부족 (WebDAV)
+HTTP_508_LOOP_DETECTED = 508                         무한 루프 감지 (WebDAV)
+HTTP_509_BANDWIDTH_LIMIT_EXCEEDED = 509              대역폭 제한 초과 (일반 표준은 아님)
+HTTP_510_NOT_EXTENDED = 510                          확장이 필요함
+HTTP_511_NETWORK_AUTHENTICATION_REQUIRED = 511       네트워크 인증 필요
 
 
 serializer.save(commit=False)가 안된다.
@@ -2418,12 +2422,3 @@ DNS 시스템이 실제 IP로 바꿔주는 역할을 합니다.
 
 https://hosting.kr/
 https://www.whois.com/whois/hosting.kr
-
-
-📦 도메인의 구성
-예를 들어 www.example.com 이라는 도메인을 보면:
-
-부분       의미
-com       최상위 도메인 (TLD)
-example   등록한 도메인 이름
-www       서브도메인 (선택사항)
