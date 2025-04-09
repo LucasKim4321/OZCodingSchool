@@ -1,0 +1,12 @@
+
+
+uvicorn main:app 명령은 다음을 의미합니다:
+
+main: 파일 main.py (파이썬 "모듈").
+app: main.py 내부의 app = FastAPI() 줄에서 생성한 오브젝트.
+--reload: 코드 변경 시 자동으로 서버 재시작. 개발 시에만 사용.
+
+
+대화형 API 문서¶
+http://127.0.0.1:8000/docs
+http://127.0.0.1:8000/redoc

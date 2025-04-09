@@ -1,0 +1,249 @@
+다음 웹사이트를 참고하여 개발하는걸 목표로 한다.
+
+http://www.meetifyr.com/
+
+meetifyr
+
+그룹의 약속 일정을 쉽게 잡을 수 있게 도와주는 웹사이트
+
+http://www.meetifyr.com/8EiNHBuw6X
+
+
+--------
+Poetry
+--------
+
+    주의사항
+        
+        anaconda 가 설치되어있다면 삭제하거나, anaconda 를 아예 끄고 (anaconda 가상환경이 켜져 있으면 안 됩니다.) poetry 설치합니다.
+
+        pyenv 도 마찬가지로, pyenv 를 비활성화 혹은 삭제하고 poetry 를 설치합니다.
+
+        brew 로 poetry 설치하지 않았으면 좋겠습니다. (official installer 로 설치할 때랑 default 설정값이 달라집니다.)
+
+        pyenv가 활성화 되어있을 시 파이참에서 FastAPI와 poetry를 사용한 프로젝트가 제대로 생성되지 않음.
+        vim ~/.zshrc로 zsh설정을 열어서 pyenv가 적용되지 않게 pyenv관련 설정을 모두 주석처리하니까 됨.
+
+    poetry 홈페이지
+
+        https://python-poetry.org/
+
+        - 매 번 pip freeze 할 필요 없이, 알아서 poetry.lock 으로 종속성을 관리해 줍니다.
+
+        - PEP 518 표준인 pyproject.toml 로 프로젝트를 관리하는 것을 도와줍니다.
+
+        - PEP: Python Enhancement Proposal → python comunity 가 PEP 라는 문서를 사용해서, "앞으로 python 을 어떻게 개선할지" 논의합니다.
+
+        - https://www.python.org/dev/peps/pep-0518/
+
+        - black, isort, mypy, ruff, coverage, pytest 설정을 pyproject.toml 한 곳에 모읍니다.
+
+        - 모든 종속성 예) fastapi 의 버전을 관리합니다.
+
+        - pip 와 달리 종속성을 group 에 따라 나눌 수 있습니다.
+            ▪ 개발시에만 필요한 종속성: black, pytest
+            ▪ 실제 배포시에 필요한 종속성: fastapi
+        -  build.gradle 이랑 비슷?
+
+    pip 보다 좀 더 똑똑한 dependency resolving (https://github.com/python-poetry/poetry/poetry#why)
+
+
+    poetry 설치
+
+        python --version 으로 버전확인 (3.13)
+        poetry 설치 (https://python-poetry.org/docs/)
+
+        코드스니펫(Code Snippet) poetry 설치 (mac 용)
+        curl -sSL https://install.python-poetry.org | python3 --version 1.8.5
+
+        코드스니펫(Code Snippet) poetry 설치 (windows 용)
+        (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+            
+    요점 (Recap)
+
+        파이참 설치
+        버전 선택
+        macOS 64-bit universal2 installer 설치
+        설치 후 나오는 폴더에서 install Certificates.command  클릭해서 인증서 설치
+
+
+정석대로 설치하면 문제 생길 확률이 줄어듬.
+브루로 설치시 문제 생길 수 있음.
+파이썬, pyenv, poetry 같은 것은 브루를 사용하지 않고 정석대로 설치하길 권장.
+
+pyenv가 활성화 되어있을 시 파이참에서 FastAPI 프로젝트가 제대로 생성되지 않음.
+vim ~/.zshrc로 zsh설정을 열어서 pyenv가 적용되지 않게 pyenv관련 설정을 모두 주석처리하니까 됨.
+
+
+--------
+# Black
+--------
+
+    black이란?
+    "The uncompromising Python code formatter"
+    (타협 없는, 엄격한 Python 코드 포매터)
+
+    🔧 무슨 역할을 하나요?
+    Python 코드를 자동으로 정해진 스타일대로 정리해줍니다.
+
+    개발자가 코드 스타일로 고민하지 않도록 강력한 규칙을 적용합니다.
+
+    사람마다 스타일이 다른 걸 방지 → 팀 프로젝트에 특히 유리
+
+    블랙(black) 설치
+    poetry add --group=dev black
+    poetry add --group=dev black==24.10.0
+
+    블랙 실행 
+    black .  또는  poetry run black .
+    현재 폴더에 블랙을 적용
+
+--------
+# Ruff
+--------
+
+  ruff는 최근 많은 Python 개발자들이 flake8, pylint, black 등의 대체 또는 보완재로 사용하고 있는
+   **빠르고 강력한 Python 정적 분석기(linter + formatter)**입니다.
+
+  설치
+    poetry add --group=dev ruff
+    poetry add --group=dev ruff==0.8.2
+    
+  # ruff의 주요 기능
+
+  기능               설명
+  Linter            코드에 잘못된 스타일, 오류 가능성 등을 알려줍니다 (flake8처럼)
+  Formatter         black처럼 코드를 자동으로 예쁘게 정리해줍니다 (옵션)
+  Import 정리        isort처럼 import 순서를 자동 정리합니다
+  타입 검사 일부       mypy 기능의 일부분도 지원 (초기 버전에서 점점 확장 중)
+  매우 빠름           Python 도구들보다 훨씬 빠릅니다. 몇 천 파일도 순식간에 처리
+
+
+  터미널에 문제점이 있는지 확인
+  ruff check
+
+  문제점을 자동으로 수정
+  ruff check --fix
+
+
+# 예제 st01.py
+
+# 이 특정 라인에 대해서 lint를 하고싶지 않을 때 주석 noqa사용
+# noqa 사용되지 않는 import일지라도 import 하고 싶을 때 사용
+# import temp2 # noqa  # isort 옵션 사용할 때 이것 때문에 무시 될 수 있음.
+
+# 일부러 알파벳순
+import os
+import sys
+
+# 코드가 옆으로 길면 black 실행 시 이렇게 바꿔줌
+print(
+    "Lif is Tooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo Short!!"
+)
+
+# ruff가 권한하지 않는 변수명
+# O = "abc"
+
+
+# black .
+# poetry run black .
+
+
+
+# 기본 그룹(select = ["E4", "E7", "E9", "F"]) 검사
+# ruff check
+# ruff check --fix
+
+# 오직 I 그룹(import 관련) 문제만 검사
+# ruff check --select I
+# ruff check --select I --fix
+
+
+# poetry
+# pyproject.toml 설정
+#
+# [tool.black]
+# line-length = 120  # hard wrap length 120
+#
+# [tool.ruff]
+# target-version = "py313"  # 파이썬 버전 3.13
+
+# ## 반드시 지켜야 하는 습관
+#  - commit 하기 전에 자기가 무엇을 커밋하는지 꼭 확인하기!
+#  - 미쳐 삭제하지 않은 print()가 없는지 꼭 확인하기
+#   - print()는 "비싼 연산" 입니다.
+
+# print()는 터미널에 입출력(Input Output)해야하기 때문에 오래걸림.
+
+
+oy my zsh 추천
+ Zsh 셸을 더 강력하고 편리하게 만들어주는 커스터마이징 프레임워크
+ bash보다 더 강력한 zsh 셸을 기반으로 함
+ 테마, 자동완성, 플러그인, git 상태 표시 등 다양한 기능 제공
+ macOS 기본 셸이 zsh로 바뀌면서 더 널리 사용됨
+
+----------
+# Mypy
+----------
+
+정적 타입 검사(static type checking)**를 할 수 있도록 도와주는 도구
+
+Mypy 설치
+ poetry add --group=dev mypy
+ poetry add --group=dev mypy==1.13.0
+
+ mypy로 검사
+ mypy .
+
+ 타입힌트가 없을 땐 다이나믹 상태로 인식해 검사를 하지 않음.
+ 타입힌트가 있을 땐 스테틱 상태로 인식해 검사를 한다.
+
+ 커맨드 시프트 n 누르고 pyt눌러서 python 선택하면 scratch.py 파일이 만들어짐.
+
+
+# 예제 st03.py
+
+# static 실행하기 전에 결정.
+a = "123"
+print(a)  # 123
+
+# dynamic
+b = input()
+print(b) # 예상 불가
+
+mypy는 "실행 전에" 알 수 있는 것들에 대해서만 검사
+mypy는 python 프로그램을 실행하지 않는다.
+
+
+print("12345")
+a = 123
+
+# reveal_type(a) # mypy로 검사 수행시 타입을 알려줌. mypy만 사용하는 함수. 파이썬으로 실행하면 오류걸림.
+
+my_int: int = 123  # 타입 힌트로 int를 줬는데 str을 입력 받으면 mypy 검사시 오류남.
+
+
+# 추론(inference)
+my_int2 = 123  # Literal : 값  mypy는 리터럴로부터 타입을 추론함.
+
+
+my_list: list[str] = ["a", "b", "c"]
+
+# 불변성 (immutable)
+# 튜플 타입에 타입 힌트를 주려면 길이만큼 타입을 지정
+my_tuple: tuple[str,str,str] = ("a", "b", "c")
+
+# 길이를 모르는 경우에 어떻게 할 까?
+my_tuple2: tuple[str, ...] = ("a", "b", "c")
+
+my_dict: dict[str, int] = {"a": 1, "b": 2, "c": 3}
+
+# str이나 int타입 설정.
+# bool도 통과된다. 파이썬의 bool이 int를 상속받았기 때문에 가능.
+or_type_list: list[str|int] = ["a", 1, "c", 3, False]
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+1 + add(1,1)
+
