@@ -78,6 +78,21 @@ pyenv가 활성화 되어있을 시 파이참에서 FastAPI 프로젝트가 제�
 vim ~/.zshrc로 zsh설정을 열어서 pyenv가 적용되지 않게 pyenv관련 설정을 모두 주석처리하니까 됨.
 
 
+--------------
+oh my zsh
+--------------
+
+zsh - Z Shell의 약자로 기존의 bash, ksh, tcsh의 많은 유용한 기능을 통합한 유닉스 쉘이다.
+사용자를 위한 다양한 편의기능을 제공하기 때문에 설치해두면 편리하다.
+맥은 기본적으로 zsh
+
+zsh의 장점인 다양한 테마를 사용하기 위해 아래 명령어로 oh-my-zsh을 설치해주자.
+
+oh my zsh 설치 추천
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+
 --------
 # Black
 --------
