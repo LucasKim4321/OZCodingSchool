@@ -1,3 +1,8 @@
+
+-------------------------------------------------
+Day2 백엔드 개발자를 위한 테스트 환경 구축
+-------------------------------------------------
+
 # Pytest
 
   - pytest는 파이썬에서 테스트 코드를 쉽게 작성하고 실행할 수 있게 도와주는 테스트 프레임워크
@@ -32,8 +37,7 @@ def test_simple() -> None:
   - 두 정수를 더하는 함수 add(a: int, b: int) -> None 을 정의했습니다.
   - test 함수에 3가지 step 이 추가되었습니다.
 
-
-# st05 test_simple.py
+# test_st05_simple.py
 
 # pytest 사용시
 # 함수 이름 앞에 test_라고 써주면 test 함수인걸 인식한다.
@@ -179,7 +183,7 @@ coverage, 왜 필요한가?
 다음 명령어를 실행하면 커버리지를 측정하면서 테스트를 수행합니다.
 
 
-# 예제 st07_temp.py, st07_test_temp.py
+# 예제 st07_coverage.py.py, test_st07_coverage.py
 
 def add(a: int, b: int) -> int:
     return a + b
@@ -203,7 +207,7 @@ coverage 설치
 poetry add --group=dev coverage
 
 pytest를 사용해 coverage를 실행
-poetry run coverage run -m pytest st07_temp.py
+poetry run coverage run -m pytest st07_coverage.py.py
 
 보고서 작성
 -m, --show-missing
@@ -215,7 +219,7 @@ poetry run coverage report -m
 test 코드도 포함되서 계산됨.
 Name           Stmts   Miss  Cover   Missing
 --------------------------------------------
-st07_temp.py       8      1    88%   5
+st07_coverage.py.py       8      1    88%   5
 --------------------------------------------
 TOTAL              8      1    88%
 
@@ -238,7 +242,7 @@ poetry run coverage report -m
 커버리지는 높을 수록 좋음.
 Name           Stmts   Miss  Cover   Missing
 --------------------------------------------
-st07_temp.py       4      1    75%   5
+st07_coverage.py.py       4      1    75%   5
 --------------------------------------------
 TOTAL              4      1    75%
 
@@ -370,7 +374,7 @@ Dev dependency
     echo "${COLOR_GREEN}ALL tests passed successfully!${COLOR_NC}"
 
 
-# 예제 st08_test_pytest_asyncio.py
+# 예제 test_st08_pytest_asyncio.py
 
 오류없이 코딩 후
 코드 포매터로 포메팅

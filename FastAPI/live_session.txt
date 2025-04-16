@@ -1,0 +1,73 @@
+
+------------------------
+Flask, Django, FastAPI
+------------------------
+
+[Q] 왜 배울까요?
+[A] 효율적으로 *웹 개발*을 돕는 도구
+
+최종 목적: "웹 서비스" 개발
+
+
+웹 서비스(Web Service)?
+: 인터넷을 기반으로 하는 서비스/제품
+
+카카오톡, 쿠팡, 토스(모바일), 배달의 민족 ->
+
+
+Python 웹 프레임워크
+
+2000년대 초반
+- Flask     : 경량 프레임워크(기본제공 기능 적음)
+- Django    : Battery-Included(배터리 포함 전략???)
+
+2019 ~
+- FastAPI   : 경량 프레임워크
+
+이전 순위
+1.Django, 2.Flask, 3.FastAPI
+
+현재 순위
+1.FastAPI, 2.Django, 3.Flask
+
+FastAPI
+1) AI 프로젝트 -> 손쉽게 배포
+2) 비동기 프로그래밍 사용시 -> 웹 서버 성능 향상 가능
+
+
+django < fastapi 동기(sync) < fastapi 비동기(async)
+
+
+fastapi 설치
+ pip install "fastapi[standard]"
+
+
+# app 객체 -> 라우팅
+# 라우팅 : 어떤 요청을 어떤 함수가 처리할지 결정하는 로직
+# GET /users -> UserListView.as_view() 장고에서 이런식으로 했었음.
+
+# Django -> Function-based View
+# FBV vs. CBV
+# FBV: 요청을 처리하는
+# FastAPI는 FBV사용
+
+# 서버 실행
+# cd src
+
+# 개발 모드로 실행
+# fastapi dev
+# 다른 모드도 있음.
+
+# Swagger API문서
+# http://127.0.0.1:8000/docs
+# http://127.0.0.1:8000/redoc
+
+
+
+클라이언트 <-> 서버(API) 큰서버는 API가 100개 ~ 200개
+
+API문서 = 설명서
+
+어떤 형식을 맞춰서 개발하면
+ -> FastAPI는 API문서를 자동으로 만들어준다.
+
