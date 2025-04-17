@@ -20,7 +20,7 @@ Poetry
 --------
 
     주의사항
-        
+
         anaconda 가 설치되어있다면 삭제하거나, anaconda 를 아예 끄고 (anaconda 가상환경이 켜져 있으면 안 됩니다.) poetry 설치합니다.
 
         pyenv 도 마찬가지로, pyenv 를 비활성화 혹은 삭제하고 poetry 를 설치합니다.
@@ -64,8 +64,8 @@ Poetry
 
         코드스니펫(Code Snippet) poetry 설치 (windows 용)
         (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
-            
-   
+
+
 --------------
 파이썬 (python)
 --------------
@@ -118,7 +118,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
     poetry add --group=dev black
     poetry add --group=dev black==24.10.0
 
-    블랙 실행 
+    블랙 실행
     black .  또는  poetry run black .
     현재 폴더에 블랙을 적용
 
@@ -132,7 +132,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
   설치
     poetry add --group=dev ruff
     poetry add --group=dev ruff==0.8.2
-    
+
   # ruff의 주요 기능
 
   기능               설명

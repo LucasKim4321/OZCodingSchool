@@ -19,7 +19,7 @@ Python 웹 프레임워크
 
 2000년대 초반
 - Flask     : 경량 프레임워크(기본제공 기능 적음)
-- Django    : Battery-Included(배터리 포함 전략???)
+- Django    : Battery-Included(Django가 웹 개발에 필요한 기능들을 기본적으로 거의 다 갖추고 있다는 뜻)
 
 2019 ~
 - FastAPI   : 경량 프레임워크

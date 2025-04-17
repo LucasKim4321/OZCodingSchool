@@ -20,7 +20,7 @@ Day2 백엔드 개발자를 위한 테스트 환경 구축
 # 터미널에서 테스트 실행 시 pytest . 이렇게 입력하면 됨.
 def test_simple() -> None:
     print("Testing simple")
-    
+
 
 실행하는 방법은 다음과 같습니다. (둘 중 하나를 선택하시면 됩니다.)
   - 함수 왼쪽의 초록색 삼각형을 누른 후, run 을 선택합니다.
@@ -346,7 +346,7 @@ Dev dependency
   #! : 시뱅이라고 부름
 
   shell
-    #!/usr/bin/env bash       
+    #!/usr/bin/env bash
     set -eo pipefail
 
     COLOR_GREEN=`tput setaf 2;`
@@ -389,7 +389,7 @@ echo $?
 오류가 있는 코드를 짠 후
 black .
 
-echo $? 
+echo $?
 
 출력이 0보다 크면 문제있음.
 
@@ -571,7 +571,7 @@ jobs:
         if: steps.cache-poetry.outputs.cache-hit != 'true'
         run: |
           curl -sSL https://install.python-poetry.org | python3 - --version 2.1.2
- 
+
       - name: Register Poetry bin
         run: echo "${HOME}/.poetry/bin" >> $GITHUB_PATH
 

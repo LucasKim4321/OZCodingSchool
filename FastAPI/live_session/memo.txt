@@ -1,0 +1,156 @@
+
+-----------------
+# Day1
+-----------------
+
+
+------------------------
+Flask, Django, FastAPI
+------------------------
+
+[Q] 왜 배울까요?
+[A] 효율적으로 *웹 개발*을 돕는 도구
+
+최종 목적: "웹 서비스" 개발
+
+
+웹 서비스(Web Service)?
+: 인터넷을 기반으로 하는 서비스/제품
+
+카카오톡, 쿠팡, 토스(모바일), 배달의 민족 ->
+
+
+Python 웹 프레임워크
+
+2000년대 초반
+- Flask     : 경량 프레임워크(기본제공 기능 적음)
+- Django    : Battery-Included(배터리 포함 전략???)
+
+2019 ~
+- FastAPI   : 경량 프레임워크
+
+이전 순위
+1.Django, 2.Flask, 3.FastAPI
+
+현재 순위
+1.FastAPI, 2.Django, 3.Flask
+
+FastAPI
+1) AI 프로젝트 -> 손쉽게 배포
+2) 비동기 프로그래밍 사용시 -> 웹 서버 성능 향상 가능
+
+
+django < fastapi 동기(sync) < fastapi 비동기(async)
+
+
+fastapi 설치
+ pip install "fastapi[standard]"
+
+
+# app 객체 -> 라우팅
+# 라우팅 : 어떤 요청을 어떤 함수가 처리할지 결정하는 로직
+# GET /users -> UserListView.as_view() 장고에서 이런식으로 했었음.
+
+# Django -> Function-based View
+# FBV vs. CBV
+# FBV: 요청을 처리하는
+# FastAPI는 FBV사용
+
+# 서버 실행
+# cd src
+
+# 개발 모드로 실행
+# fastapi dev
+# 다른 모드도 있음.
+
+# Swagger API문서
+# http://127.0.0.1:8000/docs
+# http://127.0.0.1:8000/redoc
+
+
+
+클라이언트 <-> 서버(API) 큰서버는 API가 100개 ~ 200개
+
+API문서 = 설명서
+
+어떤 형식을 맞춰서 개발하면
+ -> FastAPI는 API문서를 자동으로 만들어준다.
+
+
+-----------------
+# Day2
+-----------------
+
+FastAPI 왜 배울까요?
+웹 서비스를 만들기 위한 백엔드 프레임워크
+
+
+API가 뭘까요?
+API는 Application Programming Interface의 줄임말입니다.
+우리말로 하면 응용 프로그램 프로그래밍 인터페이스입니다.
+
+ 쉽게 말하면?
+"소프트웨어끼리 대화하게 해주는 약속"
+
+예를 들어:
+당신이 스마트폰 앱(예: 날씨 앱)을 열었을 때,
+앱은 날씨 데이터를 가지고 있지 않죠.
+대신, 날씨 API를 호출해서 **서버에게 "서울 날씨 줘!"**라고 요청합니다.
+서버는 JSON 형태로 날씨를 전달하고,
+앱은 이 데이터를 예쁘게 화면에 보여주는 거죠.
+
+
+웹 서버: 클라이언트의 요청을 처리하는 컴퓨터
+
+사용자             클라이언트  -------------->   서버
+<인간>           <소프트웨어>                <소프트웨어>
+             UI(User Interface)          API(Application Programming Interface)
+             [메시지 보내기]
+
+사용자: 뭔가 한다.
+ 1. 쿠팡: 뭔가를 사고 싶다, 어떤 상품있나 보고 싶다
+ 2. 카카오톡: 친구한테 문자 보내야지
+
+사용자는 클라이언트와 UI를 통해 소통하고
+클라이언트는 서버와 API를 통해 소통한다.
+
+클라이언트로부터 넘어온 요청을 처리하는 방법
+ a. 값 검증
+ b. 로직 실행, 데이터 조회/저장
+ c. 응답 생성 및 반환 (Response 생성)
+
+ 클라이언트 -> 서버
+
+ 1. URL Path(API 경로)                GET/users/{username}/
+ 2. Query Parameter(추가 조회 조건)     GET/items?max_price=5000
+ 3. Request Body(요청 본문)            POST/items   request body:{"price":100, "name":"apple"}
+                                     POST/users   request body:{"name":"alice","email":"email@email.com"}
+
+# 서버 실행
+# cd src
+
+# 개발 모드로 실행
+# fastapi dev
+
+uvicorn main:app --reload
+
+HTTP 상태 코드(status code)
+
+2xx (성공)
+- 200 Ok            요청 성공
+- 201 Created       새로운 데이터가 추가 됐을 때
+- 204 No content    삭제가 성공했을 때
+
+4xx (클라이언트 문제)
+- 400 Bad Request   잘못된 요청 (값, 타입,...)
+- 401 Unauthorized  인증 실패
+- 403 Forbidden     클라이언트 권한이 없는 경우
+
+5xx (서버의 문제로 잘못된 경우)
+- 500 Internal Server Error
+- 502 Bad Gateway
+- 503 Service Unavailable
+- 504 Gateway Timeout
+
+
+요청이 성공 할 때 200이 기본값
