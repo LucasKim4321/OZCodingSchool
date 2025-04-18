@@ -154,3 +154,171 @@ HTTP 상태 코드(status code)
 
 
 요청이 성공 할 때 200이 기본값
+
+
+-----------------
+# Day3
+-----------------
+
+도커 설치 확인
+docker --version
+
+상태확인
+docker ps
+
+docker-compose.yml 생성
+
+services: # 컨테이너 단위를 설정
+  db:  # 서비스 이름 (이름은 자유롭게 지정 가능)
+    container_name: fastapi_mysql  # 컨테이너의 이름을 직접 지정
+    image: mysql:8.0  # 도커 mysql 공식 이미지
+    # restart: always 문제 있을 때 자동 재시작
+    restart: always
+    # 데이터 유지를 위해 사용 (데이터 영속성을 위한 설정)
+    # volumes를 설정하지 않으면 컨테이너에 데이터가 저장되고 컨테이너가 종료되면 데이터도 같이 사라짐.
+    volumes:
+      - local_db:/var/lib/mysql  # 볼륨 이름과 경로 설정
+    environment:
+      MYSQL_DATABASE: fastapi_db  # 자동으로 생성할 DB 이름
+      MYSQL_ROOT_PASSWORD: 1234  # root 사용자 비밀번호
+    ports:
+      - "33060:3306" # 호스트의 포트 33060을 컨테이너 내부의 MySQL 포트 3306에 연결
+
+# 위에서 쓴 local_db라는 이름의 볼륨을 실제로 정의한 부분
+volumes:
+  local_db:
+
+docker-compose.yml파일이 있는 위치에서 실행
+docker compose up -d
+
+이러게 해보면 실행중
+docker ps
+CONTAINER ID   IMAGE       COMMAND                  CREATED          STATUS          PORTS                                NAMES
+bbc679b7c74e   mysql:8.0   "docker-entrypoint.s…"   19 seconds ago   Up 18 seconds   33060/tcp, 0.0.0.0:33060->3306/tcp   fastapi_mysql
+
+
+mysql 연결
+아이디, 비밀번호, 포트 33060, fastapi_db 입력
+
+brew update
+brew upgrade mysql
+
+설치
+pip3 install sqlalchemy pymysql cryptography
+
+sqlalchemy: 파이선에서 데이터베이스를 사용하기 위한 라이브러리
+pymysql: 파이썬에서 mysql을 쓰기위한 드라이버
+cryptography: pymysql과 같이 써야하는 인증관련 라이브러리
+
+데이터베이스가 뭘까요?
+- 데이터를 관리하는 저장소(프로그램/소프트웨어)
+
+데이터를 제어하는 언어 -> SQL
+
+데이터(data) -> 정보(information) -> 지식(knowledge)
+  단순 자료         가공된 정보           완성된 지식
+
+ORM (=Object Relational Mapping)
+Python <-> SQL로 바꿔주는 기술
+
+
+ Client     ->      Django(DjangoORM내장)       ->         Mysql
+                      User.object.all()       ORM         SELECT * FROM  users;
+
+
+ Client      ->        FastAPI(ORM내장x)        ->        Mysql
+                                              ORM
+
+ORM
+ sqlalchemy
+ SqlModel(sqlalchemy)
+ TortoiseORM
+
+# src/database.py 생성
+
+engine : 데이터베이스와 연결을 생성할 수 있는 객체
+특징
+DB 연결 정보를 담고 있음 (ex. mysql+pymysql://user:pass@host/dbname)
+커넥션 풀(pooling)을 관리함
+DB에 실제로 연결되는 Connection 객체를 만들어주는 역할
+
+session : ORM을 통해 DB 작업을 할 수 있게 해주는 고수준 객체
+특징
+Connection보다 상위 개념 (internally connection을 사용함)
+ORM 객체 (User, Article)를 이용해서 DB와 CRUD를 수행
+트랜잭션 시작/커밋/롤백 기능 제공
+
+connection : Engine이 만든 진짜 DB 연결 객체 (low-level)
+특징
+트랜잭션을 수동으로 관리할 때 사용
+with engine.connect() as conn: 처럼 사용
+일반적인 쿼리도 수행 가능
+
+
+python 실행 창에서 테스트
+DATABASE_URL 잘못 쓰면 동작 안함.
+from database import SessionFactory
+from sqlalchemy import select
+session = SessionFactory()
+session.execute(select(1))
+
+result = session.execute(select(1+1))
+result.scalar()  # 2 출력
+
+
+user/models.py 생성
+
+from datetime import datetime
+from sqlalchemy import Integer, Column, String, DateTime
+from database import Base
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(16))
+    password = Column(String(60))
+    created_at = Column(DateTime, default=datetime.now)
+
+# Django: model -> table
+# python manage.py makemigrations -> migration 파일 -> python manage.py migrate
+
+# Django에는 ORM + Migration 기능
+
+# sqlalchemy는 ORM만 지원
+# migration 하려면 Alembic
+
+# sqlalchemy를 사용할 때 쿼리를 직접 실행해야함.
+# 또눈 Alembic 사용 가능
+from sqlalchemy.schema import CreateTable
+from user.models import User
+from database import engine
+# 유저 테이블을 생성하는 쿼리문을 mysql에 맞게 만들어줌
+print(CreateTable(User.__table__).compile(engine))
+
+
+from database import SessionFactory
+from user.models import User
+from sqlalchemy import select
+session = SessionFactory()
+session.query(User).all()
+session.query(User).filter_by(id=1).first()
+
+
+python 콘솔에 테스트
+from user.models import User
+from sqlalchemy import select
+Session = SessionFactory()
+session.add(user)
+session.commit()
+user.id
+session.query(select)
+user = session.query(User).first()
+user = session.query(User).last()
+
+# 보통 id(pk)순으로 나옴.
+# 하지만 꼭 그렇게 저장 되지 않을 수 있음.
+
+
+k-mooc 무료 강의
+
+
+잘못된 mysql설치로 인해 오류남.

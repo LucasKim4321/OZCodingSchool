@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -7,4 +9,5 @@ from pydantic import BaseModel
 class UserResponse(BaseModel):
     id: int
     username: str
-    age: int
+    password: str
+    created_at: datetime

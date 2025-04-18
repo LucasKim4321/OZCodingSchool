@@ -1,0 +1,15 @@
+services:
+  db:
+    container_name: fastapi_mysql
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - local_db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: fastapi_db
+      MYSQL_ROOT_PASSWORD: fastapi_password
+    ports:
+      - "33060:3306"
+
+volumes:
+  local_db:
