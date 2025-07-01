@@ -18,11 +18,11 @@ mv ~/Downloads/mykey02.pem ~/.ssh/
 400 소유자에게만 읽기 권한
 600 소유자에게만 읽기/쓰기 권한
 등등 더 있음
-chmod 400 ~/Downloads/mykey02.pem
+chmod 400 ~/Downloads/WiStar.pem
 
 ec2서버 접속
 ssh -i ~/Downloads/my-key.pem ec2-user@<EC2_PUBLIC_IP> -p <PORT>
-ssh -i ~/Downloads/mykey02.pem ubuntu@54.180.109.242
+ssh -i ~/Downloads/WiStar.pem ubuntu@43.201.66.170
 ssh -i ~/Downloads/mykey02.pem bitnami@54.180.139.19
 
 인스턴스 생성
